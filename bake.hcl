@@ -16,10 +16,9 @@ group "ubuntu" {
 
 target "ubuntu-defaults" {
   dockerfile = "Containerfile"
-  platforms = ["linux/amd64"]
-  #platforms = ["linux/arm64", "linux/amd64"]
+  platforms = ["linux/arm64", "linux/amd64"]
   args = {
-    FLAVOR = "ubuntu",
+    FLAVOR = "ubuntu"
     PKG_LIST = "screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent"
     OPERATIONS = "user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache"
   }
@@ -28,7 +27,7 @@ target "ubuntu-defaults" {
 target "ubuntu-18.04" {
   inherits = ["ubuntu-defaults"]
   tags = [
-    "docker.io/containercraft/ubuntu:1804-${FLAG}",
+    "docker.io/containercraft/ubuntu:18.04-${FLAG}",
     "docker.io/containercraft/ubuntu:bionic-${FLAG}"
   ]
   args = {
@@ -50,7 +49,7 @@ target "ubuntu-20.04" {
 target "ubuntu-21.10" {
   inherits = ["ubuntu-defaults"]
   tags = [
-    "docker.io/containercraft/ubuntu:2110-${FLAG}",
+    "docker.io/containercraft/ubuntu:21.10-${FLAG}",
     "docker.io/containercraft/ubuntu:impish-${FLAG}"
   ]
   args = {
@@ -65,7 +64,7 @@ target "arch" {
     "docker.io/containercraft/arch:latest-${FLAG}"
   ]
   args = {
-    FLAVOR = "arch",
+    FLAVOR = "arch"
     PKG_LIST = "screenfetch,python3,tmux,git,vim,net-tools,qemu-guest-agent,libguestfs"
     OPERATIONS = "logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,tmp-files,smolt-uuid,package-manager-cache"
     VERSION = "latest"
