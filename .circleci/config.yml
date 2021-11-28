@@ -10,16 +10,16 @@ aliases:
         default: amd64
 
 workflows:
-  build-and-publish:
+  build-and-cache:
     jobs:
-      - bake:
+      - qcow2:
           name: bake-arm64
           target: ubuntu
           platform: arm64
           executor: arm64
 
 jobs:
-  bake:
+  qcow2:
     parameters:
       target:
         type: string
@@ -33,7 +33,6 @@ jobs:
       - prepare
       - enable_buildx
       - run:
-          name: Download Qcow2 Image
           command: curl --output origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img
           environment:
             FLAVOR: ubuntu
@@ -47,7 +46,6 @@ commands:
     description: "Alert Ops if Abort Failures Occur"
     steps:
       - slack/notify:
-          name: Ping Slack Ops Team
           event: fail
           channel: ops-kargo
           custom: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"## Failure Abort :${CIRCLE_JOB}: github.com/containercraft/kmi/tree/${CIRCLE_BRANCH}"}}]}'
@@ -57,10 +55,8 @@ commands:
     description: "Host Preparedness"
     steps:
       - run:
-          name: install_build_dependencies
           command: "sudo apt-get update && sudo apt-get install -y jq curl apt-utils qemu-user libguestfs-tools qemu-user-static apt-transport-https"
       - run:
-          name: docker_login
           command: "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USER} --password-stdin"
   # CMD: Configure Docker BuildX
   enable_buildx:
@@ -71,11 +67,9 @@ commands:
         default: v0.9.3
     steps:
       - run:
-          name: Install All Emulators
           command: |
             docker run --privileged --rm tonistiigi/binfmt --install all
       - run:
-          name: Create builder with buildkit << parameters.buildkit_version >>
           command: |
             docker buildx ls \
               | grep "build-<< parameters.buildkit_version >>" \
@@ -84,10 +78,8 @@ commands:
               --driver docker-container \
               --driver-opt image=moby/buildkit:<< parameters.buildkit_version >>,network=host
       - run:
-          name: Set builder
           command: docker buildx use --default build-<< parameters.buildkit_version >>
       - run:
-          name: Start up buildx and inspect
           command: docker buildx inspect --bootstrap
   # CMD: Run BuildX
   buildx:
@@ -101,7 +93,6 @@ commands:
       << : *platform_parameter
     steps:
       - run:
-          name: Execute docker buildx
           command: |
             docker buildx bake \
               -f << parameters.bake_file >> \
