@@ -120,14 +120,14 @@ commands:
             qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
             # Sysprep customize
-            sudo virt-sysprep --verbose --add tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 --network --update \
+            sudo virt-sysprep --verbose --add cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 --network --update \
               --enable user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache \
               --install screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent \
               --run-command 'apt-get autoremove -y' \
               --run-command 'apt-get purge -y';
 
             # Sparsify
-            sudo virt-sparsify --verbose --compress tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2
+            sudo virt-sparsify --verbose --compress cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2
             }
 
             # Check for && confirm cached customized image present || If not present then customize and cache
