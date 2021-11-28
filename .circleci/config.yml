@@ -91,7 +91,6 @@ commands:
               | grep "build-<< parameters.buildkit_version >>" \
       - ops_notify_err
 
-commands:
   # CMD: Slack Notify if ERR
   ops_notify_err:
     description: "Alert Ops if Abort Failures Occur"
