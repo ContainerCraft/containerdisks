@@ -124,7 +124,7 @@ commands:
               --run-command 'apt-get purge -y';
 
             # Sparsify
-            sudo virt-sparsify --verbose --compress tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 cache/arm64/${FLAVOR}-${VERSION}-${ARCH}.qcow2
+            sudo virt-sparsify --verbose --compress tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2
 
       - run:
           command: |
