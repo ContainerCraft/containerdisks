@@ -51,7 +51,7 @@ jobs:
             VERSION: "18.04"
             RELEASE: "bionic"
       - save_cache:
-          key: qcow2-ubuntu-bionic-arm64-origin-{{ checksum "preview/ubuntu/sha256sum.{{ .Environment.ARCH }}.txt" }}
+          key: qcow2-ubuntu-bionic-arm64-origin-{{ checksum "preview/ubuntu/sha256sum.arm64.txt" }}
           paths:
             - wip.ubuntu-18.04-{{ .Environment.ARCH }}.qcow2
       - ops_notify_err
