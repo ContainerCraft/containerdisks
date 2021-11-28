@@ -104,7 +104,6 @@ commands:
     description: "Qcow2 Image: Customize"
     steps:
       - restore_cache:
-          key: qcow2-ubuntu-bionic-arm64-tmp
           key: qcow2-ubuntu-bionic-arm64-ccio
           #key: qcow2-ubuntu-bionic-arm64-ccio-{{ checksum "preview/ubuntu/sha256sum.arm64.txt" }}
 
