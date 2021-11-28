@@ -84,7 +84,7 @@ commands:
               --run-command 'apt-get purge -y';
 
             # Sparsify
-            sudo virt-sparsify --verbose --compress --convert qcow2 ${FLAVOR}-${VERSION}-${ARCH}.qcow2 cache/${ARM}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
+            sudo virt-sparsify --verbose --compress --convert qcow2 ${FLAVOR}-${VERSION}-${ARCH}.qcow2 cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
               && rm ${FLAVOR}-${VERSION}-${ARCH}.qcow2
 
       - run:
