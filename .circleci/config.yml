@@ -49,7 +49,7 @@ commands:
     description: "Host Preparedness"
     steps:
       - run:
-          command: "sudo apt-get update && sudo apt-get install -y jq curl apt-utils qemu-user libguestfs-tools qemu-user-static apt-transport-https"
+          command: "sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static"
       - run:
           command: "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
   # CMD: Download qcow2
@@ -71,7 +71,15 @@ commands:
             VERSION: "18.04"
             RELEASE: "bionic"
       - run:
-          command: sudo virt-sparsify --verbose --compress origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 wip.${FLAVOR}-${VERSION}-${ARCH}.qcow2 
+          command: sudo virt-sparsify --verbose --compress origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 wip.${FLAVOR}-${VERSION}-${ARCH}.qcow2 && rm origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2
+          environment:
+            FLAVOR: ubuntu
+            VERSION: "18.04"
+            RELEASE: "bionic"
+      - run:
+          command: |
+            sudo virt-sysprep --verbose --add wip.${FLAVOR}-${VERSION}-${ARCH}.qcow2 --network \
+              --enable user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache
           environment:
             FLAVOR: ubuntu
             VERSION: "18.04"
