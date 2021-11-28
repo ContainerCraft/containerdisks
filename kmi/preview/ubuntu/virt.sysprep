@@ -1,0 +1,5 @@
+update
+run-command apt-get autoremove -y
+install screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent
+run-command apt-get autoremove -y
+run-command apt-get purge -y

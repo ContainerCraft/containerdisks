@@ -1,0 +1,128 @@
+version: '2.1'
+orbs:
+  slack: circleci/slack@4.5.0
+
+aliases:
+  - &platform_parameter
+      platform:
+        type: enum
+        enum: ["amd64", "arm64"]
+        default: amd64
+
+workflows:
+  build-and-publish:
+    jobs:
+      - bake:
+          name: bake-arm64
+          target: ubuntu
+          platform: arm64
+          executor: arm64
+
+jobs:
+  bake:
+    parameters:
+      target:
+        type: string
+      << : *platform_parameter
+      executor:
+        type: executor
+        default: amd64
+    executor: << parameters.executor >>
+    steps:
+      - checkout
+      - prepare
+      - enable_buildx
+      - run:
+          name: Download Qcow2 Image
+          command: curl --output origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img
+          environment:
+            FLAVOR: ubuntu
+            VERSION: "18.04"
+            RELEASE: "bionic"
+      - ops_notify_err
+
+commands:
+  # CMD: Slack Notify if ERR
+  ops_notify_err:
+    description: "Alert Ops if Abort Failures Occur"
+    steps:
+      - slack/notify:
+          name: Ping Slack Ops Team
+          event: fail
+          channel: ops-kargo
+          custom: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"## Failure Abort :${CIRCLE_JOB}: github.com/containercraft/kmi/tree/${CIRCLE_BRANCH}"}}]}'
+          #template: basic_fail_1
+  # CMD: Prepare Host Build Dependencies
+  prepare:
+    description: "Host Preparedness"
+    steps:
+      - run:
+          name: install_build_dependencies
+          command: "sudo apt-get update && sudo apt-get install -y jq curl apt-utils qemu-user libguestfs-tools qemu-user-static apt-transport-https"
+      - run:
+          name: docker_login
+          command: "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USER} --password-stdin"
+  # CMD: Configure Docker BuildX
+  enable_buildx:
+    description: "Prepare the CircleCI machine for using buildx"
+    parameters:
+      buildkit_version:
+        type: string
+        default: v0.9.3
+    steps:
+      - run:
+          name: Install All Emulators
+          command: |
+            docker run --privileged --rm tonistiigi/binfmt --install all
+      - run:
+          name: Create builder with buildkit << parameters.buildkit_version >>
+          command: |
+            docker buildx ls \
+              | grep "build-<< parameters.buildkit_version >>" \
+              || docker buildx create --use \
+              --name build-<< parameters.buildkit_version >> \
+              --driver docker-container \
+              --driver-opt image=moby/buildkit:<< parameters.buildkit_version >>,network=host
+      - run:
+          name: Set builder
+          command: docker buildx use --default build-<< parameters.buildkit_version >>
+      - run:
+          name: Start up buildx and inspect
+          command: docker buildx inspect --bootstrap
+  # CMD: Run BuildX
+  buildx:
+    description: "Run 'docker buildx'"
+    parameters:
+      bake_file:
+        type: string
+        default: bake.hcl
+      target:
+        type: string
+      << : *platform_parameter
+    steps:
+      - run:
+          name: Execute docker buildx
+          command: |
+            docker buildx bake \
+              -f << parameters.bake_file >> \
+              --progress plain \
+              --set *.platform=linux/<< parameters.platform >> \
+              << parameters.target >>
+
+executors:
+  arm64:
+    machine:
+      enabled: true
+      image: ubuntu-2004:202111-01
+    environment:
+      ARCH: arm64
+      DOCKER_CLI_EXPERIMENTAL: enabled
+    resource_class: arm.xlarge
+  amd64:
+    machine:
+      enabled: true
+      image: ubuntu-2004:202111-01
+    environment:
+      ARCH: amd64
+      DOCKER_CLI_EXPERIMENTAL: enabled
+    resource_class: xlarge
