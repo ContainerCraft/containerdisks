@@ -44,7 +44,7 @@ jobs:
             VERSION: "18.04"
             RELEASE: "bionic"
       - run:
-          command: virt-sparsify --verbose --compress origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 wip.${FLAVOR}-${VERSION}-${ARCH}.qcow2 
+          command: sudo virt-sparsify --verbose --compress origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 wip.${FLAVOR}-${VERSION}-${ARCH}.qcow2 
           environment:
             FLAVOR: ubuntu
             VERSION: "18.04"
