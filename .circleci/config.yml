@@ -28,6 +28,10 @@ jobs:
         type: executor
         default: amd64
     executor: << parameters.executor >>
+    environment:
+      FLAVOR: ubuntu
+      VERSION: "18.04"
+      RELEASE: "bionic"
     steps:
       - checkout
       - prepare
@@ -60,34 +64,18 @@ commands:
           key: qcow2-ubuntu-bionic-arm64-origin-{{ checksum "preview/ubuntu/sha256sum.arm64.txt" }}
       - run:
           command: curl --output origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img
-          environment:
-            FLAVOR: ubuntu
-            VERSION: "18.04"
-            RELEASE: "bionic"
       - run:
           command: qemu-img resize origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 +20G
-          environment:
-            FLAVOR: ubuntu
-            VERSION: "18.04"
-            RELEASE: "bionic"
       - run:
-          command: sudo virt-sparsify --verbose --compress origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 wip.${FLAVOR}-${VERSION}-${ARCH}.qcow2 && rm origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2
-          environment:
-            FLAVOR: ubuntu
-            VERSION: "18.04"
-            RELEASE: "bionic"
+          command: sudo virt-sparsify --verbose --compress origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 wip.${FLAVOR}-${VERSION}-${ARCH}.qcow2
       - run:
           command: |
             sudo virt-sysprep --verbose --add wip.${FLAVOR}-${VERSION}-${ARCH}.qcow2 --network \
               --enable user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache
-          environment:
-            FLAVOR: ubuntu
-            VERSION: "18.04"
-            RELEASE: "bionic"
       - save_cache:
           key: qcow2-ubuntu-bionic-arm64-origin-{{ checksum "preview/ubuntu/sha256sum.arm64.txt" }}
           paths:
-            - wip.ubuntu-18.04-arm64.qcow2
+            - cache/arm64/wip.ubuntu-18.04-arm64.qcow2
   # CMD: Configure Docker BuildX
   enable_buildx:
     description: "Prepare the CircleCI machine for using buildx"
@@ -97,12 +85,9 @@ commands:
         default: v0.9.3
     steps:
       - run:
-          command: |
-            docker run --privileged --rm tonistiigi/binfmt --install all
+          command: 'docker run --privileged --rm tonistiigi/binfmt --install all'
       - run:
-          command: |
-            docker buildx ls \
-              | grep "build-<< parameters.buildkit_version >>" \
+          command: 'docker buildx ls | grep "build-<< parameters.buildkit_version >>"'
       - ops_notify_err
 
   # CMD: Run Buildx
