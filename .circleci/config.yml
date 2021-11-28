@@ -66,12 +66,9 @@ commands:
 
       - run:
           command: |
-            [[ ! -f cache/arm64/tmp.ubuntu-18.04-arm64.qcow2 ]]  \
-              && curl --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img \
-              || circleci step halt
-
-      - run:
-          command: |
+            run_cache_image () {
+            # Download qcow2
+            curl --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img \
 
             # Grow disk size
             qemu-img resize ${FLAVOR}-${VERSION}-${ARCH}.qcow2 +20G;
@@ -85,6 +82,10 @@ commands:
             # Sparsify
             sudo virt-sparsify --verbose --compress --convert qcow2 ${FLAVOR}-${VERSION}-${ARCH}.qcow2 cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
               && rm ${FLAVOR}-${VERSION}-${ARCH}.qcow2
+            }
+
+            # Check for && confirm cached image present || If not present then download, prepare, and cache
+            [[ ! -f cache/arm64/tmp.ubuntu-18.04-arm64.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -112,6 +113,7 @@ commands:
 
       - run:
           command: |
+            run_cache_customize () {
             # Verify qcow2 image
             qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
@@ -124,6 +126,10 @@ commands:
 
             # Sparsify
             sudo virt-sparsify --verbose --compress tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2
+            }
+
+            # Check for && confirm cached customized image present || If not present then customize and cache
+            [[ ! -f cache/arm64/ubuntu-18.04-arm64.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -167,6 +173,8 @@ commands:
           command: 'docker run --privileged --rm tonistiigi/binfmt --install all'
       - run:
           command: 'docker buildx ls | grep "build-<< parameters.buildkit_version >>"'
+      - run:
+          command: "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
       - ops_notify_err
 
   # CMD: Prepare Host Build Dependencies
@@ -175,8 +183,6 @@ commands:
     steps:
       - run:
           command: "sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static"
-      - run:
-          command: "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
 
 #################################################################################
 # Workflow Runner Instances
