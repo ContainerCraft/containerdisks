@@ -31,7 +31,6 @@ jobs:
     steps:
       - checkout
       - prepare
-      - enable_buildx
       - run:
           command: curl --output origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img
           environment:
