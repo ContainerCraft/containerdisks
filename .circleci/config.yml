@@ -66,14 +66,12 @@ commands:
 
       - run:
           command: |
-            [[ -f cache/arm64/tmp.ubuntu-18.04-arm64.qcow2 ]]  || 
             [[ ! -f cache/arm64/tmp.ubuntu-18.04-arm64.qcow2 ]]  \
               && curl --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img \
               || circleci step halt
 
       - run:
           command: |
-            # Download qcow2 from origin
 
             # Grow disk size
             qemu-img resize ${FLAVOR}-${VERSION}-${ARCH}.qcow2 +20G;
