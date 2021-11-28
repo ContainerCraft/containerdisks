@@ -111,6 +111,7 @@ commands:
           #key: qcow2-ubuntu-bionic-arm64-ccio-{{ checksum "preview/ubuntu/sha256sum.arm64.txt" }}
 
       - run:
+          no_output_timeout: 60m
           command: |
             run_cache_customize () {
             # Install build dependencies
