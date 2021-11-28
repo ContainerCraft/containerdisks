@@ -38,7 +38,6 @@ jobs:
       RELEASE: "bionic"
     steps:
       - checkout
-      - prepare
       - cache_qcow2
       - prepare_qcow2
       - ops_notify_err
