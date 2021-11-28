@@ -179,7 +179,7 @@ commands:
           command: "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
       - ops_notify_err
 
-  prepare_qcow2:
+  prepare:
     description: "Runner: Install Prerequisites"
     steps:
       - run:
