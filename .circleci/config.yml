@@ -40,6 +40,7 @@ jobs:
       - checkout
       - prepare
       - cache_qcow2
+      - prepare_qcow2
       - ops_notify_err
 
 #################################################################################
@@ -89,7 +90,7 @@ commands:
 
       - run:
           command: |
-            # Log image stats
+            # Log tmp image stats
             qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
       - ops_notify_err
@@ -128,7 +129,7 @@ commands:
 
       - run:
           command: |
-            # Log image stats
+            # Log final image stats
             qemu-img info cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
       - save_cache:
