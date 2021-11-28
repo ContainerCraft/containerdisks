@@ -31,6 +31,33 @@ jobs:
     steps:
       - checkout
       - prepare
+      - download_qcow2
+      - ops_notify_err
+
+commands:
+  # CMD: Slack Notify if ERR
+  ops_notify_err:
+    description: "Alert Ops if Abort Failures Occur"
+    steps:
+      - slack/notify:
+          event: fail
+          channel: ops-kargo
+          template: basic_fail_1
+          #custom: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"Failure Abort :${CIRCLE_JOB}: github.com/containercraft/kmi/tree/${CIRCLE_BRANCH}"}}]}'
+  # CMD: Prepare Host Build Dependencies
+  prepare:
+    description: "Host Preparedness"
+    steps:
+      - run:
+          command: "sudo apt-get update && sudo apt-get install -y jq curl apt-utils qemu-user libguestfs-tools qemu-user-static apt-transport-https"
+      - run:
+          command: "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
+  # CMD: Download qcow2
+  download_qcow2:
+    description: "Host Preparedness"
+    steps:
+      - restore_cache:
+          key: qcow2-ubuntu-bionic-arm64-origin-{{ checksum "preview/ubuntu/sha256sum.arm64.txt" }}
       - run:
           command: curl --output origin.${FLAVOR}-${VERSION}-${ARCH}.qcow2 -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img
           environment:
@@ -52,27 +79,7 @@ jobs:
       - save_cache:
           key: qcow2-ubuntu-bionic-arm64-origin-{{ checksum "preview/ubuntu/sha256sum.arm64.txt" }}
           paths:
-            - wip.ubuntu-18.04-{{ .Environment.ARCH }}.qcow2
-      - ops_notify_err
-
-commands:
-  # CMD: Slack Notify if ERR
-  ops_notify_err:
-    description: "Alert Ops if Abort Failures Occur"
-    steps:
-      - slack/notify:
-          event: fail
-          channel: ops-kargo
-          template: basic_fail_1
-          #custom: '{"blocks":[{"type":"section","text":{"type":"mrkdwn","text":"Failure Abort :${CIRCLE_JOB}: github.com/containercraft/kmi/tree/${CIRCLE_BRANCH}"}}]}'
-  # CMD: Prepare Host Build Dependencies
-  prepare:
-    description: "Host Preparedness"
-    steps:
-      - run:
-          command: "sudo apt-get update && sudo apt-get install -y jq curl apt-utils qemu-user libguestfs-tools qemu-user-static apt-transport-https"
-      - run:
-          command: "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
+            - wip.ubuntu-18.04-arm64.qcow2
   # CMD: Configure Docker BuildX
   enable_buildx:
     description: "Prepare the CircleCI machine for using buildx"
