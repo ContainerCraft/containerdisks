@@ -101,7 +101,7 @@ commands:
                 --add ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
                 --network \
                 --update \
-                --enable user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache \
+                --enable ${VIRT_SYSPREP_OPERATIONS} \
                 --run-command 'apt-get autoremove -y' \
                 --run-command 'apt-get purge -y';
 
