@@ -14,7 +14,7 @@ aliases:
 workflows:
   build-and-cache:
     jobs:
-      - qcow2:
+      - customize-qcow2:
           matrix:
             parameters:
               flavor: [ubuntu]
@@ -24,7 +24,7 @@ workflows:
 #################################################################################
 # Reuseable Jobs
 jobs:
-  qcow2:
+  customize-qcow2:
     parameters:
       flavor:
         type: string
@@ -80,10 +80,17 @@ commands:
       - run:
           command: |
             run_cache_image () {
+
+              # Source OS specific vars
+              source preview/${FLAVOR}/env.sh
+
               # Download qcow2
               curl \
                 --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
                 --location $(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.url index.json)
+
+              SHA256SUM=$(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+              echo "${SHA256SUM} ${FLAVOR}-${VERSION}-${ARCH}.qcow2"  | sha256sum --check --status
 
               # Grow disk size
               qemu-img resize ${FLAVOR}-${VERSION}-${ARCH}.qcow2 +20G;
