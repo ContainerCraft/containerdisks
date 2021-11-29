@@ -61,7 +61,7 @@ commands:
     description: "Qcow2 Image: Load from Cache || Download & Cache"
     steps:
       - restore_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.target >>-tmp-{{ checksum "preview/ubuntu/sha256sum.<< parameters.target >>.txt" }}
+          key: qcow2-ubuntu-bionic-<< parameters.executor >>-tmp-{{ checksum "preview/ubuntu/sha256sum.<< parameters.executor >>.txt" }}
 
       - run:
           command: |
@@ -87,7 +87,7 @@ commands:
             }
 
             # Check for && confirm cached image present || If not present then download, prepare, and cache
-            [[ ! -f cache/<< parameters.target >>/tmp.ubuntu-18.04-<< parameters.target >>.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
+            [[ ! -f cache/<< parameters.executor >>/tmp.ubuntu-18.04-<< parameters.executor >>.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -96,16 +96,16 @@ commands:
 
       - ops_notify_err
       - save_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.target >>-tmp-{{ checksum "preview/ubuntu/sha256sum.<< parameters.target >>.txt" }}
+          key: qcow2-ubuntu-bionic-<< parameters.executor >>-tmp-{{ checksum "preview/ubuntu/sha256sum.<< parameters.executor >>.txt" }}
           paths:
-            - cache/<< parameters.target >>/tmp.ubuntu-18.04-<< parameters.target >>.qcow2
+            - cache/<< parameters.executor >>/tmp.ubuntu-18.04-<< parameters.executor >>.qcow2
 
   # CMD: Qcow2 Image: Load from Cache || Download & Cache
   prepare_qcow2:
     description: "Qcow2 Image: Customize"
     steps:
       - restore_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.target >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.target >>.txt" }}
+          key: qcow2-ubuntu-bionic-<< parameters.executor >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.executor >>.txt" }}
 
       - run:
           no_output_timeout: 60m
@@ -129,7 +129,7 @@ commands:
             }
 
             # Check for && confirm cached customized image present || If not present then customize and cache
-            [[ ! -f cache/<< parameters.target >>/ubuntu-18.04-<< parameters.target >>.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
+            [[ ! -f cache/<< parameters.executor >>/ubuntu-18.04-<< parameters.executor >>.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -137,9 +137,9 @@ commands:
             qemu-img info cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
       - save_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.target >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.target >>.txt" }}
+          key: qcow2-ubuntu-bionic-<< parameters.executor >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.executor >>.txt" }}
           paths:
-            - cache/<< parameters.target >>/ubuntu-18.04-<< parameters.target >>.qcow2
+            - cache/<< parameters.executor >>/ubuntu-18.04-<< parameters.executor >>.qcow2
 
   # CMD: Execute Docker Buildx
   buildx:
@@ -157,8 +157,8 @@ commands:
             docker buildx bake \
               -f << parameters.bake_file >> \
               --progress plain \
-              --set *.platform=linux/<< parameters.target >> \
-              << parameters.target >>
+              --set *.platform=linux/<< parameters.executor >> \
+              << parameters.executor >>
 
   # CMD: Configure Docker BuildX
   enable_buildx:
