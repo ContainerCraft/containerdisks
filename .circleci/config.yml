@@ -19,6 +19,9 @@ workflows:
             parameters:
               flavor: ["ubuntu-18.04", "fedora-35"]
               arch: [amd64]
+          # exclude:
+          #  - flavor: fedora-34
+          #    arch: arm64
 
 #################################################################################
 # Reuseable Jobs
@@ -74,8 +77,10 @@ commands:
             set -x
 
             run_cache_image() {
+
               NAME=${FLAVOR%-*}
               VERSION=${FLAVOR#*-}
+
               QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
 
               DOWNLOAD_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
@@ -133,9 +138,8 @@ commands:
           command: |
             run_cache_customize() {
 
-              # ubuntu-18.04
-              NAME=${FLAVOR%-*}    # ubuntu
-              VERSION=${FLAVOR#*-} # 18.04
+              NAME=${FLAVOR%-*}
+              VERSION=${FLAVOR#*-}
 
               QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
               # Source OS specific vars
