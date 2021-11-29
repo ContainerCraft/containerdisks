@@ -32,15 +32,17 @@ jobs:
         default: amd64
     executor: << parameters.executor >>
     environment:
-      FLAVOR: ubuntu
+      FLAVOR: << parameters.target >>
       VERSION: "18.04"
       RELEASE: "bionic"
       ARCH: << parameters.executor >>
     steps:
       - checkout
       - prepare
-      - cache_qcow2
-      - prepare_qcow2
+      - cache_qcow2:
+          arch: << parameters.executor >>
+      - prepare_qcow2:
+          arch: << parameters.executor >>
       - ops_notify_err
 
 #################################################################################
