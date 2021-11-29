@@ -18,8 +18,8 @@ workflows:
           matrix:
             parameters:
               flavor: [ubuntu]
-              arch: [amd64, arm64]
-              version: ["18.04", "20.04"]
+              arch: [amd64]
+              version: ["18.04"]
 
 #################################################################################
 # Reuseable Jobs
