@@ -18,7 +18,7 @@ workflows:
           matrix:
             parameters:
               target: [ubuntu]
-              executor: [amd64, arm64]
+              arch: [amd64, arm64]
 
 #################################################################################
 # Reuseable Jobs
@@ -27,22 +27,21 @@ jobs:
     parameters:
       target:
         type: string
-      executor:
-        type: executor
-        default: amd64
-    executor: << parameters.executor >>
+      arch:
+        type: string
+    executor: << parameters.arch >>
     environment:
       FLAVOR: << parameters.target >>
       VERSION: "18.04"
       RELEASE: "bionic"
-      ARCH: << parameters.executor >>
+      ARCH: << parameters.arch >>
     steps:
       - checkout
       - prepare
       - cache_qcow2:
-          arch: << parameters.executor >>
+          arch: << parameters.arch >>
       - prepare_qcow2:
-          arch: << parameters.executor >>
+          arch: << parameters.arch >>
       - ops_notify_err
 
 #################################################################################
