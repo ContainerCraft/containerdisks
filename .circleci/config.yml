@@ -108,7 +108,7 @@ commands:
       - run:
           command: |
             # Log tmp image stats
-            qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2;
+            qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${ARCH}.qcow2;
 
       - ops_notify_err
       - save_cache:
@@ -166,7 +166,7 @@ commands:
       - run:
           command: |
             # Log final image stats
-            qemu-img info cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2;
+            qemu-img info cache/${ARCH}/${FLAVOR}-${ARCH}.qcow2;
 
       - save_cache:
           key: qcow2-<< parameters.flavor>>-<< parameters.arch >>-ccio-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
