@@ -17,9 +17,8 @@ workflows:
       - customize-qcow2:
           matrix:
             parameters:
-              flavor: [ubuntu]
+              flavor: ["ubuntu-18.04"]
               arch: [amd64]
-              version: ["18.04"]
 
 #################################################################################
 # Reuseable Jobs
@@ -30,24 +29,19 @@ jobs:
         type: string
       arch:
         type: string
-      version:
-        type: string
     executor: << parameters.arch >>
     environment:
       FLAVOR: << parameters.flavor >>
       ARCH: << parameters.arch >>
-      VERSION: << parameters.version >>
     steps:
       - checkout
       - prepare
       - cache_qcow2:
           flavor: << parameters.flavor >>
           arch: << parameters.arch >>
-          version: << parameters.version >>
       - prepare_qcow2:
           flavor: << parameters.flavor >>
           arch: << parameters.arch >>
-          version: << parameters.version >>
       - ops_notify_err
 
 #################################################################################
@@ -71,26 +65,26 @@ commands:
         type: string
       arch:
         type: string
-      version:
-        type: string
     steps:
       - restore_cache:
-          key: qcow2-<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>-tmp-{{ checksum "preview/<< parameters.flavor >>/sha256sum.<< parameters.version>>-<< parameters.arch >>.txt" }}
+          key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-tmp-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
 
       - run:
           command: |
             set -x
 
-            run_cache_image () {
+            run_cache_image() {
+              NAME=${FLAVOR%-*}
+              VERSION=${FLAVOR#*-}
+              QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
 
-              QCOW2_FILE=${FLAVOR}-${VERSION}-${ARCH}.qcow2
-              DOWNLOAD_URL=$(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.url index.json)
+              DOWNLOAD_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
               # Download qcow2
               curl --verbose \
                 --output ${QCOW2_FILE} \
                 --location ${DOWNLOAD_URL}
 
-              SHA256SUM=$(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+              SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
               echo "${SHA256SUM} ${QCOW2_FILE}" \
                 | sha256sum --check --status \
                 || echo "Invalid checksum: sha256sum check failed"
@@ -118,9 +112,9 @@ commands:
 
       - ops_notify_err
       - save_cache:
-          key: qcow2-<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>-tmp-{{ checksum "preview/<< parameters.flavor >>/sha256sum.<< parameters.version>>-<< parameters.arch >>.txt" }}
+          key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-tmp-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
           paths:
-            - cache/<< parameters.arch >>/tmp.<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>.qcow2
+            - cache/<< parameters.arch >>/tmp.<< parameters.flavor >>-<< parameters.arch >>.qcow2
 
   # CMD: Qcow2 Image: Load from Cache || Download & Cache
   prepare_qcow2:
@@ -130,20 +124,22 @@ commands:
         type: string
       arch:
         type: string
-      version:
-        type: string
     steps:
       - restore_cache:
-          key: qcow2-<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>-ccio-{{ checksum "preview/<< parameters.flavor >>/sha256sum.<< parameters.version >>-<< parameters.arch >>.txt" }}
+          key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-ccio-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
 
       - run:
           no_output_timeout: 60m
           command: |
-            run_cache_customize () {
+            run_cache_customize() {
 
-              QCOW2_FILE=${FLAVOR}-${VERSION}-${ARCH}.qcow2
+              # ubuntu-18.04
+              NAME=${FLAVOR%-*}    # ubuntu
+              VERSION=${FLAVOR#*-} # 18.04
+
+              QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
               # Source OS specific vars
-              source preview/${FLAVOR}/env.sh
+              source preview/${NAME}/env.sh
 
               # Verify qcow2 image
               qemu-img info cache/${ARCH}/tmp.${QCOW2_FILE}
@@ -153,7 +149,7 @@ commands:
                 --add cache/${ARCH}/tmp.${QCOW2_FILE} \
                 --network \
                 --enable ${VIRT_SYSPREP_OPERATIONS} \
-                --commands-from-file preview/${FLAVOR}/virt.sysprep
+                --commands-from-file preview/${NAME}/virt.sysprep
 
               # Sparsify
               sudo virt-sparsify \
@@ -173,9 +169,9 @@ commands:
             qemu-img info cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
       - save_cache:
-          key: qcow2-<< parameters.flavor>>-<< parameters.version >>-<< parameters.arch >>-ccio-{{ checksum "preview/<< parameters.flavor >>/sha256sum.<< parameters.version >>-<< parameters.arch >>.txt" }}
+          key: qcow2-<< parameters.flavor>>-<< parameters.arch >>-ccio-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
           paths:
-            - cache/<< parameters.arch >>/<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>.qcow2
+            - cache/<< parameters.arch >>/<< parameters.flavor >>-<< parameters.arch >>.qcow2
 
   # CMD: Execute Docker Buildx
   buildx:
