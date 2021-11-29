@@ -83,27 +83,28 @@ commands:
 
             run_cache_image () {
 
+              QCOW2_FILE=${FLAVOR}-${VERSION}-${ARCH}.qcow2
               DOWNLOAD_URL=$(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.url index.json)
               # Download qcow2
               curl --verbose \
-                --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
-                -L ${DOWNLOAD_URL}
+                --output ${QCOW2_FILE} \
+                --location ${DOWNLOAD_URL}
 
               SHA256SUM=$(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.sha256sum index.json)
-              echo "${SHA256SUM} ${FLAVOR}-${VERSION}-${ARCH}.qcow2" \
+              echo "${SHA256SUM} ${QCOW2_FILE}" \
                 | sha256sum --check --status \
                 || echo "Invalid checksum: sha256sum check failed"
 
               # Grow disk size
-              qemu-img resize ${FLAVOR}-${VERSION}-${ARCH}.qcow2 +20G;
+              qemu-img resize ${QCOW2_FILE} +20G;
 
               # Sparsify
               sudo virt-sparsify \
                 --verbose \
                 --compress \
-                --convert qcow2 ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
-                cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
-              && rm ${FLAVOR}-${VERSION}-${ARCH}.qcow2
+                --convert qcow2 ${QCOW2_FILE} \
+                cache/${ARCH}/tmp.${QCOW2_FILE} \
+              && rm ${QCOW2_FILE}
             }
 
             run_cache_image
@@ -140,15 +141,16 @@ commands:
           command: |
             run_cache_customize () {
 
+              QCOW2_FILE=${FLAVOR}-${VERSION}-${ARCH}.qcow2
               # Source OS specific vars
               source preview/${FLAVOR}/env.sh
 
               # Verify qcow2 image
-              qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2;
+              qemu-img info cache/${ARCH}/tmp.${QCOW2_FILE}
 
               sudo virt-sysprep \
                 --verbose \
-                --add cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
+                --add cache/${ARCH}/tmp.${QCOW2_FILE} \
                 --network \
                 --enable ${VIRT_SYSPREP_OPERATIONS} \
                 --commands-from-file preview/${FLAVOR}/virt.sysprep
@@ -157,8 +159,8 @@ commands:
               sudo virt-sparsify \
                 --verbose \
                 --compress \
-                cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
-                cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2
+                cache/${ARCH}/tmp.${QCOW2_FILE} \
+                cache/${ARCH}/${QCOW2_FILE}
             }
 
             run_cache_customize
@@ -171,7 +173,7 @@ commands:
             qemu-img info cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
       - save_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.arch >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.version >>-<< parameters.arch >>.txt" }}
+          key: qcow2-<< parameters.flavor>>-<< parameters.version >>-<< parameters.arch >>-ccio-{{ checksum "preview/<< parameters.flavor >>/sha256sum.<< parameters.version >>-<< parameters.arch >>.txt" }}
           paths:
             - cache/<< parameters.arch >>/<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>.qcow2
 
