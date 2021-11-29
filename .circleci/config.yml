@@ -79,13 +79,15 @@ commands:
 
       - run:
           command: |
+            set -x
+
             run_cache_image () {
 
               DOWNLOAD_URL=$(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.url index.json)
               # Download qcow2
               curl --verbose \
                 --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
-                --location ${DOWNLOAD_URL}
+                -L ${DOWNLOAD_URL}
 
               SHA256SUM=$(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.sha256sum index.json)
               echo "${SHA256SUM} ${FLAVOR}-${VERSION}-${ARCH}.qcow2"  | sha256sum --check --status
