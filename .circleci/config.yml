@@ -14,16 +14,20 @@ aliases:
 workflows:
   build-and-cache:
     jobs:
-      - arm64-qcow2:
-          name: bake-arm64
-          target: ubuntu
-          platform: arm64
-          executor: arm64
+      - qcow2:
+          matrix:
+            parameters:
+              - target: ubuntu
+                platform: arm64
+                executor: arm64
+              - target: ubuntu
+                platform: amd64
+                executor: amd64
 
 #################################################################################
 # Reuseable Jobs
 jobs:
-  arm64-qcow2:
+  qcow2:
     parameters:
       target:
         type: string
@@ -59,35 +63,48 @@ commands:
   # CMD: Qcow2 Image: Load from Cache || Download & Cache
   cache_qcow2:
     description: "Qcow2 Image: Load from Cache || Download & Cache"
+    parameters:
+      arch:
+        type: string
     steps:
       - restore_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.executor >>-tmp-{{ checksum "preview/ubuntu/sha256sum.<< parameters.executor >>.txt" }}
+          key: qcow2-ubuntu-bionic-<< parameters.arch >>-tmp-{{ checksum "preview/ubuntu/sha256sum.<< parameters.arch >>.txt" }}
 
       - run:
           command: |
             run_cache_image () {
-            # Install build dependencies
-            #sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
+              # Install build dependencies
+              #sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
 
-            # Download qcow2
-            curl --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 -L https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img \
+              # Download qcow2
+              curl \
+                --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
+                --location https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img;
 
-            # Grow disk size
-            qemu-img resize ${FLAVOR}-${VERSION}-${ARCH}.qcow2 +20G;
+              # Grow disk size
+              qemu-img resize ${FLAVOR}-${VERSION}-${ARCH}.qcow2 +20G;
 
-            # Basic sysprep
-            sudo virt-sysprep --verbose --add ${FLAVOR}-${VERSION}-${ARCH}.qcow2 --network --update \
-              --enable user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache \
-              --run-command 'apt-get autoremove -y' \
-              --run-command 'apt-get purge -y';
+              # Basic sysprep
+              sudo virt-sysprep \
+                --verbose \
+                --add ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
+                --network \
+                --update \
+                --enable user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache \
+                --run-command 'apt-get autoremove -y' \
+                --run-command 'apt-get purge -y';
 
-            # Sparsify
-            sudo virt-sparsify --verbose --compress --convert qcow2 ${FLAVOR}-${VERSION}-${ARCH}.qcow2 cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
+              # Sparsify
+              sudo virt-sparsify \
+                --verbose \
+                --compress \
+                --convert qcow2 ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
+                cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
               && rm ${FLAVOR}-${VERSION}-${ARCH}.qcow2
             }
 
             # Check for && confirm cached image present || If not present then download, prepare, and cache
-            [[ ! -f cache/<< parameters.executor >>/tmp.ubuntu-18.04-<< parameters.executor >>.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
+            [[ ! -f cache/<< parameters.arch >>/tmp.ubuntu-18.04-<< parameters.arch >>.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -96,40 +113,51 @@ commands:
 
       - ops_notify_err
       - save_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.executor >>-tmp-{{ checksum "preview/ubuntu/sha256sum.<< parameters.executor >>.txt" }}
+          key: qcow2-ubuntu-bionic-<< parameters.arch >>-tmp-{{ checksum "preview/ubuntu/sha256sum.<< parameters.arch >>.txt" }}
           paths:
-            - cache/<< parameters.executor >>/tmp.ubuntu-18.04-<< parameters.executor >>.qcow2
+            - cache/<< parameters.arch >>/tmp.ubuntu-18.04-<< parameters.arch >>.qcow2
 
   # CMD: Qcow2 Image: Load from Cache || Download & Cache
   prepare_qcow2:
     description: "Qcow2 Image: Customize"
+    parameters:
+      arch:
+        type: string
     steps:
       - restore_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.executor >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.executor >>.txt" }}
+          key: qcow2-ubuntu-bionic-<< parameters.arch >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.arch >>.txt" }}
 
       - run:
           no_output_timeout: 60m
           command: |
             run_cache_customize () {
-            # Install build dependencies
-            #sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
+              # Install build dependencies
+              #sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
 
-            # Verify qcow2 image
-            qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2;
+              # Verify qcow2 image
+              qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
-            # Sysprep customize
-            sudo virt-sysprep --verbose --add cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 --network --update \
-              --enable user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache \
-              --install screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent \
-              --run-command 'apt-get autoremove -y' \
-              --run-command 'apt-get purge -y';
+              # Sysprep customize
+              sudo virt-sysprep \
+                --verbose \
+                --add cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
+                --network \
+                --update \
+                --enable user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache \
+                --install screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent \
+                --run-command 'apt-get autoremove -y' \
+                --run-command 'apt-get purge -y';
 
-            # Sparsify
-            sudo virt-sparsify --verbose --compress cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2
+              # Sparsify
+              sudo virt-sparsify \
+                --verbose \
+                --compress \
+                cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
+                cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2
             }
 
             # Check for && confirm cached customized image present || If not present then customize and cache
-            [[ ! -f cache/<< parameters.executor >>/ubuntu-18.04-<< parameters.executor >>.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
+            [[ ! -f cache/<< parameters.arch >>/ubuntu-18.04-<< parameters.arch >>.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -137,9 +165,9 @@ commands:
             qemu-img info cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
       - save_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.executor >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.executor >>.txt" }}
+          key: qcow2-ubuntu-bionic-<< parameters.arch >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.arch >>.txt" }}
           paths:
-            - cache/<< parameters.executor >>/ubuntu-18.04-<< parameters.executor >>.qcow2
+            - cache/<< parameters.arch >>/ubuntu-18.04-<< parameters.arch >>.qcow2
 
   # CMD: Execute Docker Buildx
   buildx:
@@ -157,7 +185,7 @@ commands:
             docker buildx bake \
               -f << parameters.bake_file >> \
               --progress plain \
-              --set *.platform=linux/<< parameters.executor >> \
+              --set *.platform=linux/<< parameters.platform >> \
               << parameters.executor >>
 
   # CMD: Configure Docker BuildX
@@ -166,21 +194,21 @@ commands:
     parameters:
       buildkit_version:
         type: string
-        default: v0.9.3
+        default: latest
     steps:
       - run:
-          command: 'docker run --privileged --rm tonistiigi/binfmt --install all'
+          command: docker run --privileged --rm tonistiigi/binfmt --install all
       - run:
-          command: 'docker buildx ls | grep "build-<< parameters.buildkit_version >>"'
+          command: docker buildx ls | grep "build-<< parameters.buildkit_version >>"
       - run:
-          command: "echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin"
+          command: echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
       - ops_notify_err
 
   prepare:
     description: "Runner: Install Prerequisites"
     steps:
       - run:
-          command: "sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static"
+          command: sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
 
 #################################################################################
 # Workflow Runner Instances
@@ -192,7 +220,6 @@ executors:
       enabled: true
       image: ubuntu-2004:202111-01
     environment:
-      ARCH: arm64
       DOCKER_CLI_EXPERIMENTAL: enabled
     resource_class: arm.large
 
@@ -202,6 +229,5 @@ executors:
       enabled: true
       image: ubuntu-2004:202111-01
     environment:
-      ARCH: amd64
       DOCKER_CLI_EXPERIMENTAL: enabled
     resource_class: large
