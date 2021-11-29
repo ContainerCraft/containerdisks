@@ -171,7 +171,7 @@ commands:
             qemu-img info cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
       - save_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.arch >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.arch >>.txt" }}
+          key: qcow2-ubuntu-bionic-<< parameters.arch >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.version >>-<< parameters.arch >>.txt" }}
           paths:
             - cache/<< parameters.arch >>/<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>.qcow2
 
