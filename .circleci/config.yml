@@ -65,7 +65,7 @@ commands:
 
   # CMD: Qcow2 Image: Load from Cache || Download & Cache
   cache_qcow2:
-    description: Qcow2 Image: Load from Cache || Download & Cache
+    description: "Qcow2 Image: Load from Cache || Download & Cache"
     parameters:
       flavor:
         type: string
@@ -123,7 +123,7 @@ commands:
 
   # CMD: Qcow2 Image: Load from Cache || Download & Cache
   prepare_qcow2:
-    description: Qcow2 Image: Customize
+    description: "Qcow2 Image: Customize"
     parameters:
       flavor:
         type: string
@@ -177,7 +177,7 @@ commands:
 
   # CMD: Execute Docker Buildx
   buildx:
-    description: Runner: Execute Docker Buildx
+    description: "Runner: Execute Docker Buildx"
     parameters:
       bake_file:
         type: string
@@ -196,7 +196,7 @@ commands:
 
   # CMD: Configure Docker BuildX
   enable_buildx:
-    description: Runner: Configure Docker Buildx Environment
+    description: "Runner: Configure Docker Buildx Environment"
     parameters:
       buildkit_version:
         type: string
@@ -211,7 +211,7 @@ commands:
       - ops_notify_err
 
   prepare:
-    description: Runner: Install Prerequisites
+    description: "Runner: Install Prerequisites"
     steps:
       - run:
           command: sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
