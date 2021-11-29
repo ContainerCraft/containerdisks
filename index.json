@@ -35,11 +35,11 @@
       "18.04": {
         "amd64": {
           "url": "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img",
-          "sha256sum": "c99398c8be76032b6ef0c9549f4c26fbb039751800d66d464a7859bb76cf61ec"
+          "sha256sum": "eeff819e8474babe95382c07608fdcea11ad99a3865962281ce219e749e492c9"
         },
         "arm64": {
           "url": "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-arm64.img",
-          "sha256sum": "04a85ac2f7ef873e229614905bb3726e2e3e0688221a0ac84908afb57094d6cf"
+          "sha256sum": "5985d8479c10d5f0af54939559bdf87f47a2390b8395dd0fb5060eb5457f3797"
         }
       },
       "20.04": {

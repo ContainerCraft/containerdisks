@@ -90,7 +90,9 @@ commands:
                 -L ${DOWNLOAD_URL}
 
               SHA256SUM=$(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.sha256sum index.json)
-              echo "${SHA256SUM} ${FLAVOR}-${VERSION}-${ARCH}.qcow2"  | sha256sum --check --status
+              echo "${SHA256SUM} ${FLAVOR}-${VERSION}-${ARCH}.qcow2" \
+                | sha256sum --check --status \
+                || echo "Invalid checksum: sha256sum check failed"
 
               # Grow disk size
               qemu-img resize ${FLAVOR}-${VERSION}-${ARCH}.qcow2 +20G;
