@@ -17,31 +17,37 @@ workflows:
       - qcow2:
           matrix:
             parameters:
-              target: [ubuntu]
+              flavor: [ubuntu]
               arch: [amd64, arm64]
+              version: ["18.04", "20.04"]
 
 #################################################################################
 # Reuseable Jobs
 jobs:
   qcow2:
     parameters:
-      target:
+      flavor:
         type: string
       arch:
         type: string
+      version:
+        type: string
     executor: << parameters.arch >>
     environment:
-      FLAVOR: << parameters.target >>
-      VERSION: "18.04"
-      RELEASE: "bionic"
+      FLAVOR: << parameters.flavor >>
       ARCH: << parameters.arch >>
+      VERSION: << parameters.version >>
     steps:
       - checkout
       - prepare
       - cache_qcow2:
+          flavor: << parameters.flavor >>
           arch: << parameters.arch >>
+          version: << parameters.version >>
       - prepare_qcow2:
+          flavor: << parameters.flavor >>
           arch: << parameters.arch >>
+          version: << parameters.version >>
       - ops_notify_err
 
 #################################################################################
@@ -50,7 +56,7 @@ commands:
 
   # CMD: Slack Notify if ERR
   ops_notify_err:
-    description: "Alert Ops if Abort Failures Occur"
+    description: Alert Ops if Abort Failures Occur
     steps:
       - slack/notify:
           event: fail
@@ -59,24 +65,25 @@ commands:
 
   # CMD: Qcow2 Image: Load from Cache || Download & Cache
   cache_qcow2:
-    description: "Qcow2 Image: Load from Cache || Download & Cache"
+    description: Qcow2 Image: Load from Cache || Download & Cache
     parameters:
+      flavor:
+        type: string
       arch:
+        type: string
+      version:
         type: string
     steps:
       - restore_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.arch >>-tmp-{{ checksum "preview/ubuntu/sha256sum.<< parameters.arch >>.txt" }}
+          key: qcow2-<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>-tmp-{{ checksum "preview/<< parameters.flavor >>/sha256sum.<< parameters.version>>-<< parameters.arch >>.txt" }}
 
       - run:
           command: |
             run_cache_image () {
-              # Install build dependencies
-              #sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
-
               # Download qcow2
               curl \
                 --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
-                --location https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-${ARCH}.img;
+                --location $(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.url index.json)
 
               # Grow disk size
               qemu-img resize ${FLAVOR}-${VERSION}-${ARCH}.qcow2 +20G;
@@ -101,7 +108,7 @@ commands:
             }
 
             # Check for && confirm cached image present || If not present then download, prepare, and cache
-            [[ ! -f cache/<< parameters.arch >>/tmp.ubuntu-18.04-<< parameters.arch >>.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
+            [[ ! -f cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -110,26 +117,28 @@ commands:
 
       - ops_notify_err
       - save_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.arch >>-tmp-{{ checksum "preview/ubuntu/sha256sum.<< parameters.arch >>.txt" }}
+          key: qcow2-<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>-tmp-{{ checksum "preview/<< parameters.flavor >>/sha256sum.<< parameters.version>>-<< parameters.arch >>.txt" }}
           paths:
-            - cache/<< parameters.arch >>/tmp.ubuntu-18.04-<< parameters.arch >>.qcow2
+            - cache/<< parameters.arch >>/tmp.<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>.qcow2
 
   # CMD: Qcow2 Image: Load from Cache || Download & Cache
   prepare_qcow2:
-    description: "Qcow2 Image: Customize"
+    description: Qcow2 Image: Customize
     parameters:
+      flavor:
+        type: string
       arch:
+        type: string
+      version:
         type: string
     steps:
       - restore_cache:
-          key: qcow2-ubuntu-bionic-<< parameters.arch >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.arch >>.txt" }}
+          key: qcow2-<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>-ccio-{{ checksum "preview/<< parameters.flavor >>/sha256sum.<< parameters.version >>-<< parameters.arch >>.txt" }}
 
       - run:
           no_output_timeout: 60m
           command: |
             run_cache_customize () {
-              # Install build dependencies
-              #sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
 
               # Verify qcow2 image
               qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2;
@@ -154,7 +163,7 @@ commands:
             }
 
             # Check for && confirm cached customized image present || If not present then customize and cache
-            [[ ! -f cache/<< parameters.arch >>/ubuntu-18.04-<< parameters.arch >>.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
+            [[ ! -f cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -164,11 +173,11 @@ commands:
       - save_cache:
           key: qcow2-ubuntu-bionic-<< parameters.arch >>-ccio-{{ checksum "preview/ubuntu/sha256sum.<< parameters.arch >>.txt" }}
           paths:
-            - cache/<< parameters.arch >>/ubuntu-18.04-<< parameters.arch >>.qcow2
+            - cache/<< parameters.arch >>/<< parameters.flavor >>-<< parameters.version >>-<< parameters.arch >>.qcow2
 
   # CMD: Execute Docker Buildx
   buildx:
-    description: "Runner: Execute Docker Buildx"
+    description: Runner: Execute Docker Buildx
     parameters:
       bake_file:
         type: string
@@ -187,7 +196,7 @@ commands:
 
   # CMD: Configure Docker BuildX
   enable_buildx:
-    description: "Runner: Configure Docker Buildx Environment"
+    description: Runner: Configure Docker Buildx Environment
     parameters:
       buildkit_version:
         type: string
@@ -202,10 +211,11 @@ commands:
       - ops_notify_err
 
   prepare:
-    description: "Runner: Install Prerequisites"
+    description: Runner: Install Prerequisites
     steps:
       - run:
           command: sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
+      - enable_buildx
 
 #################################################################################
 # Workflow Runner Instances
