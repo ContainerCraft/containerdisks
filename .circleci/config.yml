@@ -215,7 +215,6 @@ commands:
     steps:
       - run:
           command: sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
-      - enable_buildx
 
 #################################################################################
 # Workflow Runner Instances
