@@ -81,9 +81,6 @@ commands:
           command: |
             run_cache_image () {
 
-              # Source OS specific vars
-              source preview/${FLAVOR}/env.sh
-
               # Download qcow2
               curl \
                 --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
@@ -95,16 +92,6 @@ commands:
               # Grow disk size
               qemu-img resize ${FLAVOR}-${VERSION}-${ARCH}.qcow2 +20G;
 
-              # Basic sysprep
-              sudo virt-sysprep \
-                --verbose \
-                --add ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
-                --network \
-                --update \
-                --enable ${VIRT_SYSPREP_OPERATIONS} \
-                --run-command 'apt-get autoremove -y' \
-                --run-command 'apt-get purge -y';
-
               # Sparsify
               sudo virt-sparsify \
                 --verbose \
@@ -114,8 +101,9 @@ commands:
               && rm ${FLAVOR}-${VERSION}-${ARCH}.qcow2
             }
 
+            run_cache_image
             # Check for && confirm cached image present || If not present then download, prepare, and cache
-            [[ ! -f cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
+            # [[ ! -f cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -147,17 +135,19 @@ commands:
           command: |
             run_cache_customize () {
 
+              # Source OS specific vars
+              source preview/${FLAVOR}/env.sh
+
               # Verify qcow2 image
               qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2;
 
-              # Sysprep customize
               sudo virt-sysprep \
                 --verbose \
                 --add cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
                 --network \
                 --update \
-                --enable user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache \
-                --install screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent \
+                --enable ${VIRT_SYSPREP_OPERATIONS} \
+                --install ${VIRT_SYSPREP_INSTALL_PACKAGES} \
                 --run-command 'apt-get autoremove -y' \
                 --run-command 'apt-get purge -y';
 
@@ -169,8 +159,9 @@ commands:
                 cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2
             }
 
+            run_cache_customize
             # Check for && confirm cached customized image present || If not present then customize and cache
-            [[ ! -f cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
+            # [[ ! -f cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
