@@ -6,7 +6,7 @@ aliases:
   - &platform_parameter
       platform:
         type: enum
-        enum: ["amd64", "arm64"]
+        enum: [amd64, arm64]
         default: amd64
 
 #################################################################################
@@ -17,12 +17,8 @@ workflows:
       - qcow2:
           matrix:
             parameters:
-              - target: ubuntu
-                platform: arm64
-                executor: arm64
-              - target: ubuntu
-                platform: amd64
-                executor: amd64
+              target: [ubuntu]
+              executor: [amd64, arm64]
 
 #################################################################################
 # Reuseable Jobs
@@ -31,7 +27,6 @@ jobs:
     parameters:
       target:
         type: string
-      << : *platform_parameter
       executor:
         type: executor
         default: amd64
@@ -40,6 +35,7 @@ jobs:
       FLAVOR: ubuntu
       VERSION: "18.04"
       RELEASE: "bionic"
+      ARCH: << parameters.executor >>
     steps:
       - checkout
       - prepare
