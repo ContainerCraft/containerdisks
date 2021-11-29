@@ -23,7 +23,7 @@ workflows:
 #################################################################################
 # Reuseable Jobs
 jobs:
-  arm-qcow2:
+  arm64-qcow2:
     parameters:
       target:
         type: string
