@@ -81,10 +81,11 @@ commands:
           command: |
             run_cache_image () {
 
+              DOWNLOAD_URL=$(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.url index.json)
               # Download qcow2
-              curl \
+              curl --verbose \
                 --output ${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
-                --location $(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.url index.json)
+                --location ${DOWNLOAD_URL}
 
               SHA256SUM=$(jq -r .distributions.${FLAVOR}.\"${VERSION}\".${ARCH}.sha256sum index.json)
               echo "${SHA256SUM} ${FLAVOR}-${VERSION}-${ARCH}.qcow2"  | sha256sum --check --status
@@ -145,11 +146,8 @@ commands:
                 --verbose \
                 --add cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 \
                 --network \
-                --update \
                 --enable ${VIRT_SYSPREP_OPERATIONS} \
-                --install ${VIRT_SYSPREP_INSTALL_PACKAGES} \
-                --run-command 'apt-get autoremove -y' \
-                --run-command 'apt-get purge -y';
+                --commands-from-file preview/${FLAVOR}/virt.sysprep
 
               # Sparsify
               sudo virt-sparsify \
