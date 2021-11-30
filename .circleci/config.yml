@@ -125,7 +125,7 @@ commands:
       - run:
           command: |
             # Log tmp image stats
-            qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${ARCH}.qcow2;
+            qemu-img info cache/${ARCH}/tmp.${FLAVOR}.qcow2;
 
       - ops_notify_err
     # - save_cache:
