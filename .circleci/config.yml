@@ -84,13 +84,15 @@ commands:
 
               QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
 
-              DOWNLOAD_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
+              BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
+              DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
+              SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+
               # Download qcow2
               curl --verbose \
                 --output ${QCOW2_FILE} \
-                --location ${DOWNLOAD_URL}
+                --location ${BASE_URL}/${DOWNLOAD_FILE}
 
-              SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
               echo "${SHA256SUM} ${QCOW2_FILE}" \
                 | sha256sum --check --status \
                 || echo "Invalid checksum: sha256sum check failed"
