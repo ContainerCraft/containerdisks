@@ -77,6 +77,7 @@ commands:
             set -x
 
             run_cache_image() {
+              export LIBGUESTFS_BACKEND=direct
 
               NAME=${FLAVOR%-*}
               VERSION=${FLAVOR#*-}
@@ -137,6 +138,7 @@ commands:
           no_output_timeout: 60m
           command: |
             run_cache_customize() {
+              export LIBGUESTFS_BACKEND=direct
 
               NAME=${FLAVOR%-*}
               VERSION=${FLAVOR#*-}
