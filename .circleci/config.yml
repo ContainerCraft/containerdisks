@@ -72,6 +72,7 @@ commands:
       - run:
           command: |
             set -x
+            mkdir -p cache/${ARCH}
             # Write out sha256sum for cache key
             NAME=${FLAVOR%-*}
             VERSION=${FLAVOR#*-}
