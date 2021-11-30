@@ -17,10 +17,10 @@ workflows:
       - customize-qcow2:
           matrix:
             parameters:
-              flavor: ["ubuntu-18.04", "fedora-35", "centos-8"]
+              flavor: ["ubuntu-18.04", "fedora-35", "centos-8", "arch-latest"]
               arch: [amd64]
           # exclude:
-          #  - flavor: fedora-34
+          #  - flavor: arch-latest
           #    arch: arm64
 
 #################################################################################
@@ -175,7 +175,7 @@ commands:
                 --compress \
                 cache/${ARCH}/tmp.${QCOW2_FILE} \
                 cache/${ARCH}/${QCOW2_FILE} \
-              && rm cache/${ARCH}/tmp.${QCOW2_FILE}
+              && sudo rm cache/${ARCH}/tmp.${QCOW2_FILE}
             }
 
             run_cache_customize
