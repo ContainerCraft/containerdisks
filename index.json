@@ -8,13 +8,6 @@
       "1.3": {}
     },
     "arch": {
-      "meta": {
-        "update": true,
-        "makefile": false,
-        "selinux-relabel": true,
-        "operations": "user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache",
-        "post_commands": []
-      },
       "latest": {
         "amd64": {
           "url": "https://mirror.pkgbuild.com/images",
@@ -24,19 +17,7 @@
       }
     },
     "centos": {
-      "meta": {
-        "update": true,
-        "makefile": false,
-        "selinux-relabel": true,
-        "operations": "user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache",
-        "post_commands": [
-          "dnf clean all",
-          "rm -rf /var/cache/dnf",
-          "systemctl enable qemu-guest-agent"
-        ]
-      },
       "8": {
-        "pkg_list": "git-core,vim,tmux,net-tools,screenfetch,qemu-guest-agent",
         "amd64": {
           "url": "https://cloud.centos.org/centos/8-stream/x86_64/images",
           "image": "CentOS-Stream-GenericCloud-8-20210603.0.x86_64.qcow2",
@@ -49,7 +30,6 @@
         }
       },
       "9": {
-        "pkg_list": "git-core,vim,tmux,net-tools,screenfetch,qemu-guest-agent",
         "amd64": {
           "url": "https://cloud.centos.org/centos/9-stream/x86_64/images",
           "image": "CentOS-Stream-GenericCloud-9-20211119.0.x86_64.qcow2",
@@ -63,19 +43,7 @@
       }
     },
     "fedora": {
-      "meta": {
-        "update": true,
-        "makefile": false,
-        "selinux-relabel": true,
-        "operations": "user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache",
-        "post_commands": [
-          "dnf clean all",
-          "rm -rf /var/cache/dnf",
-          "systemctl enable qemu-guest-agent"
-        ]
-      },
       "34": {
-        "pkg_list": "git-core,vim,tmux,net-tools,screenfetch,qemu-guest-agent",
         "amd64": {
           "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/x86_64/images",
           "image": "Fedora-Cloud-Base-34-1.2.x86_64.qcow2",
@@ -88,7 +56,6 @@
         }
       },
       "35": {
-        "pkg_list": "git-core,vim,tmux,net-tools,screenfetch,qemu-guest-agent",
         "amd64": {
           "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/x86_64/images",
           "image": "Fedora-Cloud-Base-35-1.2.x86_64.qcow2",
@@ -102,17 +69,7 @@
       }
     },
     "ubuntu": {
-      "meta": {
-        "update": true,
-        "makefile": false,
-        "selinux-relabel": false,
-        "operations": "user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache",
-        "post_commands": [
-          "apt-get autoremove -y ; apt-get purge -y"
-        ]
-      },
       "18.04": {
-        "pkg_list": "screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent",
         "amd64": {
           "url": "https://cloud-images.ubuntu.com/bionic/current",
           "image": "bionic-server-cloudimg-amd64.img",
@@ -125,7 +82,6 @@
         }
       },
       "20.04": {
-        "pkg_list": "screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent",
         "amd64": {
           "url": "https://cloud-images.ubuntu.com/focal/current",
           "image": "focal-server-cloudimg-amd64.img",
@@ -138,7 +94,6 @@
         }
       },
       "21.10": {
-        "pkg_list": "screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent",
         "amd64": {
           "url": "https://cloud-images.ubuntu.com/impish/current",
           "image": "impish-server-cloudimg-amd64-disk-kvm.img"
