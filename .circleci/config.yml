@@ -117,10 +117,10 @@ commands:
             qemu-img info cache/${ARCH}/tmp.${FLAVOR}-${ARCH}.qcow2;
 
       - ops_notify_err
-      - save_cache:
-          key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-tmp-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
-          paths:
-            - cache/<< parameters.arch >>/tmp.<< parameters.flavor >>-<< parameters.arch >>.qcow2
+    # - save_cache:
+    #     key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-tmp-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
+    #     paths:
+    #       - cache/<< parameters.arch >>/tmp.<< parameters.flavor >>-<< parameters.arch >>.qcow2
 
   # CMD: Qcow2 Image: Load from Cache || Download & Cache
   prepare_qcow2:
@@ -174,10 +174,10 @@ commands:
             # Log final image stats
             qemu-img info cache/${ARCH}/${FLAVOR}-${ARCH}.qcow2;
 
-      - save_cache:
-          key: qcow2-<< parameters.flavor>>-<< parameters.arch >>-ccio-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
-          paths:
-            - cache/<< parameters.arch >>/<< parameters.flavor >>-<< parameters.arch >>.qcow2
+    # - save_cache:
+    #     key: qcow2-<< parameters.flavor>>-<< parameters.arch >>-ccio-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
+    #     paths:
+    #       - cache/<< parameters.arch >>/<< parameters.flavor >>-<< parameters.arch >>.qcow2
 
   # CMD: Execute Docker Buildx
   buildx:
