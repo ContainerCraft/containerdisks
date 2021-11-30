@@ -69,8 +69,8 @@ commands:
       arch:
         type: string
     steps:
-      - restore_cache:
-          key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-tmp-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
+    # - restore_cache:
+    #     key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-tmp-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
 
       - run:
           command: |
@@ -131,8 +131,8 @@ commands:
       arch:
         type: string
     steps:
-      - restore_cache:
-          key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-ccio-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
+    # - restore_cache:
+    #     key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-ccio-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
 
       - run:
           no_output_timeout: 60m
