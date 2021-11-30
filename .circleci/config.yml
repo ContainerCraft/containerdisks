@@ -69,8 +69,17 @@ commands:
       arch:
         type: string
     steps:
+      - run:
+          command: |
+            set -x
+            # Write out sha256sum for cache key
+            NAME=${FLAVOR%-*}
+            VERSION=${FLAVOR#*-}
+            SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+            echo ${SHA256SUM} > cache/${ARCH}/${FLAVOR}.txt
+
     # - restore_cache:
-    #     key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-tmp-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
+    #     key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-tmp-{{ checksum "cache/<< parameters.arch >>/<< parameters.flavor >>.txt" }}
 
       - run:
           command: |
@@ -82,7 +91,7 @@ commands:
               NAME=${FLAVOR%-*}
               VERSION=${FLAVOR#*-}
 
-              QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
+              QCOW2_FILE=${FLAVOR}.qcow2
 
               BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
               DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
@@ -111,7 +120,7 @@ commands:
 
             run_cache_image
             # Check for && confirm cached image present || If not present then download, prepare, and cache
-            # [[ ! -f cache/${ARCH}/tmp.${FLAVOR}-${VERSION}-${ARCH}.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
+            # [[ ! -f cache/${ARCH}/tmp.${FLAVOR}.qcow2 ]] && run_cache_image || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -120,9 +129,9 @@ commands:
 
       - ops_notify_err
     # - save_cache:
-    #     key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-tmp-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
+    #     key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-tmp-{{ checksum "cache/<< parameters.arch >>/<< parameters.flavor >>.txt" }}
     #     paths:
-    #       - cache/<< parameters.arch >>/tmp.<< parameters.flavor >>-<< parameters.arch >>.qcow2
+    #       - cache/<< parameters.arch >>/tmp.<< parameters.flavor >>.qcow2
 
   # CMD: Qcow2 Image: Load from Cache || Download & Cache
   prepare_qcow2:
@@ -134,7 +143,7 @@ commands:
         type: string
     steps:
     # - restore_cache:
-    #     key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-ccio-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
+    #     key: qcow2-<< parameters.flavor >>-<< parameters.arch >>-ccio-{{ checksum "cache/<< parameters.arch >>/<< parameters.flavor >>.txt" }}
 
       - run:
           no_output_timeout: 60m
@@ -145,7 +154,7 @@ commands:
               NAME=${FLAVOR%-*}
               VERSION=${FLAVOR#*-}
 
-              QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
+              QCOW2_FILE=${FLAVOR}.qcow2
               # Source OS specific vars
               source preview/${NAME}/env.sh
 
@@ -164,22 +173,23 @@ commands:
                 --verbose \
                 --compress \
                 cache/${ARCH}/tmp.${QCOW2_FILE} \
-                cache/${ARCH}/${QCOW2_FILE}
+                cache/${ARCH}/${QCOW2_FILE} \
+              && rm cache/${ARCH}/tmp.${QCOW2_FILE}
             }
 
             run_cache_customize
             # Check for && confirm cached customized image present || If not present then customize and cache
-            # [[ ! -f cache/${ARCH}/${FLAVOR}-${VERSION}-${ARCH}.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
+            # [[ ! -f cache/${ARCH}/${FLAVOR}.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
             # Log final image stats
-            qemu-img info cache/${ARCH}/${FLAVOR}-${ARCH}.qcow2;
+            qemu-img info cache/${ARCH}/${FLAVOR}.qcow2;
 
     # - save_cache:
-    #     key: qcow2-<< parameters.flavor>>-<< parameters.arch >>-ccio-{{ checksum "sha256sums/<< parameters.flavor >>-<< parameters.arch >>.txt" }}
+    #     key: qcow2-<< parameters.flavor>>-<< parameters.arch >>-ccio-{{ checksum "cache/<< parameters.arch >>/<< parameters.flavor >>.txt" }}
     #     paths:
-    #       - cache/<< parameters.arch >>/<< parameters.flavor >>-<< parameters.arch >>.qcow2
+    #       - cache/<< parameters.arch >>/<< parameters.flavor >>.qcow2
 
   # CMD: Execute Docker Buildx
   buildx:
