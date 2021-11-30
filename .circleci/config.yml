@@ -17,7 +17,15 @@ workflows:
       - customize-qcow2:
           matrix:
             parameters:
-              flavor: ["ubuntu-18.04", "fedora-35", "centos-8", "arch-latest"]
+              flavor:
+                - "ubuntu-18.04"
+                - "ubuntu-20.04"
+                - "ubuntu-21.10"
+                - "fedora-34"
+                - "fedora-35"
+                - "centos-8"
+                - "centos-9"
+                - "arch-latest"
               arch: [amd64]
           # exclude:
           #  - flavor: arch-latest
@@ -149,6 +157,8 @@ commands:
       - run:
           no_output_timeout: 60m
           command: |
+            set -x
+
             run_cache_customize() {
               export LIBGUESTFS_BACKEND=direct
 
