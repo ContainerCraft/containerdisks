@@ -17,7 +17,7 @@ workflows:
       - customize-qcow2:
           matrix:
             parameters:
-              flavor: ["ubuntu-18.04", "fedora-35"]
+              flavor: ["ubuntu-18.04", "fedora-35", "centos-stream-8"]
               arch: [amd64]
           # exclude:
           #  - flavor: fedora-34
@@ -75,7 +75,7 @@ commands:
             mkdir -p cache/${ARCH}
             # Write out sha256sum for cache key
             NAME=${FLAVOR%-*}
-            VERSION=${FLAVOR#*-}
+            VERSION=${FLAVOR##*-}
             SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
             echo ${SHA256SUM} > cache/${ARCH}/${FLAVOR}.txt
 
@@ -90,7 +90,7 @@ commands:
               export LIBGUESTFS_BACKEND=direct
 
               NAME=${FLAVOR%-*}
-              VERSION=${FLAVOR#*-}
+              VERSION=${FLAVOR##*-}
 
               QCOW2_FILE=${FLAVOR}.qcow2
 
@@ -153,7 +153,7 @@ commands:
               export LIBGUESTFS_BACKEND=direct
 
               NAME=${FLAVOR%-*}
-              VERSION=${FLAVOR#*-}
+              VERSION=${FLAVOR##*-}
 
               QCOW2_FILE=${FLAVOR}.qcow2
               # Source OS specific vars
