@@ -81,6 +81,7 @@ commands:
             echo ${SHA256SUM} > cache/${ARCH}/${FLAVOR}.txt
 
       - run:
+          no_output_timeout: 90m
           command: |
             set -x
 
