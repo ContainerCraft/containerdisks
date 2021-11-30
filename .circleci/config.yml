@@ -84,7 +84,7 @@ commands:
           command: |
             set -x
 
-            run_cache_image() {
+            customize_image() {
               export LIBGUESTFS_BACKEND=direct
 
               NAME=${FLAVOR%-*}
@@ -130,7 +130,7 @@ commands:
               && sudo rm ${QCOW2_FILE}
             }
 
-            run_cache_customize
+            customize_image
             # Check for && confirm cached customized image present || If not present then customize and cache
             # [[ ! -f ${FLAVOR}.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
 
