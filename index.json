@@ -9,30 +9,73 @@
     },
     "centos": {
       "8": {
+        "pkg_list": "git-core,vim,tmux,net-tools,screenfetch,qemu-guest-agent",
         "amd64": {
-          "url": ""
+          "url": "https://cloud.centos.org/centos/8/x86_64/images/CentOS-8-GenericCloud-8.4.2105-20210603.0.x86_64.qcow2",
+          "sha256sum": "3510fc7deb3e1939dbf3fe6f65a02ab1efcc763480bc352e4c06eca2e4f7c2a2"
+        },
+        "arm64": {
+          "url": "https://cloud.centos.org/centos/8/aarch64/images/CentOS-8-GenericCloud-8.4.2105-20210603.0.aarch64.qcow2",
+          "sha256sum": "8029d9ec018c54dc48f02d01200002b36ba69c6c6ea58334857eb172ab32e5d7"
         }
       },
       "9": {
+        "pkg_list": "git-core,vim,tmux,net-tools,screenfetch,qemu-guest-agent",
         "amd64": {
-          "url": ""
+          "url": "https://cloud.centos.org/centos/8/x86_64/images/CentOS-8-GenericCloud-8.4.2105-20210603.0.x86_64.qcow2",
+          "sha256sum": "3510fc7deb3e1939dbf3fe6f65a02ab1efcc763480bc352e4c06eca2e4f7c2a2"
+        },
+        "arm64": {
+          "url": "https://cloud.centos.org/centos/8/aarch64/images/CentOS-8-GenericCloud-8.4.2105-20210603.0.aarch64.qcow2",
+          "sha256sum": "8029d9ec018c54dc48f02d01200002b36ba69c6c6ea58334857eb172ab32e5d7"
         }
       }
     },
     "fedora": {
+      "sysprep": {
+        "update": true,
+        "selinux-relabel": true,
+        "operations": "user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache",
+        "commands": [
+          "dnf clean all",
+          "rm -rf /var/cache/dnf",
+          "systemctl enable qemu-guest-agent"
+        ]
+      },
       "34": {
+        "pkg_list": "git-core,vim,tmux,net-tools,screenfetch,qemu-guest-agent",
         "amd64": {
-          "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/x86_64/images/Fedora-Cloud-Base-34-1.2.x86_64.qcow2"
+          "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/x86_64/images/Fedora-Cloud-Base-34-1.2.x86_64.qcow2",
+          "sha256sum": "b9b621b26725ba95442d9a56cbaa054784e0779a9522ec6eafff07c6e6f717ea"
+        },
+        "arm64": {
+          "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/aarch64/images/Fedora-Cloud-Base-34-1.2.aarch64.qcow2",
+          "sha256sum": "141f16f52bfbe159947267658a0dbfbbe96fd5b988a95d1271f9c9ed61156da2"
         }
       },
       "35": {
+        "pkg_list": "git-core,vim,tmux,net-tools,screenfetch,qemu-guest-agent",
         "amd64": {
-          "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/x86_64/images/Fedora-Cloud-Base-35-1.2.x86_64.qcow2"
+          "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/x86_64/images/Fedora-Cloud-Base-35-1.2.x86_64.qcow2",
+          "sha256sum": "fe84502779b3477284a8d4c86731f642ca10dd3984d2b5eccdf82630a9ca2de6"
+        },
+        "arm64": {
+          "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/aarch64/images/Fedora-Cloud-Base-35-1.2.aarch64.qcow2",
+          "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6"
         }
       }
     },
     "ubuntu": {
+      "sysprep": {
+        "update": true,
+        "selinux-relabel": false,
+        "operations": "user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache",
+        "commands": [
+          "apt-get autoremove -y ; apt-get purge -y"
+        ]
+      },
       "18.04": {
+        "pkg_list": "screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent",
         "amd64": {
           "url": "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64.img",
           "sha256sum": "eeff819e8474babe95382c07608fdcea11ad99a3865962281ce219e749e492c9"
@@ -43,6 +86,7 @@
         }
       },
       "20.04": {
+        "pkg_list": "screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent",
         "amd64": {
           "url": "https://cloud-images.ubuntu.com/focal/current/focal-server-cloudimg-amd64.img",
           "sha256sum": "6398da3ec321e39d652676812089cd4b3d9d6eb349ae187920cb564194c721f8"
@@ -53,6 +97,7 @@
         }
       },
       "21.10": {
+        "pkg_list": "screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent",
         "amd64": {
           "url": "https://cloud-images.ubuntu.com/impish/current/impish-server-cloudimg-amd64-disk-kvm.img"
         },
