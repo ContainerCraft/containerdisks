@@ -24,12 +24,12 @@ workflows:
                 - "fedora-34"
                 - "fedora-35"
                 - "centos-8"
-                - "centos-9"
-                - "arch-latest"
-              arch: [amd64]
-          # exclude:
-          #  - flavor: arch-latest
-          #    arch: arm64
+                # - "centos-9"
+                # - "arch-latest"
+              arch: [amd64, arm64]
+            exclude:
+              - flavor: arch-latest
+                arch: arm64
 
 #################################################################################
 # Reuseable Jobs
