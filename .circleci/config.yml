@@ -30,6 +30,7 @@ workflows:
             exclude:
               - flavor: arch-latest
                 arch: arm64
+
       - cradle-qcow2:
           requires:
             - customize-qcow2
@@ -206,6 +207,7 @@ commands:
           command: |
             set -x
 
+            # Install Dependencies
             . /etc/os-release
             sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
             wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${VERSION_ID}/Release.key -O Release.key
@@ -226,16 +228,21 @@ commands:
             cradle_image_amd64() {
 
               # Make rootfs for copy into container
-              mkdir -p rootfs/disk
+              mkdir -p rootfs/amd64/disk
 
               # Log image stats for loading to cradle
-              #qemu-img info ${FLAVOR}-${ARCH}.qcow2 > rootfs/disk/image-info.log
+              #qemu-img info ${QCOW2_FILE_AMD64}.qcow2 > rootfs/disk/image-info.log
+
+              # Copy image to rootfs
+              cp ${QCOW2_FILE_AMD64} rootfs/amd64/disk/
 
               # Source OS build variables
               source preview/${NAME}/env.sh
 
               # Cradle AMD64 Disk Image
-              ./cradle --image-name docker.io/containercraft/${FLAVOR} --image-tag ${VERSION}-${ARCH} --image-file ${FLAVOR}-${ARCH}.qcow2
+              buildah bud --squash -f amd64.Containerfile \
+                -t quay.io/containercraft/${FLAVOR}:${VERSION}-${ARCH} \
+                -t docker.io/containercraft/${FLAVOR}:${VERSION}-${ARCH}
             }
 
             [[ -f ${QCOW2_FILE_AMD64} ]] && cradle_image_amd64 || echo "Cradle task for AMD64 image ... qcow2 file not found .. Aborting!"
