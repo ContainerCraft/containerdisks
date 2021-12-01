@@ -76,7 +76,12 @@ commands:
     description: "Runner: Install Prerequisites"
     steps:
       - run:
-          command: sudo apt-get update && sudo apt-get install -y jq curl skopeo buildah qemu-user libguestfs-tools qemu-user-static
+          command: |
+            . /etc/os-release
+            sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+            wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${VERSION_ID}/Release.key -O Release.key
+            sudo apt-key add - < Release.key
+            sudo apt-get update && sudo apt-get install -y jq curl skopeo buildah qemu-user libguestfs-tools qemu-user-static
 
   qcow2-prepare:
     description: "Qcow2 Image: Download and Customize"
