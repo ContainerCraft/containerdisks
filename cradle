@@ -1,0 +1,138 @@
+#!/usr/bin/env python3
+# ./cradle --image-name registry.com/namespace/rhel --image-tag 8.2 --cradle-image scratch --image-file ./images/rhel-8.2.x86_64.qcow2
+
+import os
+import gzip
+import shutil
+import tempfile
+import time
+import argparse
+import subprocess
+import urllib.request
+
+# Define Mandatory & Optional CLI Flags
+parser = argparse.ArgumentParser(
+    description="KubeVirt Image Cradle Builder to generate OpenShift Virtualization compatible qcow2 import images"
+)
+parser.add_argument(
+    "--image-name",
+    default="localhost/cradle",
+    help="Name of cradle image",
+    metavar="registry.com/namespace/image-name",
+    required=False,
+)
+parser.add_argument(
+    "--image-tag",
+    default="latest",
+    help="Image tag",
+    metavar="IMAGE_TAG",
+    required=True,
+)
+parser.add_argument(
+    "--cradle-image",
+    help="Name of cradle image",
+    default="scratch",
+    #default="registry.access.redhat.com/ubi8/ubi",
+    required=False,
+)
+
+
+group = parser.add_mutually_exclusive_group(required=True)
+group.add_argument(
+    "--image-archive-url",
+    help="qcow image url",
+    metavar="https://FQDN/URI/image.qcow2.gz",
+    default="",
+    required=False,
+)
+group.add_argument(
+    "--image-url",
+    help="qcow image url",
+    metavar="https://FQDN/URI/image.qcow2",
+    default="",
+    required=False,
+)
+group.add_argument(
+    "--image-file",
+    help="qcow image path",
+    metavar="/global/path/to/image.qcow2",
+    default="",
+    required=False,
+)
+group.add_argument(
+    "--tmpdir",
+    help="temporary staging path",
+    metavar="./path/to/scratch/space",
+    default="./tmp",
+    required=False,
+)
+
+
+# Download Image from URL
+def download_image_file(image_url: str, destination: str):
+    print(">> Downloading Image: " + image_url)
+    try:
+        with urllib.request.urlopen(image_url) as image_file:
+            with open(destination, "wb") as image:
+                shutil.copyfileobj(image_file, image)
+    except Exception:
+        raise
+
+
+# Download Image Archive from URL
+def download_image_file_archive(image_archive_url: str, destination: str):
+    print(f">> Downloading Image Archive: {image_archive_url}")
+    try:
+        with urllib.request.urlopen(image_archive_url) as image_gzip:
+            with gzip.GzipFile(fileobj=image_gzip) as archive:
+                with open(destination, "wb") as image:
+                    shutil.copyfileobj(archive, image)
+    except Exception:
+        raise
+
+
+# Build Disk Image Cradle Container
+def build_cradle(from_image: str, name: str, tag: str, tmpdir: str):
+    def buildah(*cmd) -> str:
+        run_cmd = ["buildah", *cmd]
+        str_cmd = " ".join(run_cmd).replace("\n", "")
+        print(f">>    {str_cmd}")
+        return subprocess.run(
+            run_cmd,
+            env=dict(os.environ, STORAGE_DRIVER="overlay"),
+            capture_output=True,
+            text=True,
+            check=True,
+            cwd=tmpdir,
+        ).stdout
+
+    print(f">> Building Container Disk Image: {name}:{tag}")
+    tmp_image = buildah("from", from_image).replace('\n', '')
+    buildah("copy", tmp_image, "./rootfs", "/")
+    buildah("commit", tmp_image, name)
+    buildah("tag", name, f"{name}:{tag}")
+
+
+def main() -> int:
+    args = parser.parse_args()
+
+    with tempfile.TemporaryDirectory(prefix="cradle") as tmpdir:
+        staging_dir = tmpdir + "/rootfs/disk"
+        qcow2_staging_path = staging_dir + "/image.qcow2"
+
+        os.makedirs(staging_dir)
+        if args.image_url != "":
+            download_image_file(args.image_url, qcow2_staging_path)
+        elif args.image_archive_url != "":
+            download_image_file_archive(args.image_archive_url, qcow2_staging_path)
+        elif args.image_file != "":
+            print(">> Staging Image File: " + args.image_file)
+            shutil.copy(args.image_file, qcow2_staging_path)
+
+        build_cradle(args.cradle_image, args.image_name, args.image_tag, tmpdir)
+
+    return 0
+
+
+if __name__ == "__main__":
+    exit(main())
