@@ -215,7 +215,8 @@ commands:
             wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${VERSION_ID}/Release.key -O Release.key
             sudo apt-key add - < Release.key
             sudo apt-get update
-            sudo apt-get install -y jq skopeo buildah
+            sudo apt-get install -y jq skopeo buildah podman fuse-overlayfs
+            sudo podman system reset --force
 
             NAME=${FLAVOR%-*}
             export VERSION=${FLAVOR##*-}
@@ -242,7 +243,10 @@ commands:
               source preview/${NAME}/env.sh
 
               # Cradle AMD64 Disk Image
-              buildah bud --squash -f amd64.Containerfile \
+              export STORAGE_DRIVER="overlay"
+              buildah bud --squash \
+                --platform linux/amd64 \
+                -f amd64.Containerfile \
                 -t quay.io/containercraft/${FLAVOR}:${VERSION}-${ARCH} \
                 -t docker.io/containercraft/${FLAVOR}:${VERSION}-${ARCH}
             }
