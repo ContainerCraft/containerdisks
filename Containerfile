@@ -1,16 +1,16 @@
-FROM scratch
+FROM quay.io/containercraft/ubi:base
 ARG FLAVOR=${FLAVOR}
 LABEL \
-  license=GPLv3                                                                 \
-  name="${ORIGIN_LICENSE_URL"                                                   \
-  version="${RELEASE_VERSION}"                                                  \
-  distribution-scope="public"                                                   \
-  io.openshift.tags="containercraft,kubevirt,kmi,${FLAVOR},${VERSION},${ARCH}"  \
-  io.k8s.display-name="${FLAVOR}-${VERSION}-${ARCH}"                            \
-  summary="${FLAVOR} Kubevirt Machine Image"                                    \
-  description="ContainerCraft.io Maintained Public Reference KMI"               \
-  image_origin="${DOWNLOAD_URL}                                                 \
-  image_origin_checksum="${SHASUM}                                              \
-  io.k8s.description="ContainerCraft.io Maintained Public Reference KMI"
+  license=GPLv3
+# name="${ORIGIN_LICENSE_URL"                                                   \
+# version="${RELEASE_VERSION}"                                                  \
+# distribution-scope="public"                                                   \
+# io.openshift.tags="containercraft,kubevirt,kmi,${FLAVOR},${VERSION},${ARCH}"  \
+# io.k8s.display-name="${FLAVOR}-${VERSION}-${ARCH}"                            \
+# summary="${FLAVOR} Kubevirt Machine Image"                                    \
+# description="ContainerCraft.io Maintained Public Reference KMI"               \
+# image_origin="${DOWNLOAD_URL}"                                                 \
+# image_origin_checksum="${SHASUM}"                                              \
+# io.k8s.description="ContainerCraft.io Maintained Public Reference KMI"
 
-COPY --from=sysprep /disk/${FLAVOR}.sparse.qcow2 /disk/${FLAVOR}.qcow2
+COPY ubuntu-18.04-amd64.qcow2 /disk/

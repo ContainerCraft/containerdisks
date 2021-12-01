@@ -19,11 +19,11 @@ workflows:
             parameters:
               flavor:
                 - ubuntu-18.04
-                - ubuntu-20.04
-                - ubuntu-21.10
-                - fedora-34
-                - fedora-35
-                - centos-8
+                # ubuntu-20.04
+                # ubuntu-21.10
+                # fedora-34
+                # fedora-35
+                # centos-8
                 # - "centos-9"
                 # - "arch-latest"
               arch: [amd64, arm64]
@@ -34,6 +34,8 @@ workflows:
 #################################################################################
 # Reuseable Jobs
 jobs:
+
+  # Download & Prepare qcow2 image(s)
   customize-qcow2:
     parameters:
       flavor:
@@ -47,10 +49,24 @@ jobs:
     steps:
       - checkout
       - prepare
-      - download-and-prep:
+      - qcow2-prepare:
           flavor: << parameters.flavor >>
           arch: << parameters.arch >>
       - ops_notify_err
+
+  # Containerize qcow2 image(s)
+  cradle-qcow2:
+    parameters:
+      flavor:
+        type: string
+      arch:
+        type: string
+    executor: amd64
+    environment:
+      FLAVOR: << parameters.flavor >>
+    steps:
+      - checkout
+      - cradle
 
 #################################################################################
 # Reuseable Commands
@@ -60,9 +76,9 @@ commands:
     description: "Runner: Install Prerequisites"
     steps:
       - run:
-          command: sudo apt-get update && sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
+          command: sudo apt-get update && sudo apt-get install -y jq curl skopeo buildah qemu-user libguestfs-tools qemu-user-static
 
-  download-and-prep:
+  qcow2-prepare:
     description: "Qcow2 Image: Download and Customize"
     parameters:
       flavor:
@@ -154,6 +170,51 @@ commands:
           key: << parameters.flavor >>-<< parameters.arch >>
           paths:
             - << parameters.flavor >>-<< parameters.arch >>.qcow2
+
+  qcow2-cradle:
+    description: "Qcow2 Image: Download and Customize"
+    parameters:
+      flavor:
+        type: string
+      arch:
+        type: string
+    steps:
+      - restore_cache:
+          keys:
+            - << parameters.flavor >>-amd64
+            - << parameters.flavor >>-arm64
+
+      - run:
+          no_output_timeout: 90m
+          command: |
+            set -x
+
+            NAME=${FLAVOR%-*}
+            export VERSION=${FLAVOR##*-}
+
+            export QCOW2_FILE_ARM64=${FLAVOR}-arm64.qcow2
+            export QCOW2_FILE_AMD64=${FLAVOR}-amd64.qcow2
+
+            export BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
+            export SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+            export DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
+
+            cradle_image_amd64() {
+
+              # Make rootfs for copy into container
+              mkdir -p rootfs/disk
+
+              # Log image stats for loading to cradle
+              qemu-img info ${FLAVOR}-${ARCH}.qcow2 > rootfs/disk/image-info.log
+
+              # Source OS build variables
+              source preview/${NAME}/env.sh
+
+              # Cradle AMD64 Disk Image
+              ./cradle --image-name docker.io/containercraft/${FLAVOR} --image-tag ${VERSION}-${ARCH} --image-file ${FLAVOR}-${ARCH}.qcow2
+            }
+
+            [[ ! -f ${QCOW2_FILE_AMD64} ]] && cradle_image_amd64 || echo "Cradle task for AMD64 image ... qcow2 file not found .. Skipping"
 
   # CMD: Slack Notify if ERR
   ops_notify_err:

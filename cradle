@@ -23,7 +23,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--image-tag",
-    default="latest",
+    default="",
     help="Image tag",
     metavar="IMAGE_TAG",
     required=True,
@@ -31,64 +31,23 @@ parser.add_argument(
 parser.add_argument(
     "--cradle-image",
     help="Name of cradle image",
-    default="scratch",
-    #default="registry.access.redhat.com/ubi8/ubi",
+    default="quay.io/containercraft/ubi:base",
     required=False,
 )
-
-
-group = parser.add_mutually_exclusive_group(required=True)
-group.add_argument(
-    "--image-archive-url",
-    help="qcow image url",
-    metavar="https://FQDN/URI/image.qcow2.gz",
-    default="",
-    required=False,
-)
-group.add_argument(
-    "--image-url",
-    help="qcow image url",
-    metavar="https://FQDN/URI/image.qcow2",
-    default="",
-    required=False,
-)
-group.add_argument(
+parser.add_argument(
     "--image-file",
     help="qcow image path",
     metavar="/global/path/to/image.qcow2",
     default="",
     required=False,
 )
-group.add_argument(
+parser.add_argument(
     "--tmpdir",
     help="temporary staging path",
     metavar="./path/to/scratch/space",
     default="./tmp",
     required=False,
 )
-
-
-# Download Image from URL
-def download_image_file(image_url: str, destination: str):
-    print(">> Downloading Image: " + image_url)
-    try:
-        with urllib.request.urlopen(image_url) as image_file:
-            with open(destination, "wb") as image:
-                shutil.copyfileobj(image_file, image)
-    except Exception:
-        raise
-
-
-# Download Image Archive from URL
-def download_image_file_archive(image_archive_url: str, destination: str):
-    print(f">> Downloading Image Archive: {image_archive_url}")
-    try:
-        with urllib.request.urlopen(image_archive_url) as image_gzip:
-            with gzip.GzipFile(fileobj=image_gzip) as archive:
-                with open(destination, "wb") as image:
-                    shutil.copyfileobj(archive, image)
-    except Exception:
-        raise
 
 
 # Build Disk Image Cradle Container
@@ -108,7 +67,7 @@ def build_cradle(from_image: str, name: str, tag: str, tmpdir: str):
 
     print(f">> Building Container Disk Image: {name}:{tag}")
     tmp_image = buildah("from", from_image).replace('\n', '')
-    buildah("copy", tmp_image, "./rootfs", "/")
+    buildah("add", tmp_image, "./rootfs", "/")
     buildah("commit", tmp_image, name)
     buildah("tag", name, f"{name}:{tag}")
 
@@ -121,11 +80,7 @@ def main() -> int:
         qcow2_staging_path = staging_dir + "/image.qcow2"
 
         os.makedirs(staging_dir)
-        if args.image_url != "":
-            download_image_file(args.image_url, qcow2_staging_path)
-        elif args.image_archive_url != "":
-            download_image_file_archive(args.image_archive_url, qcow2_staging_path)
-        elif args.image_file != "":
+        if args.image_file != "":
             print(">> Staging Image File: " + args.image_file)
             shutil.copy(args.image_file, qcow2_staging_path)
 
