@@ -1,7 +1,6 @@
 version: '2.1'
 orbs:
   slack: circleci/slack@4.5.0
-  git-shallow-clone: guitarrapc/git-shallow-clone@2.4.0
 
 aliases:
   - &platform_parameter
@@ -46,8 +45,7 @@ jobs:
       FLAVOR: << parameters.flavor >>
       ARCH: << parameters.arch >>
     steps:
-      # - checkout
-      - git-shallow-clone/checkout
+      - checkout
       - prepare
       - download-and-prep:
           flavor: << parameters.flavor >>
