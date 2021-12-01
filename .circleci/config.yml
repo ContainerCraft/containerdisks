@@ -36,22 +36,22 @@ workflows:
 jobs:
 
   # Download & Prepare qcow2 image(s)
-  customize-qcow2:
-    parameters:
-      flavor:
-        type: string
-      arch:
-        type: string
-    executor: << parameters.arch >>
-    environment:
-      FLAVOR: << parameters.flavor >>
-      ARCH: << parameters.arch >>
-    steps:
-      - checkout
-      - qcow2-prepare:
-          flavor: << parameters.flavor >>
-          arch: << parameters.arch >>
-      - ops_notify_err
+# customize-qcow2:
+#   parameters:
+#     flavor:
+#       type: string
+#     arch:
+#       type: string
+#   executor: << parameters.arch >>
+#   environment:
+#     FLAVOR: << parameters.flavor >>
+#     ARCH: << parameters.arch >>
+#   steps:
+#     - checkout
+#     - qcow2-prepare:
+#         flavor: << parameters.flavor >>
+#         arch: << parameters.arch >>
+#     - ops_notify_err
 
   # Containerize qcow2 image(s)
   cradle-qcow2:
@@ -65,7 +65,7 @@ jobs:
       FLAVOR: << parameters.flavor >>
     steps:
       - checkout
-      - cradle
+      - qcow2-cradle
 
 #################################################################################
 # Reuseable Commands
@@ -99,7 +99,7 @@ commands:
 
             # Install Qcow2 Build Dependencies
             sudo apt-get update
-            sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
+            sudo apt-get install -y jq
 
             # Disable libvirtd layer 
             # Required to support edge cases for some distributions
@@ -116,6 +116,8 @@ commands:
             export DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
 
             customize_image() {
+
+              sudo apt-get install -y curl qemu-user libguestfs-tools qemu-user-static
 
               # Source OS build variables
               source preview/${NAME}/env.sh
