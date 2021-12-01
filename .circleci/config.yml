@@ -6,8 +6,7 @@ aliases:
   - &platform_parameter
       platform:
         type: enum
-        enum: [amd64]
-        #enum: [amd64, arm64]
+        enum: [amd64, arm64]
         default: amd64
 
 #################################################################################
@@ -49,7 +48,6 @@ jobs:
       ARCH: << parameters.arch >>
     steps:
       - checkout
-      - prepare
       - qcow2-prepare:
           flavor: << parameters.flavor >>
           arch: << parameters.arch >>
@@ -72,18 +70,6 @@ jobs:
 #################################################################################
 # Reuseable Commands
 commands:
-
-  prepare:
-    description: "Runner: Install Prerequisites"
-    steps:
-      - run:
-          command: |
-            . /etc/os-release
-            sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
-            wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${VERSION_ID}/Release.key -O Release.key
-            sudo apt-key add - < Release.key
-            sudo apt-get update
-            sudo apt-get install -y jq curl skopeo buildah qemu-user libguestfs-tools qemu-user-static
 
   qcow2-prepare:
     description: "Qcow2 Image: Download and Customize"
@@ -110,6 +96,10 @@ commands:
           no_output_timeout: 90m
           command: |
             set -x
+
+            # Install Qcow2 Build Dependencies
+            sudo apt-get update
+            sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
 
             # Disable libvirtd layer 
             # Required to support edge cases for some distributions
@@ -166,7 +156,7 @@ commands:
             }
 
             # Check for && confirm cached customized image present || If not present then customize and cache
-            [[ -f ${QCOW2_FILE} ]] && customize_image || echo "Disk image not found ... Aborting!"
+            [[ ! -f ${QCOW2_FILE} ]] && customize_image || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
@@ -196,6 +186,13 @@ commands:
           command: |
             set -x
 
+            . /etc/os-release
+            sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+            wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${VERSION_ID}/Release.key -O Release.key
+            sudo apt-key add - < Release.key
+            sudo apt-get update
+            sudo apt-get install -y jq skopeo buildah
+
             NAME=${FLAVOR%-*}
             export VERSION=${FLAVOR##*-}
 
@@ -212,7 +209,7 @@ commands:
               mkdir -p rootfs/disk
 
               # Log image stats for loading to cradle
-              qemu-img info ${FLAVOR}-${ARCH}.qcow2 > rootfs/disk/image-info.log
+              #qemu-img info ${FLAVOR}-${ARCH}.qcow2 > rootfs/disk/image-info.log
 
               # Source OS build variables
               source preview/${NAME}/env.sh
@@ -221,7 +218,7 @@ commands:
               ./cradle --image-name docker.io/containercraft/${FLAVOR} --image-tag ${VERSION}-${ARCH} --image-file ${FLAVOR}-${ARCH}.qcow2
             }
 
-            [[ ! -f ${QCOW2_FILE_AMD64} ]] && cradle_image_amd64 || echo "Cradle task for AMD64 image ... qcow2 file not found .. Skipping"
+            [[ -f ${QCOW2_FILE_AMD64} ]] && cradle_image_amd64 || echo "Cradle task for AMD64 image ... qcow2 file not found .. Aborting!"
 
   # CMD: Slack Notify if ERR
   ops_notify_err:
