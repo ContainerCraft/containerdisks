@@ -118,27 +118,27 @@ commands:
           command: |
             set -x
 
-            # Install Qcow2 Build Dependencies
-            sudo apt-get update
-            sudo apt-get install -y jq
-
-            # Disable libvirtd layer 
-            # Required to support edge cases for some distributions
-            export LIBGUESTFS_BACKEND=direct
-
-            NAME=${FLAVOR%-*}
-            export VERSION=${FLAVOR##*-}
-
-            export QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
-            export QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
-
-            export BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
-            export SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
-            export DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
-
             customize_image() {
 
-              sudo apt-get install -y curl qemu-user libguestfs-tools qemu-user-static
+              # Install Qcow2 Build Dependencies
+              sudo apt-get update
+              sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
+  
+              # Disable libvirtd layer 
+              # Required to support edge cases for some distributions
+              export LIBGUESTFS_BACKEND=direct
+  
+              NAME=${FLAVOR%-*}
+              export VERSION=${FLAVOR##*-}
+  
+              export QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
+              export QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
+  
+              export BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
+              export SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+              export DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
+
+
 
               # Source OS build variables
               source preview/${NAME}/env.sh
@@ -179,7 +179,7 @@ commands:
             }
 
             # Check for && confirm cached customized image present || If not present then customize and cache
-            [[ ! -f ${QCOW2_FILE} ]] && customize_image || echo "Detected cached disk image ... continuing"
+            [[ ! -f << parameters.flavor >>-<< parameters.arch >>.qcow2 ]] && customize_image || echo "Detected cached disk image ... continuing"
 
 #     - run:
 #         command: |
@@ -247,8 +247,8 @@ commands:
               buildah bud --squash \
                 --platform linux/amd64 \
                 -f amd64.Containerfile \
-                -t quay.io/containercraft/${FLAVOR}:${VERSION}-${ARCH} \
-                -t docker.io/containercraft/${FLAVOR}:${VERSION}-${ARCH}
+                -t quay.io/containercraft/${NAME}:${VERSION}-amd64 \
+                -t docker.io/containercraft/${NAME}:${VERSION}-amd64
             }
 
             [[ -f ${QCOW2_FILE_AMD64} ]] && cradle_image_amd64 || echo "Cradle task for AMD64 image ... qcow2 file not found .. Aborting!"
