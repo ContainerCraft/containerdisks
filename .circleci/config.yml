@@ -181,10 +181,10 @@ commands:
             # Check for && confirm cached customized image present || If not present then customize and cache
             [[ ! -f ${QCOW2_FILE} ]] && customize_image || echo "Detected cached disk image ... continuing"
 
-      - run:
-          command: |
-            # Log final image stats
-            qemu-img info ${FLAVOR}-${ARCH}.qcow2;
+#     - run:
+#         command: |
+#           # Log final image stats
+#           qemu-img info ${FLAVOR}-${ARCH}.qcow2;
 
       - save_cache:
           key: << parameters.flavor >>-<< parameters.arch >>
