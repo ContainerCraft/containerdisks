@@ -30,28 +30,46 @@ workflows:
             exclude:
               - flavor: arch-latest
                 arch: arm64
+      - cradle-qcow2:
+          requires:
+            - customize-qcow2
+          matrix:
+            parameters:
+              flavor:
+                - ubuntu-18.04
+                # ubuntu-20.04
+                # ubuntu-21.10
+                # fedora-34
+                # fedora-35
+                # centos-8
+                # - "centos-9"
+                # - "arch-latest"
+              arch: [amd64]
+            exclude:
+              - flavor: arch-latest
+                arch: arm64
 
 #################################################################################
 # Reuseable Jobs
 jobs:
 
   # Download & Prepare qcow2 image(s)
-# customize-qcow2:
-#   parameters:
-#     flavor:
-#       type: string
-#     arch:
-#       type: string
-#   executor: << parameters.arch >>
-#   environment:
-#     FLAVOR: << parameters.flavor >>
-#     ARCH: << parameters.arch >>
-#   steps:
-#     - checkout
-#     - qcow2-prepare:
-#         flavor: << parameters.flavor >>
-#         arch: << parameters.arch >>
-#     - ops_notify_err
+  customize-qcow2:
+    parameters:
+      flavor:
+        type: string
+      arch:
+        type: string
+    executor: << parameters.arch >>
+    environment:
+      FLAVOR: << parameters.flavor >>
+      ARCH: << parameters.arch >>
+    steps:
+      - checkout
+      - qcow2-prepare:
+          flavor: << parameters.flavor >>
+          arch: << parameters.arch >>
+      - ops_notify_err
 
   # Containerize qcow2 image(s)
   cradle-qcow2:
