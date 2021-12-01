@@ -215,7 +215,7 @@ commands:
             wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${VERSION_ID}/Release.key -O Release.key
             sudo apt-key add - < Release.key
             sudo apt-get update
-            sudo apt-get install -y jq skopeo buildah podman fuse-overlayfs
+            sudo apt-get install -y jq skopeo buildah podman
             sudo podman system reset --force
 
             NAME=${FLAVOR%-*}
