@@ -1,6 +1,7 @@
 version: '2.1'
 orbs:
   slack: circleci/slack@4.5.0
+  git-shallow-clone: guitarrapc/git-shallow-clone@2.4.0
 
 aliases:
   - &platform_parameter
@@ -45,7 +46,8 @@ jobs:
       FLAVOR: << parameters.flavor >>
       ARCH: << parameters.arch >>
     steps:
-      - checkout
+      # - checkout
+      - git-shallow-clone/checkout
       - prepare
       - download-and-prep:
           flavor: << parameters.flavor >>
@@ -70,6 +72,9 @@ commands:
       arch:
         type: string
     steps:
+      - restore_cache:
+          key: << parameters.flavor >>-<< parameters.arch >>
+
       - run:
           command: |
             set -x
@@ -85,60 +90,72 @@ commands:
           command: |
             set -x
 
+            # Disable libvirtd layer 
+            # Required to support edge cases for some distributions
+            export LIBGUESTFS_BACKEND=direct
+
+            NAME=${FLAVOR%-*}
+            export VERSION=${FLAVOR##*-}
+
+            export QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
+            export QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
+
+            export BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
+            export SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+            export DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
+
             customize_image() {
-              export LIBGUESTFS_BACKEND=direct
 
-              NAME=${FLAVOR%-*}
-              VERSION=${FLAVOR##*-}
-
-              QCOW2_FILE=${FLAVOR}.qcow2
-
-              BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
-              DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
-              SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+              # Source OS build variables
+              source preview/${NAME}/env.sh
 
               # Download qcow2
               curl --verbose \
-                --output ${QCOW2_FILE} \
+                --output ${QCOW2_TMPFILE} \
                 --location ${BASE_URL}/${DOWNLOAD_FILE}
 
-              echo "${SHA256SUM} ${QCOW2_FILE}" \
+              # Verify Checksum
+              echo "${SHA256SUM} ${QCOW2_TMPFILE}" \
                 | sha256sum --check --status \
                 || echo "Invalid checksum: sha256sum check failed"
 
               # Grow disk size
-              qemu-img resize ${QCOW2_FILE} +20G;
+              qemu-img resize ${QCOW2_TMPFILE} +20G;
 
-              # Source OS specific vars
-              source preview/${NAME}/env.sh
-
-              # Verify qcow2 image
-              qemu-img info ${QCOW2_FILE}
-
+              # Customize Disk Image
               sudo virt-sysprep \
                 --verbose \
-                --add ${QCOW2_FILE} \
                 --network \
+                --add ${QCOW2_TMPFILE} \
                 --enable ${VIRT_SYSPREP_OPERATIONS} \
                 --commands-from-file preview/${NAME}/virt.sysprep
+
+              # Log disk image info
+              qemu-img info ${QCOW2_TMPFILE}
 
               # Sparsify
               sudo virt-sparsify \
                 --verbose \
                 --compress \
+                ${QCOW2_TMPFILE} \
                 ${QCOW2_FILE} \
-                sparse.${QCOW2_FILE} \
-              && sudo rm ${QCOW2_FILE}
+              && sudo chown ${USER}:${USER} ${QCOW2_FILE} \
+              && sudo rm ${QCOW2_TMPFILE} \
+
             }
 
-            customize_image
             # Check for && confirm cached customized image present || If not present then customize and cache
-            # [[ ! -f ${FLAVOR}.qcow2 ]] && run_cache_customize || echo "Detected cached disk image ... continuing"
+            [[ ! -f ${QCOW2_FILE} ]] && customize_image || echo "Detected cached disk image ... continuing"
 
       - run:
           command: |
             # Log final image stats
-            qemu-img info sparse.${FLAVOR}.qcow2;
+            qemu-img info ${FLAVOR}-${ARCH}.qcow2;
+
+      - save_cache:
+          key: << parameters.flavor >>-<< parameters.arch >>
+          paths:
+            - << parameters.flavor >>-<< parameters.arch >>.qcow2
 
   # CMD: Slack Notify if ERR
   ops_notify_err:
