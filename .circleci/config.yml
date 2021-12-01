@@ -84,7 +84,9 @@ jobs:
       FLAVOR: << parameters.flavor >>
     steps:
       - checkout
-      - qcow2-cradle
+      - qcow2-cradle:
+          flavor: << parameters.flavor >>
+          arch: << parameters.arch >>
 
 #################################################################################
 # Reuseable Commands
