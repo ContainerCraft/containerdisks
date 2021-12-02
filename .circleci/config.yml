@@ -14,7 +14,7 @@ aliases:
 workflows:
   build-and-cache:
     jobs:
-      - customize-qcow2:
+      - customize:
           matrix:
             parameters:
               flavor:
@@ -31,9 +31,9 @@ workflows:
               - flavor: arch-latest
                 arch: arm64
 
-      - cradle-qcow2:
+      - cradle:
           requires:
-            - customize-qcow2
+            - customize
           matrix:
             parameters:
               flavor:
@@ -45,17 +45,13 @@ workflows:
                 # centos-8
                 # - "centos-9"
                 # - "arch-latest"
-              arch: [amd64]
-            exclude:
-              - flavor: arch-latest
-                arch: arm64
 
 #################################################################################
 # Reuseable Jobs
 jobs:
 
   # Download & Prepare qcow2 image(s)
-  customize-qcow2:
+  customize:
     parameters:
       flavor:
         type: string
@@ -67,13 +63,13 @@ jobs:
       ARCH: << parameters.arch >>
     steps:
       - checkout
-      - qcow2-prepare:
+      - prepare-qcow2:
           flavor: << parameters.flavor >>
           arch: << parameters.arch >>
       - ops_notify_err
 
   # Containerize qcow2 image(s)
-  cradle-qcow2:
+  cradle:
     parameters:
       flavor:
         type: string
@@ -84,15 +80,14 @@ jobs:
       FLAVOR: << parameters.flavor >>
     steps:
       - checkout
-      - qcow2-cradle:
+      - cradle-qcow2:
           flavor: << parameters.flavor >>
-          arch: << parameters.arch >>
 
 #################################################################################
 # Reuseable Commands
 commands:
 
-  qcow2-prepare:
+  prepare-qcow2:
     description: "Qcow2 Image: Download and Customize"
     parameters:
       flavor:
@@ -100,9 +95,6 @@ commands:
       arch:
         type: string
     steps:
-      - restore_cache:
-          key: << parameters.flavor >>-<< parameters.arch >>
-
       - run:
           command: |
             set -x
@@ -123,22 +115,20 @@ commands:
               # Install Qcow2 Build Dependencies
               sudo apt-get update
               sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
-  
+
               # Disable libvirtd layer 
               # Required to support edge cases for some distributions
               export LIBGUESTFS_BACKEND=direct
-  
+
               NAME=${FLAVOR%-*}
               export VERSION=${FLAVOR##*-}
-  
+
               export QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
               export QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
-  
+
               export BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
               export SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
               export DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
-
-
 
               # Source OS build variables
               source preview/${NAME}/env.sh
@@ -175,83 +165,37 @@ commands:
                 ${QCOW2_FILE} \
               && sudo chown ${USER}:${USER} ${QCOW2_FILE} \
               && sudo rm ${QCOW2_TMPFILE} \
-
             }
 
+            customize_image
             # Check for && confirm cached customized image present || If not present then customize and cache
-            [[ ! -f << parameters.flavor >>-<< parameters.arch >>.qcow2 ]] && customize_image || echo "Detected cached disk image ... continuing"
+            # [[ ! -f << parameters.flavor >>-<< parameters.arch >>.qcow2 ]] && customize_image || echo "Detected cached disk image ... continuing"
 
-#     - run:
-#         command: |
-#           # Log final image stats
-#           qemu-img info ${FLAVOR}-${ARCH}.qcow2;
-
-      - save_cache:
-          key: << parameters.flavor >>-<< parameters.arch >>
+      - persist_to_workspace:
+          root: cache/
           paths:
-            - << parameters.flavor >>-<< parameters.arch >>.qcow2
+            - *.qcow2
 
-  qcow2-cradle:
+  cradle-qcow2:
     description: "Qcow2 Image: Download and Customize"
     parameters:
       flavor:
         type: string
-      arch:
-        type: string
     steps:
-      - restore_cache:
-          keys:
-            - << parameters.flavor >>-amd64
-            - << parameters.flavor >>-arm64
-
       - run:
           no_output_timeout: 90m
           command: |
             set -x
 
-            # Install Dependencies
-            . /etc/os-release
-            sudo sh -c "echo 'deb http://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_${VERSION_ID}/ /' > /etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
-            wget -nv https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable/xUbuntu_${VERSION_ID}/Release.key -O Release.key
-            sudo apt-key add - < Release.key
-            sudo apt-get update
-            sudo apt-get install -y jq skopeo buildah podman
-            sudo podman system reset --force
-
             NAME=${FLAVOR%-*}
-            export VERSION=${FLAVOR##*-}
+            VERSION=${FLAVOR##*-}
 
-            export QCOW2_FILE_ARM64=${FLAVOR}-arm64.qcow2
-            export QCOW2_FILE_AMD64=${FLAVOR}-amd64.qcow2
+            BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
+            SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+            DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
 
-            export BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
-            export SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
-            export DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
+            ls cache/
 
-            cradle_image_amd64() {
-
-              # Make rootfs for copy into container
-              mkdir -p rootfs/amd64/disk
-
-              # Log image stats for loading to cradle
-              #qemu-img info ${QCOW2_FILE_AMD64}.qcow2 > rootfs/disk/image-info.log
-
-              # Copy image to rootfs
-              cp ${QCOW2_FILE_AMD64} rootfs/amd64/disk/
-
-              # Source OS build variables
-              source preview/${NAME}/env.sh
-
-              # Cradle AMD64 Disk Image
-              export STORAGE_DRIVER="overlay"
-              buildah bud --squash \
-                --platform linux/amd64 \
-                -f amd64.Containerfile \
-                -t quay.io/containercraft/${NAME}:${VERSION}-amd64 \
-                -t docker.io/containercraft/${NAME}:${VERSION}-amd64
-            }
-
-            [[ -f ${QCOW2_FILE_AMD64} ]] && cradle_image_amd64 || echo "Cradle task for AMD64 image ... qcow2 file not found .. Aborting!"
 
   # CMD: Slack Notify if ERR
   ops_notify_err:
@@ -261,41 +205,6 @@ commands:
           event: fail
           channel: ops-kargo
           template: basic_fail_1
-
-  # CMD: Execute Docker Buildx
-  buildx:
-    description: "Runner: Execute Docker Buildx"
-    parameters:
-      bake_file:
-        type: string
-        default: bake.hcl
-      target:
-        type: string
-      << : *platform_parameter
-    steps:
-      - run:
-          command: |
-            docker buildx bake \
-              -f << parameters.bake_file >> \
-              --progress plain \
-              --set *.platform=linux/<< parameters.platform >> \
-              << parameters.executor >>
-
-  # CMD: Configure Docker BuildX
-  enable_buildx:
-    description: "Runner: Configure Docker Buildx Environment"
-    parameters:
-      buildkit_version:
-        type: string
-        default: latest
-    steps:
-      - run:
-          command: docker run --privileged --rm tonistiigi/binfmt --install all
-      - run:
-          command: docker buildx ls | grep "build-<< parameters.buildkit_version >>"
-      - run:
-          command: echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
-      - ops_notify_err
 
 #################################################################################
 # Workflow Runner Instances
