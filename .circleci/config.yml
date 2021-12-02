@@ -222,7 +222,7 @@ commands:
 
       - enable_buildx
       - buildx:
-          flavor: << parameters.flavor >>
+          target: << parameters.flavor >>
 
   # CMD: Slack Notify if ERR
   ops_notify_err:
