@@ -1,3 +1,5 @@
 FROM scratch
+ARG TARGETARCH
 ARG FLAVOR=${FLAVOR}
-COPY images/${FLAVOR}.qcow2 /disk/${FLAVOR}.qcow2
+ARG VERSION=${VERSION}
+COPY images/${FLAVOR}-${VERSION}-${TARGETARCH}.qcow2 /disk/${FLAVOR}.qcow2
