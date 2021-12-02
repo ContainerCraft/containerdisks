@@ -18,7 +18,7 @@ workflows:
           matrix:
             parameters:
               flavor:
-                - ubuntu-18.04
+                # ubuntu-18.04
                 # ubuntu-20.04
                 # ubuntu-21.10
                 # fedora-34
@@ -142,7 +142,7 @@ commands:
         type: string
     steps:
       - restore_cache:
-          key: << parameters.flavor >>-<< parameters.arch >>
+          key: << parameters.flavor >>-<< parameters.arch >>-{{checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
 
       - run:
           no_output_timeout: 90m
@@ -170,7 +170,7 @@ commands:
               DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
 
               # Source OS build variables
-              source preview/${NAME}/env.sh
+              source kmi/${NAME}/env.sh
 
               # Download qcow2
               curl --verbose \
@@ -191,7 +191,7 @@ commands:
                 --network \
                 --add ${QCOW2_TMPFILE} \
                 --enable ${VIRT_SYSPREP_OPERATIONS} \
-                --commands-from-file preview/${NAME}/virt.sysprep
+                --commands-from-file kmi/${FLAVOR}/virt.sysprep
 
               # Log disk image info
               qemu-img info ${QCOW2_TMPFILE}
@@ -209,7 +209,7 @@ commands:
             # Check for && confirm cached customized image present || If not present then customize and cache
             [[ ! -f << parameters.flavor >>-<< parameters.arch >>.qcow2 ]] && customize_image || echo "Detected cached disk image ... continuing"
       - save_cache:
-          key: << parameters.flavor >>-<< parameters.arch >>
+          key: << parameters.flavor >>-<< parameters.arch >>-{{checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
           paths:
             - << parameters.flavor >>-<< parameters.arch >>.qcow2
 
