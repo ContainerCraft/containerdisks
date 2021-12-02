@@ -97,6 +97,7 @@ commands:
           command: |
             docker buildx bake \
               -f << parameters.bake_file >> \
+              --push \
               --progress plain \
               << parameters.target >>
 
