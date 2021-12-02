@@ -93,15 +93,8 @@ commands:
       arch:
         type: string
     steps:
-      - run:
-          command: |
-            set -x
-            mkdir -p cache/${ARCH}
-            # Write out sha256sum for cache key
-            NAME=${FLAVOR%-*}
-            VERSION=${FLAVOR##*-}
-            SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
-            echo ${SHA256SUM} > cache/${ARCH}/${FLAVOR}.txt
+      - restore_cache:
+          key: << parameters.flavor >>-<< parameters.arch >>
 
       - run:
           no_output_timeout: 90m
@@ -165,14 +158,17 @@ commands:
               && sudo rm ${QCOW2_TMPFILE};
             }
 
-            customize_image
             # Check for && confirm cached customized image present || If not present then customize and cache
-            # [[ ! -f << parameters.flavor >>-<< parameters.arch >>.qcow2 ]] && customize_image || echo "Detected cached disk image ... continuing"
+            [[ ! -f << parameters.flavor >>-<< parameters.arch >>.qcow2 ]] && customize_image || echo "Detected cached disk image ... continuing"
+      - save_cache:
+          key: << parameters.flavor >>-<< parameters.arch >>
+          paths:
+            - << parameters.flavor >>-<< parameters.arch >>.qcow2
 
       - persist_to_workspace:
-          root: cache/
+          root: /home/circleci/project
           paths:
-            - "*.qcow2"
+            - << parameters.flavor >>-<< parameters.arch >>.qcow2
 
   cradle-qcow2:
     description: "Qcow2 Image: Download and Customize"
@@ -193,7 +189,6 @@ commands:
             DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
 
             ls cache/
-
 
   # CMD: Slack Notify if ERR
   ops_notify_err:
