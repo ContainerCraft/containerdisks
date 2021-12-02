@@ -12,7 +12,7 @@ aliases:
 #################################################################################
 # Job Scheduler
 workflows:
-  build-and-cache:
+  build-and-publish:
     jobs:
       - customize:
           matrix:
@@ -72,8 +72,6 @@ jobs:
   cradle:
     parameters:
       flavor:
-        type: string
-      arch:
         type: string
     executor: amd64
     environment:
