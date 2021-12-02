@@ -84,6 +84,37 @@ jobs:
 #################################################################################
 # Reuseable Commands
 commands:
+  buildx:
+    description: "Runner: Execute Docker Buildx"
+    parameters:
+      bake_file:
+        type: string
+        default: bake.hcl
+      target:
+        type: string
+    steps:
+      - run:
+          command: |
+            docker buildx bake \
+              -f << parameters.bake_file >> \
+              --progress plain \
+              << parameters.target >>
+
+  # CMD: Configure Docker BuildX
+  enable_buildx:
+    description: "Runner: Configure Docker Buildx Environment"
+    parameters:
+      buildkit_version:
+        type: string
+        default: v0.9.3
+    steps:
+      - run:
+          command: docker run --privileged --rm tonistiigi/binfmt --install all
+      - run:
+          command: docker buildx ls | grep "build-<< parameters.buildkit_version >>"
+      - run:
+          command: echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
+      - ops_notify_err
 
   prepare-qcow2:
     description: "Qcow2 Image: Download and Customize"
@@ -112,14 +143,14 @@ commands:
               export LIBGUESTFS_BACKEND=direct
 
               NAME=${FLAVOR%-*}
-              export VERSION=${FLAVOR##*-}
+              VERSION=${FLAVOR##*-}
 
-              export QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
-              export QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
+              QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
+              QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
 
-              export BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
-              export SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
-              export DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
+              BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
+              SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+              DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
 
               # Source OS build variables
               source preview/${NAME}/env.sh
@@ -188,6 +219,10 @@ commands:
             VERSION=${FLAVOR##*-}
 
             ls -lah /tmp/images/
+
+      - enable_buildx
+      - buildx:
+          flavor: << parameters.flavor >>
 
   # CMD: Slack Notify if ERR
   ops_notify_err:
