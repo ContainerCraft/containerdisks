@@ -84,7 +84,7 @@ jobs:
 #################################################################################
 # Reuseable Commands
 commands:
-  buildx:
+  buildx-bake:
     description: "Runner: Execute Docker Buildx"
     parameters:
       bake_file:
@@ -101,7 +101,7 @@ commands:
               << parameters.target >>
 
   # CMD: Configure Docker BuildX
-  enable_buildx:
+  enable-buildx:
     description: "Runner: Configure Docker Buildx Environment"
     parameters:
       buildkit_version:
@@ -236,8 +236,8 @@ commands:
 
             ls -lah /tmp/images/
 
-      - enable_buildx
-      - buildx:
+      - enable-buildx
+      - buildx-bake:
           target: << parameters.flavor >>
 
   # CMD: Slack Notify if ERR
