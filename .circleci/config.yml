@@ -174,7 +174,7 @@ commands:
       - persist_to_workspace:
           root: cache/
           paths:
-            - *.qcow2
+            - "*.qcow2"
 
   cradle-qcow2:
     description: "Qcow2 Image: Download and Customize"
