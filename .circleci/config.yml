@@ -184,10 +184,6 @@ commands:
             NAME=${FLAVOR%-*}
             VERSION=${FLAVOR##*-}
 
-            BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
-            SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
-            DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
-
             ls cache/
 
   # CMD: Slack Notify if ERR
