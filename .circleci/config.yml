@@ -224,7 +224,7 @@ commands:
         type: string
     steps:
       - attach_workspace:
-          at: /tmp/images
+          at: /home/circleci/project/images
 
       - run:
           no_output_timeout: 90m
@@ -234,7 +234,7 @@ commands:
             NAME=${FLAVOR%-*}
             VERSION=${FLAVOR##*-}
 
-            ls -lah /tmp/images/
+            ls -lah images/
 
       - enable-buildx
       - buildx-bake:
