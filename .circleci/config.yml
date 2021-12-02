@@ -109,10 +109,26 @@ commands:
         default: v0.9.3
     steps:
       - run:
-          command: docker run --privileged --rm tonistiigi/binfmt --install all
+          name: Install All Emulators
+          command: |
+            docker run --privileged --rm tonistiigi/binfmt --install all
       - run:
-          command: docker buildx ls | grep "build-<< parameters.buildkit_version >>"
+          name: Create builder with buildkit << parameters.buildkit_version >>
+          command: |
+            docker buildx ls \
+              | grep "build-<< parameters.buildkit_version >>" \
+              || docker buildx create --use \
+              --name build-<< parameters.buildkit_version >> \
+              --driver docker-container \
+              --driver-opt image=moby/buildkit:<< parameters.buildkit_version >>,network=host
       - run:
+          name: Set builder
+          command: docker buildx use --default build-<< parameters.buildkit_version >>
+      - run:
+          name: Start up buildx and inspect
+          command: docker buildx inspect --bootstrap
+      - run:
+          name: Login to dockerhub
           command: echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
       - ops_notify_err
 
