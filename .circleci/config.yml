@@ -184,7 +184,7 @@ commands:
             NAME=${FLAVOR%-*}
             VERSION=${FLAVOR##*-}
 
-            ls cache/
+            ls -lah
 
   # CMD: Slack Notify if ERR
   ops_notify_err:
