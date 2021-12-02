@@ -1,5 +1,4 @@
-mkdir /etc/skel/.ssh
-update
+run-command dnf -y --best upgrade --exclude=kernel*
 edit /etc/selinux/config:\
     s/^SELINUX=*/SELINUX=permissive/
 install git-core,vim,tmux,net-tools,screenfetch,qemu-guest-agent
