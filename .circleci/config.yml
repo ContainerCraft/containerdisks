@@ -162,7 +162,7 @@ commands:
                 ${QCOW2_TMPFILE} \
                 ${QCOW2_FILE} \
               && sudo chown ${USER}:${USER} ${QCOW2_FILE} \
-              && sudo rm ${QCOW2_TMPFILE} \
+              && sudo rm ${QCOW2_TMPFILE};
             }
 
             customize_image
