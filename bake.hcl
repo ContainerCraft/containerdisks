@@ -14,6 +14,10 @@ group "ubuntu" {
   targets = ["ubuntu-18.04"]
 }
 
+group "fedora" {
+  targets = ["fedora-35"]
+}
+
 target "ubuntu-18.04" {
   dockerfile = "Containerfile"
   platforms = ["linux/arm64", "linux/amd64"]
@@ -24,5 +28,17 @@ target "ubuntu-18.04" {
   args = {
     FLAVOR = "ubuntu"
     VERSION = "18.04"
+  }
+}
+
+target "fedora-35" {
+  dockerfile = "Containerfile"
+  platforms = ["linux/arm64", "linux/amd64"]
+  tags = [
+    "docker.io/containercraft/fedora:35-${FLAG}"
+  ]
+  args = {
+    FLAVOR = "fedora"
+    VERSION = "35"
   }
 }

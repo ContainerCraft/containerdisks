@@ -22,7 +22,7 @@ workflows:
                 # ubuntu-20.04
                 # ubuntu-21.10
                 # fedora-34
-                # fedora-35
+                - fedora-35
                 # centos-8
                 # - "centos-9"
                 # - "arch-latest"
@@ -41,7 +41,7 @@ workflows:
                 # ubuntu-20.04
                 # ubuntu-21.10
                 # fedora-34
-                # fedora-35
+                - fedora-35
                 # centos-8
                 # - "centos-9"
                 # - "arch-latest"
