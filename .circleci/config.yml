@@ -176,6 +176,9 @@ commands:
       flavor:
         type: string
     steps:
+      - attach_workspace:
+          at: /tmp/images
+
       - run:
           no_output_timeout: 90m
           command: |
@@ -184,7 +187,7 @@ commands:
             NAME=${FLAVOR%-*}
             VERSION=${FLAVOR##*-}
 
-            ls -lah
+            ls -lah /tmp/images/
 
   # CMD: Slack Notify if ERR
   ops_notify_err:
