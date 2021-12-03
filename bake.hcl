@@ -7,7 +7,19 @@ variable "FLAG" {
 }
 
 group "default" {
-  targets = ["ubuntu", "arch"]
+  targets = ["ubuntu"]
+}
+
+target "defaults" {
+  dockerfile = "Containerfile"
+  platforms = ["linux/arm64", "linux/amd64"]
+  labels = {
+    license = "GPLv3"
+    distribution-scope = "public"
+    description = "ContainerCraft.io Maintained Public Reference KMI",
+    "io.k8s.description" = "ContainerCraft.io Maintained Public Reference KMI"
+    "org.opencontainers.image.source" = "https://github.com/ContainerCraft/kmi/"
+  }
 }
 
 group "ubuntu" {
@@ -19,26 +31,22 @@ group "fedora" {
 }
 
 target "ubuntu-18.04" {
-  dockerfile = "Containerfile"
-  platforms = ["linux/arm64", "linux/amd64"]
+  inherits = ["defaults"]
   tags = [
     "docker.io/containercraft/ubuntu:18.04-${FLAG}",
     "docker.io/containercraft/ubuntu:bionic-${FLAG}"
   ]
   args = {
-    FLAVOR = "ubuntu"
-    VERSION = "18.04"
+    FLAVOR = "ubuntu-18.04"
   }
 }
 
 target "fedora-35" {
-  dockerfile = "Containerfile"
-  platforms = ["linux/arm64", "linux/amd64"]
+  inherits = ["defaults"]
   tags = [
     "docker.io/containercraft/fedora:35-${FLAG}"
   ]
   args = {
-    FLAVOR = "fedora"
-    VERSION = "35"
+    FLAVOR = "fedora-35"
   }
 }
