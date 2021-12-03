@@ -8,7 +8,7 @@
       "1.3": {}
     },
     "arch": {
-      "latest": {
+      "arch": {
         "amd64": {
           "url": "https://mirror.pkgbuild.com/images",
           "image": "Arch-Linux-x86_64-cloudimg-20211115.39179.qcow2",

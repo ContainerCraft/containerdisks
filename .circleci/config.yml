@@ -2,42 +2,56 @@ version: '2.1'
 orbs:
   slack: circleci/slack@4.5.0
 
+aliases:
+  fedora-flavors: &_fedora-flavors
+    - fedora-34
+    - fedora-35
+
+  ubuntu-flavors: &_ubuntu-flavors
+    - ubuntu-18.04
+    - ubuntu-20.04
+    - ubuntu-21.10
+
+  cache-key: &_cache-key
+    key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
+
+
 #################################################################################
 # Job Scheduler
 workflows:
   build-and-publish:
     jobs:
       - customize:
+          name: customize-<< matrix.flavor >>-<< matrix.arch >>
           matrix:
             parameters:
-              flavor:
-                - ubuntu-18.04
-                # ubuntu-20.04
-                # ubuntu-21.10
-                # fedora-34
-                - fedora-35
-                # centos-8
-                # - "centos-9"
-                # - "arch-latest"
+              flavor: *_fedora-flavors
               arch: [amd64, arm64]
-            exclude:
-              - flavor: arch-latest
-                arch: arm64
+
+      - customize:
+          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+          matrix:
+            parameters:
+              flavor: *_ubuntu-flavors
+              arch: [amd64, arm64]
 
       - cradle:
           requires:
-            - customize
+            - customize-<< matrix.flavor >>-amd64
+            - customize-<< matrix.flavor >>-arm64
+          name: cradle-<< matrix.flavor >>
           matrix:
             parameters:
-              flavor:
-                - ubuntu-18.04
-                # ubuntu-20.04
-                # ubuntu-21.10
-                # fedora-34
-                - fedora-35
-                # centos-8
-                # - "centos-9"
-                # - "arch-latest"
+              flavor: *_fedora-flavors
+
+      - cradle:
+          requires:
+            - customize-<< matrix.flavor >>-amd64
+            - customize-<< matrix.flavor >>-arm64
+          name: cradle-<< matrix.flavor >>
+          matrix:
+            parameters:
+              flavor: *_ubuntu-flavors
 
 #################################################################################
 # Reuseable Jobs
@@ -138,9 +152,8 @@ commands:
           command: |
             echo $(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
 
-
       - restore_cache:
-          key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
+          <<: *_cache-key
 
       - run:
           name: Customize image
@@ -208,7 +221,7 @@ commands:
             # Check for && confirm cached customized image present || If not present then customize and cache
             [[ ! -f << parameters.flavor >>-<< parameters.arch >>.qcow2 ]] && customize_image || echo "Detected cached disk image ... continuing"
       - save_cache:
-          key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
+          <<: *_cache-key
           paths:
             - << parameters.flavor >>-<< parameters.arch >>.qcow2
 
