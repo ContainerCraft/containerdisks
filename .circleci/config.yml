@@ -2,13 +2,6 @@ version: '2.1'
 orbs:
   slack: circleci/slack@4.5.0
 
-aliases:
-  - &platform_parameter
-      platform:
-        type: enum
-        enum: [amd64, arm64]
-        default: amd64
-
 #################################################################################
 # Job Scheduler
 workflows:
@@ -18,7 +11,7 @@ workflows:
           matrix:
             parameters:
               flavor:
-                # ubuntu-18.04
+                - ubuntu-18.04
                 # ubuntu-20.04
                 # ubuntu-21.10
                 # fedora-34
@@ -141,10 +134,16 @@ commands:
       arch:
         type: string
     steps:
+      - run:
+          command: |
+            echo $(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
+
+
       - restore_cache:
-          key: << parameters.flavor >>-<< parameters.arch >>-{{checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
+          key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
 
       - run:
+          name: Customize image
           no_output_timeout: 90m
           command: |
             set -x
@@ -209,7 +208,7 @@ commands:
             # Check for && confirm cached customized image present || If not present then customize and cache
             [[ ! -f << parameters.flavor >>-<< parameters.arch >>.qcow2 ]] && customize_image || echo "Detected cached disk image ... continuing"
       - save_cache:
-          key: << parameters.flavor >>-<< parameters.arch >>-{{checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
+          key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
           paths:
             - << parameters.flavor >>-<< parameters.arch >>.qcow2
 
@@ -228,13 +227,7 @@ commands:
           at: /home/circleci/project/images
 
       - run:
-          no_output_timeout: 90m
           command: |
-            set -x
-
-            NAME=${FLAVOR%-*}
-            VERSION=${FLAVOR##*-}
-
             ls -lah images/
 
       - enable-buildx
