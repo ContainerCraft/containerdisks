@@ -1,0 +1,266 @@
+version: '2.1'
+orbs:
+  slack: circleci/slack@4.5.0
+
+#################################################################################
+# Job Scheduler
+workflows:
+  build-and-publish:
+    jobs:
+      - customize:
+          matrix:
+            parameters:
+              flavor:
+                - ubuntu-18.04
+                # ubuntu-20.04
+                # ubuntu-21.10
+                # fedora-34
+                - fedora-35
+                # centos-8
+                # - "centos-9"
+                # - "arch-latest"
+              arch: [amd64, arm64]
+            exclude:
+              - flavor: arch-latest
+                arch: arm64
+
+      - cradle:
+          requires:
+            - customize
+          matrix:
+            parameters:
+              flavor:
+                - ubuntu-18.04
+                # ubuntu-20.04
+                # ubuntu-21.10
+                # fedora-34
+                - fedora-35
+                # centos-8
+                # - "centos-9"
+                # - "arch-latest"
+
+#################################################################################
+# Reuseable Jobs
+jobs:
+
+  # Download & Prepare qcow2 image(s)
+  customize:
+    parameters:
+      flavor:
+        type: string
+      arch:
+        type: string
+    executor: << parameters.arch >>
+    environment:
+      FLAVOR: << parameters.flavor >>
+      ARCH: << parameters.arch >>
+    steps:
+      - checkout
+      - prepare-qcow2:
+          flavor: << parameters.flavor >>
+          arch: << parameters.arch >>
+      - ops_notify_err
+
+  # Containerize qcow2 image(s)
+  cradle:
+    parameters:
+      flavor:
+        type: string
+    executor: amd64
+    environment:
+      FLAVOR: << parameters.flavor >>
+    steps:
+      - checkout
+      - cradle-qcow2:
+          flavor: << parameters.flavor >>
+
+#################################################################################
+# Reuseable Commands
+commands:
+  buildx-bake:
+    description: "Runner: Execute Docker Buildx"
+    parameters:
+      bake_file:
+        type: string
+        default: bake.hcl
+      target:
+        type: string
+    steps:
+      - run:
+          command: |
+            docker buildx bake \
+              -f << parameters.bake_file >> \
+              --push \
+              --progress plain \
+              << parameters.target >>
+
+  # CMD: Configure Docker BuildX
+  enable-buildx:
+    description: "Runner: Configure Docker Buildx Environment"
+    parameters:
+      buildkit_version:
+        type: string
+        default: v0.9.3
+    steps:
+      - run:
+          name: Install All Emulators
+          command: |
+            docker run --privileged --rm tonistiigi/binfmt --install all
+      - run:
+          name: Create builder with buildkit << parameters.buildkit_version >>
+          command: |
+            docker buildx ls \
+              | grep "build-<< parameters.buildkit_version >>" \
+              || docker buildx create --use \
+              --name build-<< parameters.buildkit_version >> \
+              --driver docker-container \
+              --driver-opt image=moby/buildkit:<< parameters.buildkit_version >>,network=host
+      - run:
+          name: Set builder
+          command: docker buildx use --default build-<< parameters.buildkit_version >>
+      - run:
+          name: Start up buildx and inspect
+          command: docker buildx inspect --bootstrap
+      - run:
+          name: Login to dockerhub
+          command: echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
+      - ops_notify_err
+
+  prepare-qcow2:
+    description: "Qcow2 Image: Download and Customize"
+    parameters:
+      flavor:
+        type: string
+      arch:
+        type: string
+    steps:
+      - run:
+          command: |
+            echo $(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
+
+
+      - restore_cache:
+          key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
+
+      - run:
+          name: Customize image
+          no_output_timeout: 90m
+          command: |
+            set -x
+
+            customize_image() {
+
+              # Install Qcow2 Build Dependencies
+              sudo apt-get update
+              sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
+
+              # Disable libvirtd layer 
+              # Required to support edge cases for some distributions
+              export LIBGUESTFS_BACKEND=direct
+
+              NAME=${FLAVOR%-*}
+              VERSION=${FLAVOR##*-}
+
+              QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
+              QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
+
+              BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
+              SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
+              DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
+
+              # Source OS build variables
+              source kmi/${NAME}/env.sh
+
+              # Download qcow2
+              curl --verbose \
+                --output ${QCOW2_TMPFILE} \
+                --location ${BASE_URL}/${DOWNLOAD_FILE}
+
+              # Verify Checksum
+              echo "${SHA256SUM} ${QCOW2_TMPFILE}" \
+                | sha256sum --check --status \
+                || echo "Invalid checksum: sha256sum check failed"
+
+              # Grow disk size
+              qemu-img resize ${QCOW2_TMPFILE} +20G;
+
+              # Customize Disk Image
+              sudo virt-sysprep \
+                --verbose \
+                --network \
+                --add ${QCOW2_TMPFILE} \
+                --enable ${VIRT_SYSPREP_OPERATIONS} \
+                --commands-from-file kmi/${FLAVOR}/virt.sysprep
+
+              # Log disk image info
+              qemu-img info ${QCOW2_TMPFILE}
+
+              # Sparsify
+              sudo virt-sparsify \
+                --verbose \
+                --compress \
+                ${QCOW2_TMPFILE} \
+                ${QCOW2_FILE} \
+              && sudo chown ${USER}:${USER} ${QCOW2_FILE} \
+              && sudo rm ${QCOW2_TMPFILE};
+            }
+
+            # Check for && confirm cached customized image present || If not present then customize and cache
+            [[ ! -f << parameters.flavor >>-<< parameters.arch >>.qcow2 ]] && customize_image || echo "Detected cached disk image ... continuing"
+      - save_cache:
+          key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
+          paths:
+            - << parameters.flavor >>-<< parameters.arch >>.qcow2
+
+      - persist_to_workspace:
+          root: /home/circleci/project
+          paths:
+            - << parameters.flavor >>-<< parameters.arch >>.qcow2
+
+  cradle-qcow2:
+    description: "Qcow2 Image: Download and Customize"
+    parameters:
+      flavor:
+        type: string
+    steps:
+      - attach_workspace:
+          at: /home/circleci/project/images
+
+      - run:
+          command: |
+            ls -lah images/
+
+      - enable-buildx
+      - buildx-bake:
+          target: << parameters.flavor >>
+
+  # CMD: Slack Notify if ERR
+  ops_notify_err:
+    description: Alert Ops if Abort Failures Occur
+    steps:
+      - slack/notify:
+          event: fail
+          channel: ops-kargo
+          template: basic_fail_1
+
+#################################################################################
+# Workflow Runner Instances
+executors:
+
+  # ARM64 Runner
+  arm64:
+    machine:
+      enabled: true
+      image: ubuntu-2004:202111-01
+    environment:
+      DOCKER_CLI_EXPERIMENTAL: enabled
+    resource_class: arm.large
+
+  # AMD64 Runner
+  amd64:
+    machine:
+      enabled: true
+      image: ubuntu-2004:202111-01
+    environment:
+      DOCKER_CLI_EXPERIMENTAL: enabled
+    resource_class: large

@@ -7,66 +7,46 @@ variable "FLAG" {
 }
 
 group "default" {
-  targets = ["ubuntu", "arch"]
+  targets = ["ubuntu"]
 }
 
-group "ubuntu" {
-  targets = ["ubuntu-18.04", "ubuntu-20.04", "ubuntu-21.10"]
-}
-
-target "ubuntu-defaults" {
+target "defaults" {
   dockerfile = "Containerfile"
   platforms = ["linux/arm64", "linux/amd64"]
-  args = {
-    FLAVOR = "ubuntu"
-    PKG_LIST = "screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent"
-    OPERATIONS = "user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache"
+  labels = {
+    license = "GPLv3"
+    distribution-scope = "public"
+    description = "ContainerCraft.io Maintained Public Reference KMI",
+    "io.k8s.description" = "ContainerCraft.io Maintained Public Reference KMI"
+    "org.opencontainers.image.source" = "https://github.com/ContainerCraft/kmi/"
   }
 }
 
+group "ubuntu" {
+  targets = ["ubuntu-18.04"]
+}
+
+group "fedora" {
+  targets = ["fedora-35"]
+}
+
 target "ubuntu-18.04" {
-  inherits = ["ubuntu-defaults"]
+  inherits = ["defaults"]
   tags = [
     "docker.io/containercraft/ubuntu:18.04-${FLAG}",
     "docker.io/containercraft/ubuntu:bionic-${FLAG}"
   ]
   args = {
-    VERSION = "18.04"
+    FLAVOR = "ubuntu-18.04"
   }
 }
 
-target "ubuntu-20.04" {
-  inherits = ["ubuntu-defaults"]
+target "fedora-35" {
+  inherits = ["defaults"]
   tags = [
-    "docker.io/containercraft/ubuntu:20.04-${FLAG}",
-    "docker.io/containercraft/ubuntu:focal-${FLAG}"
+    "docker.io/containercraft/fedora:35-${FLAG}"
   ]
   args = {
-    VERSION = "20.04"
-  }
-}
-
-target "ubuntu-21.10" {
-  inherits = ["ubuntu-defaults"]
-  tags = [
-    "docker.io/containercraft/ubuntu:21.10-${FLAG}",
-    "docker.io/containercraft/ubuntu:impish-${FLAG}"
-  ]
-  args = {
-    VERSION = "21.10"
-  }
-}
-
-target "arch" {
-  dockerfile = "Containerfile"
-  platforms = ["linux/amd64"]
-  tags = [
-    "docker.io/containercraft/arch:latest-${FLAG}"
-  ]
-  args = {
-    FLAVOR = "arch"
-    PKG_LIST = "screenfetch,python3,tmux,git,vim,net-tools,qemu-guest-agent,libguestfs"
-    OPERATIONS = "logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,tmp-files,smolt-uuid,package-manager-cache"
-    VERSION = "latest"
+    FLAVOR = "fedora-35"
   }
 }
