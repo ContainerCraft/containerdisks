@@ -24,6 +24,7 @@ kubectl get pods -A
 sleep 30
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-operator
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-api
+sleep 60
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-controller
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-handler
 
