@@ -9,25 +9,27 @@ aliases:
 
   ubuntu-flavors: &_ubuntu-flavors
     - ubuntu-18.04
-    - ubuntu-20.04
-    - ubuntu-21.10
+#    - ubuntu-20.04
+#    - ubuntu-21.10
 
   cache-key: &_cache-key
     key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
 
-
 #################################################################################
 # Job Scheduler
 workflows:
-  build-and-publish:
-    jobs:
-      - customize:
-          name: customize-<< matrix.flavor >>-<< matrix.arch >>
-          matrix:
-            parameters:
-              flavor: *_fedora-flavors
-              arch: [amd64, arm64]
 
+  build-and-publish-dev:
+    jobs:
+      # Fedora customize job matrix
+#      - customize:
+#          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#          matrix:
+#            parameters:
+#              flavor: *_fedora-flavors
+#              arch: [amd64, arm64]
+
+      # Ubuntu customize job matrix
       - customize:
           name: customize-<< matrix.flavor >>-<< matrix.arch >>
           matrix:
@@ -35,20 +37,36 @@ workflows:
               flavor: *_ubuntu-flavors
               arch: [amd64, arm64]
 
-      - cradle:
-          requires:
-            - customize-<< matrix.flavor >>-amd64
-            - customize-<< matrix.flavor >>-arm64
-          name: cradle-<< matrix.flavor >>
-          matrix:
-            parameters:
-              flavor: *_fedora-flavors
+      # Fedora cradle job matrix
+      # - depends on all Fedora customize jobs
+#      - cradle:
+#          requires:
+#            - customize-<< matrix.flavor >>-amd64
+#            - customize-<< matrix.flavor >>-arm64
+#          name: cradle-<< matrix.flavor >>
+#          matrix:
+#            alias: cradle-fedora
+#            parameters:
+#              flavor: *_fedora-flavors
 
+      # Ubuntu cradle job matrix
+      # - depends on all Ubuntu customize jobs
       - cradle:
           requires:
             - customize-<< matrix.flavor >>-amd64
             - customize-<< matrix.flavor >>-arm64
           name: cradle-<< matrix.flavor >>
+            alias: cradle-ubuntu
+            parameters:
+              flavor: *_ubuntu-flavors
+
+      # Trigger GitHub Actions E2E test workflow
+      # - depends on all cradle jobs
+      - trigger-tests:
+          requires:
+#            - cradle-fedora
+            - cradle-ubuntu
+          name: trigger-<< matrix.flavor >>-e2e-test
           matrix:
             parameters:
               flavor: *_ubuntu-flavors
@@ -73,7 +91,7 @@ jobs:
       - prepare-qcow2:
           flavor: << parameters.flavor >>
           arch: << parameters.arch >>
-      - ops_notify_err
+      - ops-notify-err
 
   # Containerize qcow2 image(s)
   cradle:
@@ -87,10 +105,39 @@ jobs:
       - checkout
       - cradle-qcow2:
           flavor: << parameters.flavor >>
+      - ops-notify-err
+
+  trigger-tests:
+    executor: amd64
+    parameters:
+      flavor:
+        type: string
+    steps:
+      - trigger-gha-test:
+          flavor: << parameters.flavor >>
+      - ops-notify-err
 
 #################################################################################
 # Reuseable Commands
 commands:
+  trigger-gha-test:
+    description: "Tests: Trigger GHA Test Workflow"
+    parameters:
+      flavor:
+        type: string
+    steps:
+      - run:
+          name: Trigger GitHub Actions E2E test and promote workflow
+          command: |
+            set -x
+            curl \
+              --fail \
+              --request POST \
+              --header "Authorization: token $GITHUB_ACTIONS_PAT" \
+              --header "Accept: application/vnd.github.everest-preview+json" \
+              --data-raw '{"ref":"<< pipeline.git.branch >>", "inputs": {"flavor": "<< parameters.flavor >>"}' \
+              https://api.github.com/repos/containercraft/kmi/actions/workflows/test.yml/dispatches
+ 
   buildx-bake:
     description: "Runner: Execute Docker Buildx"
     parameters:
@@ -114,12 +161,12 @@ commands:
     parameters:
       buildkit_version:
         type: string
-        default: v0.9.3
+        default: latest
     steps:
       - run:
           name: Install All Emulators
           command: |
-            docker run --privileged --rm tonistiigi/binfmt --install all
+            docker run --privileged --rm tonistiigi/binfmt --install arm64
       - run:
           name: Create builder with buildkit << parameters.buildkit_version >>
           command: |
@@ -138,7 +185,7 @@ commands:
       - run:
           name: Login to dockerhub
           command: echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
-      - ops_notify_err
+      - ops-notify-err
 
   prepare-qcow2:
     description: "Qcow2 Image: Download and Customize"
@@ -248,7 +295,7 @@ commands:
           target: << parameters.flavor >>
 
   # CMD: Slack Notify if ERR
-  ops_notify_err:
+  ops-notify-err:
     description: Alert Ops if Abort Failures Occur
     steps:
       - slack/notify:

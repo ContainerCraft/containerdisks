@@ -1,13 +1,22 @@
-name: Test an image
+name: End to End KMI Test
 on:
-  push:
+  workflow_dispatch:
+    inputs:
+      flavor:
+        description: "Image Flavor to test"
+        required: true
 
 jobs:
-  qubo-testing:
+  e2e-test:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+
+    - name: Validate Flavor is configured for testing
+      run: |
+        set -ex
+        file .github/workflows/kind/${{ github.event.inputs.flavor }}.yml
 
     - name: Prepare Node
       run: |
@@ -41,13 +50,13 @@ jobs:
         kubectl create configmap kubevirt-config -n kubevirt --from-literal debug.useEmulation=true
         sleep 90
         kubectl get pods -A
-        kubectl apply -f .github/workflows/kind/ubuntu-18.04.yml
+        kubectl apply -f .github/workflows/kind/${{ github.event.inputs.flavor }}.yml
         sleep 120
         kubectl get po -A
         sleep 90
         kubectl get po -A
         echo
         kubectl get events -A
-        kubectl describe vm ubuntu
+        kubectl describe vm ${{ github.event.inputs.flavor }}
         sleep 270
         ssh -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 screenfetch || ssh -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami

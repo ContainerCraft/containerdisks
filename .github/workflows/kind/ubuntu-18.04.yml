@@ -15,7 +15,7 @@ spec:
 apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachine
 metadata:
-  name: ubuntu
+  name: ubuntu-18.04
   labels:
     test: qubo
 spec:
