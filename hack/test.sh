@@ -5,6 +5,11 @@ export FLAVOR=ubuntu
 export VERSION="18.04"
 KUBEVIRT_LATEST=$(curl -s https://api.github.com/repos/kubevirt/kubevirt/releases/latest | jq -r .tag_name)
 
+export VIRTCTL_RELEASE=$(curl -s https://api.github.com/repos/kubevirt/kubevirt/releases/latest | awk -F '["v,]' '/tag_name/{print $5}')
+sudo curl --output /usr/local/bin/virtctl -L https://github.com/kubevirt/kubevirt/releases/download/v${VIRTCTL_RELEASE}/virtctl-v${VIRTCTL_RELEASE}-$(uname -s | awk '{print tolower($0)}')-amd64
+sudo chmod +x /usr/local/bin/virtctl
+virtctl version --client
+
 kind create cluster --config .github/workflows/kind/config.yml || echo 0
 kubectl cluster-info
 kubectl get storageclass standard
@@ -56,6 +61,7 @@ guest_test_boot () {
     echo ">>>"
     echo ">>> Failed to detect guest boot"
     echo ">>>"
+    exit 1
   else
     echo
   fi
