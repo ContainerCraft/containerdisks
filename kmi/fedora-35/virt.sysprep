@@ -1,6 +1,5 @@
 run-command dnf -y --best upgrade --exclude=kernel*
-edit /etc/selinux/config:\
-    s/^SELINUX=*/SELINUX=permissive/
+edit /etc/selinux/config:s/^SELINUX=enforcing/SELINUX=permissive/
 install git-core,vim,tmux,net-tools,screenfetch,qemu-guest-agent
 run-command systemctl enable qemu-guest-agent
 run-command dnf clean all
