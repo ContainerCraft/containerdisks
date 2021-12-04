@@ -72,7 +72,7 @@ guest_test_ssh () {
   ;do
     echo ">>> Testing guest VM for SSH ... $ready"
     let "count=count+1"
-    ready=$(ssh -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami 2>&1 1>/dev/null;echo $?)
+    ready=$(ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami 2>&1 1>/dev/null;echo $?)
     echo $count
     sleep 5
   done
