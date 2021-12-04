@@ -40,4 +40,5 @@ jobs:
 
     - name: Test Cluster
       run: |
+        set -x
         source ./hack/test.sh

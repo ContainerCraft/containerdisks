@@ -10,30 +10,33 @@ sudo curl --output /usr/local/bin/virtctl -L https://github.com/kubevirt/kubevir
 sudo chmod +x /usr/local/bin/virtctl
 virtctl version --client
 
-kind create cluster --config .github/workflows/kind/config.yml || echo 0
+#kind create cluster --config .github/workflows/kind/config.yml || echo 0
 kubectl cluster-info
 kubectl get storageclass standard
 kubectl get nodes -oyaml | grep 'test:' && echo "detected node label 'kmi=test'"
 ls $HOME/.ssh/id_rsa || ssh-keygen -t rsa -N "" -f $HOME/.ssh/id_rsa
 kubectl create secret generic kargo-sshpubkey-kc2user --from-file=key1=$HOME/.ssh/id_rsa.pub --dry-run=client -oyaml | kubectl apply -f -
-
+sleep 30
 kubectl create namespace kubevirt --dry-run=client -oyaml | kubectl apply -f -
 kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_LATEST}/kubevirt-operator.yaml \
-  || sleep 3 && kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_LATEST}/kubevirt-operator.yaml
-
+  || sleep 10 && kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_LATEST}/kubevirt-operator.yaml
+sleep 5
 kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_LATEST}/kubevirt-cr.yaml
+sleep 5
 kubectl create configmap kubevirt-config -n kubevirt --from-literal debug.useEmulation=true --dry-run=client -oyaml | kubectl apply -f -
 kubectl get pods -A
 
-sleep 5
+sleep 30
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-operator
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-api
+sleep 60
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-controller
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-handler
 
 # Deploy Test VM
 source .github/workflows/kind/testvm.sh \
-  || sleep 2 && source .github/workflows/kind/testvm.sh
+  || sleep 10 && source .github/workflows/kind/testvm.sh
+sleep 10
 kubectl wait --for=condition=ready pod -l test=kmi --timeout=240s
 
 guest_test_boot () {
