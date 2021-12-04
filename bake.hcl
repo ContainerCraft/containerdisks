@@ -6,8 +6,12 @@ variable "FLAG" {
   default = "dev"
 }
 
+variable "REPO" {
+  default = ""
+}
+
 group "default" {
-  targets = ["ubuntu"]
+  targets = ["ubuntu", "fedora", "arch"]
 }
 
 target "defaults" {
@@ -23,30 +27,77 @@ target "defaults" {
 }
 
 group "ubuntu" {
-  targets = ["ubuntu-18.04"]
+  targets = ["ubuntu-18.04", "ubuntu-20.04", "ubuntu-21.10"]
 }
 
 group "fedora" {
-  targets = ["fedora-35"]
+  targets = ["fedora-34", "fedora-35"]
+}
+
+function "tag" {
+  params = [image, tag]
+  result = equal("", REPO) ? "docker.io/containercraft/${image}:${tag}-${FLAG}" : "${REPO}/${image}:${tag}-${FLAG}"
 }
 
 target "ubuntu-18.04" {
   inherits = ["defaults"]
   tags = [
-    "docker.io/containercraft/ubuntu:18.04-${FLAG}",
-    "docker.io/containercraft/ubuntu:bionic-${FLAG}"
+    tag("ubuntu", "18.04"),
+    tag("ubuntu", "bionic"),
   ]
   args = {
     FLAVOR = "ubuntu-18.04"
   }
 }
 
+target "ubuntu-20.04" {
+  inherits = ["defaults"]
+  tags = [
+    tag("ubuntu", "20.04"),
+    tag("ubuntu", "focal"),
+  ]
+  args = {
+    FLAVOR = "ubuntu-20.04"
+  }
+}
+
+target "ubuntu-21.10" {
+  inherits = ["defaults"]
+  tags = [
+    tag("ubuntu", "21.10"),
+    tag("ubuntu", "impish"),
+  ]
+  args = {
+    FLAVOR = "ubuntu-21.10"
+  }
+}
+
+target "fedora-34" {
+  inherits = ["defaults"]
+  tags = [
+    tag("fedora", "34")
+  ]
+  args = {
+    FLAVOR = "fedora-34"
+  }
+}
+
 target "fedora-35" {
   inherits = ["defaults"]
   tags = [
-    "docker.io/containercraft/fedora:35-${FLAG}"
+    tag("fedora", "35")
   ]
   args = {
     FLAVOR = "fedora-35"
+  }
+}
+
+target "arch" {
+  inherits = ["defaults"]
+  tags = [
+    tag("arch", "latest")
+  ]
+  args = {
+    FLAVOR = "arch"
   }
 }
