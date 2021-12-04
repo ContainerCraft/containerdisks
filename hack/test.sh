@@ -5,7 +5,7 @@ export FLAVOR=ubuntu
 export VERSION="18.04"
 KUBEVIRT_LATEST=$(curl -s https://api.github.com/repos/kubevirt/kubevirt/releases/latest | jq -r .tag_name)
 
-kind create cluster --config .github/workflows/kind/config.yml || echo 0
+#kind create cluster --config .github/workflows/kind/config.yml || echo 0
 kubectl cluster-info
 kubectl get storageclass standard
 kubectl get nodes -oyaml | grep 'test:' && echo "detected node label 'kmi=test'"
