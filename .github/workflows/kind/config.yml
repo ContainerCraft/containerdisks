@@ -1,0 +1,39 @@
+# docker volume create worker1-containerd
+# docker volume create control1-containerd
+# kind create cluster --config kind/config.yaml
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: qubo-test
+networking:
+  apiServerAddress: "127.0.0.1"
+  apiServerPort: 6443
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.22.2
+    extraMounts:
+    # Shared persistent image cache
+    - hostPath: /var/lib/docker/volumes/control1-containerd/_data
+      containerPath: /var/lib/containerd
+    kubeadmConfigPatches:
+    - |
+      kind: ClusterConfiguration
+      apiServer:
+        extraArgs:
+          "service-account-issuer": "kubernetes.default.svc"
+          "service-account-signing-key-file": "/etc/kubernetes/pki/sa.key"
+  - role: worker
+    image: kindest/node:v1.22.2
+    extraMounts:
+      # Shared persistent image cache
+      - hostPath: /var/lib/docker/volumes/worker1-containerd/_data
+        containerPath: /var/lib/containerd
+    extraPortMappings:
+    - containerPort: 30950
+      hostPort: 30950
+    kubeadmConfigPatches:
+    - |
+      kind: JoinConfiguration
+      nodeRegistration:
+        kubeletExtraArgs:
+          node-labels: test=qubo
