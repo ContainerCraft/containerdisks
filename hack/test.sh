@@ -14,13 +14,14 @@ kubectl create secret generic kargo-sshpubkey-kc2user --from-file=key1=$HOME/.ss
 
 kubectl create namespace kubevirt --dry-run=client -oyaml | kubectl apply -f -
 kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_LATEST}/kubevirt-operator.yaml \
-  || sleep 3 && kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_LATEST}/kubevirt-operator.yaml
-
+  || sleep 10 && kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_LATEST}/kubevirt-operator.yaml
+sleep 5
 kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_LATEST}/kubevirt-cr.yaml
+sleep 5
 kubectl create configmap kubevirt-config -n kubevirt --from-literal debug.useEmulation=true --dry-run=client -oyaml | kubectl apply -f -
 kubectl get pods -A
 
-sleep 20
+sleep 30
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-operator
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-api
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-controller
@@ -28,7 +29,8 @@ kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io
 
 # Deploy Test VM
 source .github/workflows/kind/testvm.sh \
-  || sleep 2 && source .github/workflows/kind/testvm.sh
+  || sleep 10 && source .github/workflows/kind/testvm.sh
+sleep 10
 kubectl wait --for=condition=ready pod -l test=kmi --timeout=240s
 
 guest_test_boot () {
