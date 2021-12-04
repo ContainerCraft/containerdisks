@@ -11,7 +11,7 @@ kubectl get storageclass standard
 kubectl get nodes -oyaml | grep 'test:' && echo "detected node label 'kmi=test'"
 ls $HOME/.ssh/id_rsa || ssh-keygen -t rsa -N "" -f $HOME/.ssh/id_rsa
 kubectl create secret generic kargo-sshpubkey-kc2user --from-file=key1=$HOME/.ssh/id_rsa.pub --dry-run=client -oyaml | kubectl apply -f -
-
+sleep 30
 kubectl create namespace kubevirt --dry-run=client -oyaml | kubectl apply -f -
 kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_LATEST}/kubevirt-operator.yaml \
   || sleep 10 && kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/${KUBEVIRT_LATEST}/kubevirt-operator.yaml
