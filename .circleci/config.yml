@@ -56,6 +56,7 @@ workflows:
             - customize-<< matrix.flavor >>-amd64
             - customize-<< matrix.flavor >>-arm64
           name: cradle-<< matrix.flavor >>
+          matrix:
             alias: cradle-ubuntu
             parameters:
               flavor: *_ubuntu-flavors
