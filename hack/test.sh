@@ -20,7 +20,7 @@ kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/downl
 kubectl create configmap kubevirt-config -n kubevirt --from-literal debug.useEmulation=true --dry-run=client -oyaml | kubectl apply -f -
 kubectl get pods -A
 
-sleep 5
+sleep 20
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-operator
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-api
 kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-controller
