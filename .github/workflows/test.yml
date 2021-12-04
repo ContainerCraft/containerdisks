@@ -26,7 +26,7 @@ jobs:
     - name: Create kind cluster QuboCI
       uses: helm/kind-action@v1.2.0
       with:
-        cluster_name: qubo-ci
+        cluster_name: kmi-ci
         config: .github/workflows/kind/config.yml
 
     - name: Prepare Cluster
@@ -34,29 +34,10 @@ jobs:
         set -x
         kubectl cluster-info
         kubectl get storageclass standard
-        kubectl get nodes -oyaml | grep 'test:' && echo "detected node label 'qubo=test'"
+        kubectl get nodes -oyaml | grep 'test:' && echo "detected node label 'kmi=test'"
         ls $HOME/.ssh/id_rsa || ssh-keygen -t rsa -N "" -f $HOME/.ssh/id_rsa
         kubectl create secret generic kargo-sshpubkey-kc2user --from-file=key1=$HOME/.ssh/id_rsa.pub
 
     - name: Test Cluster
       run: |
-        set -x
-        kubectl create ns kubevirt
-
-        kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/v0.47.1/kubevirt-operator.yaml
-        kubectl apply -n kubevirt -f https://github.com/kubevirt/kubevirt/releases/download/v0.47.1/kubevirt-cr.yaml
-
-        sleep 5
-        kubectl create configmap kubevirt-config -n kubevirt --from-literal debug.useEmulation=true
-        sleep 90
-        kubectl get pods -A
-        kubectl apply -f .github/workflows/kind/${{ github.event.inputs.flavor }}.yml
-        sleep 120
-        kubectl get po -A
-        sleep 90
-        kubectl get po -A
-        echo
-        kubectl get events -A
-        kubectl describe vm ${{ github.event.inputs.flavor }}
-        sleep 270
-        ssh -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 screenfetch || ssh -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami
+        source ./hack/test.sh

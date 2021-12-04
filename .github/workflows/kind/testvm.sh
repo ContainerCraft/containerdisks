@@ -1,3 +1,4 @@
+cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Service
 metadata:
@@ -9,24 +10,24 @@ spec:
     protocol: TCP
     targetPort: 22
   selector:
-    test: qubo
+    test: kmi
   type: NodePort
 ---
 apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachine
 metadata:
-  name: ubuntu-18.04
+  name: testvm
   labels:
-    test: qubo
+    test: kmi
 spec:
   running: true
   template:
     metadata:
       labels:
-        test: qubo
+        test: kmi
     spec:
       nodeSelector:
-        test: "qubo"
+        test: "kmi"
       domain:
         devices:
           autoattachPodInterface: true
@@ -46,7 +47,7 @@ spec:
             memory: 1G
           requests:
             memory: 1G
-      hostname: ubuntu
+      hostname: testvm
       terminationGracePeriodSeconds: 0
       accessCredentials:
       - sshPublicKey:
@@ -60,7 +61,7 @@ spec:
       volumes:
         - name: containerdisk
           containerDisk:
-            image: docker.io/containercraft/ubuntu:18.04-dev
+            image: docker.io/containercraft/${FLAVOR}:${VERSION}-dev
             imagePullPolicy: Always
         - name: cloudinitdisk
           cloudInitNoCloud:
@@ -83,13 +84,10 @@ spec:
                   shell: /bin/bash
                   lock_passwd: false
                   sudo: ['ALL=(ALL) NOPASSWD:ALL']
-                  groups: sudo,lxd,libvirt,microk8s,xrdp,docker,ssl-cert
+                  groups: sudo,wheel
               growpart:
                 mode: auto
                 devices: ['/']
                 ignore_growroot_disabled: true
               package_upgrade: false
-              packages:
-                - screenfetch
-              runcmd:
-                - "screenfetch"
+EOF
