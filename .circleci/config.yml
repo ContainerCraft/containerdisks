@@ -13,7 +13,11 @@ aliases:
 #    - ubuntu-21.10
 
   cache-key: &_cache-key
-    key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
+    # cache key contains three different ways to bust the cache:
+    # 1. the checksum of the flavor's sha256sum changes
+    # 2. the flavor's virt.sysprep file changes
+    # 3. the number on the end (if all else fails, increase the number)
+    key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}-1
 
 #################################################################################
 # Job Scheduler
