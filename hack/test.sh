@@ -36,8 +36,8 @@ kubectl get nodes -oyaml | grep 'test:' && echo "detected node label 'kmi=test'"
 ls "$HOME"/.ssh/id_rsa || ssh-keygen -t rsa -N "" -f "$HOME"/.ssh/id_rsa
 kubectl create secret generic kargo-sshpubkey-kc2user \
 	--from-file=key1="$HOME"/.ssh/id_rsa.pub \
-	--dry-run=client -oyaml \
-	| kubectl apply -f -
+	--dry-run=client -oyaml |
+	kubectl apply -f -
 
 # Deploy Kubevirt
 until kubectl create namespace kubevirt --dry-run=client -oyaml | kubectl apply -f -; do sleep 1; done
@@ -69,7 +69,7 @@ guest_test_boot() {
 		echo ">>> Waiting for guest VM to boot ... Attempt #$count ..."
 		virtctl guestosinfo testvm 2>&1
 		ready=$(echo $?)
-		((count+=1))
+		((count += 1))
 		sleep 7
 	done
 
@@ -103,7 +103,7 @@ guest_test_ssh() {
 			ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami 2>&1 1>/dev/null
 			echo $?
 		)
-		((count+=1))
+		((count += 1))
 		sleep 5
 	done
 
