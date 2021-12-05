@@ -45,19 +45,19 @@ until kubectl wait --for=condition=ready pod -l test=kmi --timeout=240s; do slee
 set -e
 
 guest_test_boot() {
+	set +xe
+
 	local ready=1
 	local count=1
 	echo ">>>"
 
 	# Wait for vm to boot
 	while [[ $ready != 0 ]] && [[ $count -lt 120 ]]; do
-		set +xe
 		echo ">>> Waiting for guest VM to boot ... Attempt #$count ..."
 		virtctl guestosinfo testvm 2>&1
 		ready=$(echo $?)
 		((count+=1))
 		sleep 7
-		set -xe
 	done
 
 	if [[ $ready == 0 ]]; then
@@ -72,16 +72,19 @@ guest_test_boot() {
 	else
 		echo
 	fi
+
+	set -xe
 }
 
 guest_test_ssh() {
+	set +xe
+
 	local ready=1
 	local count=1
 	echo ">>>"
 
 	# Wait for vm ssh ready
 	while [[ $ready != 0 ]] && [[ $count -le 60 ]]; do
-		set +xe
 		echo ">>> Testing guest VM for SSH ... Attempt #$count ..."
 		ready=$(
 			ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami 2>&1 1>/dev/null
@@ -89,7 +92,6 @@ guest_test_ssh() {
 		)
 		((count+=1))
 		sleep 5
-		set -xe
 	done
 
 	if [[ $ready == 0 ]]; then
@@ -102,6 +104,8 @@ guest_test_ssh() {
 		echo ">>>"
 		exit 1
 	fi
+
+	set -xe
 }
 
 guest_test_boot
