@@ -12,12 +12,8 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2.4.0
 
-      - name: Find and Update latest Arch Image URL
-        run: |
-          set -ex
-          URL=https://mirror.pkgbuild.com/images/latest/
-          IMAGE=$(curl -s ${URL} | grep cloudimg | awk -F\" '{print $2}' | grep -v SHA)
-          cat <<< $(jq '.distributions |= . + {"arch": {"latest": {"amd64": {"url": "'${URL}${IMAGE}'"}}}}' index.json)  > index.json
+      - name: Find and Update latest Images
+        run: bash hack/update.sh
 
       - name: Push Updates
         run: |

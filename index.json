@@ -1,108 +1,107 @@
 {
-  "distributions": {
-    "vyos": {
-      "meta": {
-        "makefile": true
-      },
-      "1.4": {},
-      "1.3": {}
+  "vyos": {
+    "meta": {
+      "makefile": true
     },
-    "arch": {
-      "arch": {
-        "amd64": {
-          "url": "https://mirror.pkgbuild.com/images",
-          "image": "Arch-Linux-x86_64-cloudimg-20211115.39179.qcow2",
-          "sha256sum": "1f056b5e98e3b75179e71ec4f4237a945fb5043a1753889d6c850d2a8a517137"
-        }
+    "1.4": {},
+    "1.3": {}
+  },
+  "arch": {
+    "latest": {
+      "amd64": {
+        "url": "https://mirror.pkgbuild.com/images/latest/",
+        "image": "Arch-Linux-x86_64-cloudimg-20211201.40458.qcow2",
+        "sha256sum": "90fb8ea170be6fcfff0821b7544ccc8c3c1282fd0d08fcc0432a72552b929999"
+      }
+    }
+  },
+  "centos": {
+    "8": {
+      "amd64": {
+        "url": "https://cloud.centos.org/centos/8-stream/x86_64/images",
+        "image": "CentOS-Stream-GenericCloud-8-20210603.0.x86_64.qcow2",
+        "sha256sum": "8e22e67687b81e38c7212fc30c47cb24cbc4935c0f2459ed139f498397d1e7cd"
+      },
+      "arm64": {
+        "url": "https://cloud.centos.org/centos/8-stream/aarch64/images",
+        "image": "CentOS-Stream-GenericCloud-8-20210603.0.aarch64.qcow2",
+        "sha256sum": "935d23342c953f298293f4a6f2c3d072414226609140b674719ced3a4b86b147"
       }
     },
-    "centos": {
-      "8": {
-        "amd64": {
-          "url": "https://cloud.centos.org/centos/8-stream/x86_64/images",
-          "image": "CentOS-Stream-GenericCloud-8-20210603.0.x86_64.qcow2",
-          "sha256sum": "8e22e67687b81e38c7212fc30c47cb24cbc4935c0f2459ed139f498397d1e7cd"
-        },
-        "arm64": {
-          "url": "https://cloud.centos.org/centos/8-stream/aarch64/images",
-          "image": "CentOS-Stream-GenericCloud-8-20210603.0.aarch64.qcow2",
-          "sha256sum": "935d23342c953f298293f4a6f2c3d072414226609140b674719ced3a4b86b147"
-        }
+    "9": {
+      "amd64": {
+        "url": "https://cloud.centos.org/centos/9-stream/x86_64/images",
+        "image": "CentOS-Stream-GenericCloud-9-20211119.0.x86_64.qcow2",
+        "sha256sum": "84e67ec05f085bbf2fe42d3a341bfff4a4800ef1957655443638522c4c73e02c"
       },
-      "9": {
-        "amd64": {
-          "url": "https://cloud.centos.org/centos/9-stream/x86_64/images",
-          "image": "CentOS-Stream-GenericCloud-9-20211119.0.x86_64.qcow2",
-          "sha256sum": "84e67ec05f085bbf2fe42d3a341bfff4a4800ef1957655443638522c4c73e02c"
-        },
-        "arm64": {
-          "url": "https://cloud.centos.org/centos/9-stream/aarch64/images",
-          "image": "CentOS-Stream-GenericCloud-9-20211119.0.aarch64.qcow2",
-          "sha256sum": "b68b6d8c3a9a82a41c94ca295ce127e15761c87f9ad33db9871f236252fce17b"
-        }
+      "arm64": {
+        "url": "https://cloud.centos.org/centos/9-stream/aarch64/images",
+        "image": "CentOS-Stream-GenericCloud-9-20211119.0.aarch64.qcow2",
+        "sha256sum": "b68b6d8c3a9a82a41c94ca295ce127e15761c87f9ad33db9871f236252fce17b"
+      }
+    }
+  },
+  "fedora": {
+    "34": {
+      "amd64": {
+        "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/x86_64/images",
+        "image": "Fedora-Cloud-Base-34-1.2.x86_64.qcow2",
+        "sha256sum": "fe84502779b3477284a8d4c86731f642ca10dd3984d2b5eccdf82630a9ca2de6"
+      },
+      "arm64": {
+        "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/aarch64/images",
+        "image": "Fedora-Cloud-Base-34-1.2.aarch64.qcow2",
+        "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6"
       }
     },
-    "fedora": {
-      "34": {
-        "amd64": {
-          "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/x86_64/images",
-          "image": "Fedora-Cloud-Base-34-1.2.x86_64.qcow2",
-          "sha256sum": "b9b621b26725ba95442d9a56cbaa054784e0779a9522ec6eafff07c6e6f717ea"
-        },
-        "arm64": {
-          "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/aarch64/images",
-          "image": "Fedora-Cloud-Base-34-1.2.aarch64.qcow2",
-          "sha256sum": "141f16f52bfbe159947267658a0dbfbbe96fd5b988a95d1271f9c9ed61156da2"
-        }
+    "35": {
+      "amd64": {
+        "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/x86_64/images",
+        "image": "Fedora-Cloud-Base-35-1.2.x86_64.qcow2",
+        "sha256sum": "fe84502779b3477284a8d4c86731f642ca10dd3984d2b5eccdf82630a9ca2de6"
       },
-      "35": {
-        "amd64": {
-          "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/x86_64/images",
-          "image": "Fedora-Cloud-Base-35-1.2.x86_64.qcow2",
-          "sha256sum": "fe84502779b3477284a8d4c86731f642ca10dd3984d2b5eccdf82630a9ca2de6"
-        },
-        "arm64": {
-          "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/aarch64/images",
-          "image": "Fedora-Cloud-Base-35-1.2.aarch64.qcow2",
-          "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6"
-        }
+      "arm64": {
+        "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/aarch64/images",
+        "image": "Fedora-Cloud-Base-35-1.2.aarch64.qcow2",
+        "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6"
+      }
+    }
+  },
+  "ubuntu": {
+    "18.04": {
+      "amd64": {
+        "url": "https://cloud-images.ubuntu.com/bionic/current",
+        "image": "bionic-server-cloudimg-amd64.img",
+        "sha256sum": "eeff819e8474babe95382c07608fdcea11ad99a3865962281ce219e749e492c9"
+      },
+      "arm64": {
+        "url": "https://cloud-images.ubuntu.com/bionic/current",
+        "image": "bionic-server-cloudimg-arm64.img",
+        "sha256sum": "5985d8479c10d5f0af54939559bdf87f47a2390b8395dd0fb5060eb5457f3797"
       }
     },
-    "ubuntu": {
-      "18.04": {
-        "amd64": {
-          "url": "https://cloud-images.ubuntu.com/bionic/current",
-          "image": "bionic-server-cloudimg-amd64.img",
-          "sha256sum": "eeff819e8474babe95382c07608fdcea11ad99a3865962281ce219e749e492c9"
-        },
-        "arm64": {
-          "url": "https://cloud-images.ubuntu.com/bionic/current",
-          "image": "bionic-server-cloudimg-arm64.img",
-          "sha256sum": "5985d8479c10d5f0af54939559bdf87f47a2390b8395dd0fb5060eb5457f3797"
-        }
+    "20.04": {
+      "amd64": {
+        "url": "https://cloud-images.ubuntu.com/focal/current",
+        "image": "focal-server-cloudimg-amd64.img",
+        "sha256sum": "053da1ff7b713d39bbd816781a12c699fe1031ef8ab5b8a156fe441d1410eb67"
       },
-      "20.04": {
-        "amd64": {
-          "url": "https://cloud-images.ubuntu.com/focal/current",
-          "image": "focal-server-cloudimg-amd64.img",
-          "sha256sum": "6398da3ec321e39d652676812089cd4b3d9d6eb349ae187920cb564194c721f8"
-        },
-        "arm64": {
-          "url": "https://cloud-images.ubuntu.com/focal/current",
-          "image": "focal-server-cloudimg-arm64.img",
-          "sha256sum": "296e36df011dcb0c6e236ffd567bd5116893e58428d222738b2eefed3bbada51"
-        }
+      "arm64": {
+        "url": "https://cloud-images.ubuntu.com/focal/current",
+        "image": "focal-server-cloudimg-arm64.img",
+        "sha256sum": "c41d6762bb8a3589ac3632db2a7f33d73381d3b8953b18e9db8579f88f5ea300"
+      }
+    },
+    "21.10": {
+      "amd64": {
+        "url": "https://cloud-images.ubuntu.com/impish/current",
+        "image": "impish-server-cloudimg-amd64-disk-kvm.img",
+        "sha256sum": "4090e8317d9eecfddd0ca8c6fd11792209eaf13347d954e6e6119b0d41c69c41"
       },
-      "21.10": {
-        "amd64": {
-          "url": "https://cloud-images.ubuntu.com/impish/current",
-          "image": "impish-server-cloudimg-amd64-disk-kvm.img"
-        },
-        "arm64": {
-          "url": "https://cloud-images.ubuntu.com/impish/current",
-          "image": "impish-server-cloudimg-arm64.img",
-          "sha256sum": "063fa690f56b11f6bb12eecabd9e140a82faa05e26aed89cc1b7efa4c86e3bf2"
-        }
+      "arm64": {
+        "url": "https://cloud-images.ubuntu.com/impish/current",
+        "image": "impish-server-cloudimg-arm64.img",
+        "sha256sum": "063fa690f56b11f6bb12eecabd9e140a82faa05e26aed89cc1b7efa4c86e3bf2"
       }
     }
   }

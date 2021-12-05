@@ -24,9 +24,9 @@ VERSION=${FLAVOR##*-}
 QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
 QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
 
-BASE_URL=$(jq -r .distributions."${NAME}".\""${VERSION}"\"."${ARCH}".url index.json)
-SHA256SUM=$(jq -r .distributions."${NAME}".\""${VERSION}"\"."${ARCH}".sha256sum index.json)
-DOWNLOAD_FILE=$(jq -r .distributions."${NAME}".\""${VERSION}"\"."${ARCH}".image index.json)
+BASE_URL=$(jq -r ."${NAME}".\""${VERSION}"\"."${ARCH}".url index.json)
+SHA256SUM=$(jq -r ."${NAME}".\""${VERSION}"\"."${ARCH}".sha256sum index.json)
+DOWNLOAD_FILE=$(jq -r ."${NAME}".\""${VERSION}"\"."${ARCH}".image index.json)
 
 # Download qcow2
 curl --verbose \
