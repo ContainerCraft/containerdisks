@@ -90,4 +90,6 @@ spec:
                 devices: ['/']
                 ignore_growroot_disabled: true
               package_upgrade: false
+              runcmd:
+                - "setenforce 0"
 EOF
