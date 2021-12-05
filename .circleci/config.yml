@@ -207,7 +207,7 @@ commands:
           name: Customize image
           no_output_timeout: 90m
           command: |
-            set -x
+            set -ex
 
             customize_image() {
 
@@ -230,7 +230,7 @@ commands:
               DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
 
               # Source OS build variables
-              source kmi/${NAME}/env.sh
+              source kmi/${FLAVOR}/env.sh
 
               # Download qcow2
               curl --verbose \
@@ -250,8 +250,8 @@ commands:
                 --verbose \
                 --network \
                 --add ${QCOW2_TMPFILE} \
-                --enable ${VIRT_SYSPREP_OPERATIONS} \
-                --commands-from-file kmi/${FLAVOR}/virt.sysprep
+                --commands-from-file kmi/${FLAVOR}/virt.sysprep \
+                --enable ${VIRT_SYSPREP_OPERATIONS} ;
 
               # Log disk image info
               qemu-img info ${QCOW2_TMPFILE}
