@@ -26,7 +26,7 @@ jobs:
     - name: Create kind cluster QuboCI
       uses: helm/kind-action@v1.2.0
       with:
-        cluster_name: kmi-ci
+        cluster_name: kmi-test
         config: .github/workflows/kind/config.yml
 
     - name: Prepare Cluster
