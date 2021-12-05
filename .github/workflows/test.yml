@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       flavor:
-        description: "Image Flavor to test"
+        description: "Image Flavor to test (ex. ubuntu-18.04)"
         required: true
 
 jobs:
@@ -12,11 +12,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-
-    - name: Validate Flavor is configured for testing
-      run: |
-        set -ex
-        file .github/workflows/kind/${{ github.event.inputs.flavor }}.yml
 
     - name: Prepare Node
       run: |
@@ -39,4 +34,4 @@ jobs:
         kubectl create secret generic kargo-sshpubkey-kc2user --from-file=key1=$HOME/.ssh/id_rsa.pub
 
     - name: Test Cluster
-      run: bash hack/test.sh
+      run: bash hack/test.sh ${{ github.event.inputs.flavor }}

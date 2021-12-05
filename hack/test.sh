@@ -3,7 +3,17 @@
 
 set -ex
 
-export FLAVOR="ubuntu-18.04"
+FLAVOR=${FLAVOR:-$1}
+
+[[ -z ${FLAVOR} ]] && {
+	echo "\$FLAVOR must be passed in"
+	exit 1
+}
+
+# TODO: validate flavor exists
+
+export FLAVOR
+
 KUBEVIRT_LATEST=$(curl -s https://api.github.com/repos/kubevirt/kubevirt/releases/latest | jq -r .tag_name)
 
 # Install virtctl cli
@@ -24,7 +34,10 @@ kubectl get nodes -oyaml | grep 'test:' && echo "detected node label 'kmi=test'"
 
 # Check for || Create ssh keys & credentials secret
 ls "$HOME"/.ssh/id_rsa || ssh-keygen -t rsa -N "" -f "$HOME"/.ssh/id_rsa
-kubectl create secret generic kargo-sshpubkey-kc2user --from-file=key1="$HOME"/.ssh/id_rsa.pub --dry-run=client -oyaml | kubectl apply -f -
+kubectl create secret generic kargo-sshpubkey-kc2user \
+	--from-file=key1="$HOME"/.ssh/id_rsa.pub \
+	--dry-run=client -oyaml \
+	| kubectl apply -f -
 
 # Deploy Kubevirt
 until kubectl create namespace kubevirt --dry-run=client -oyaml | kubectl apply -f -; do sleep 1; done
@@ -84,7 +97,7 @@ guest_test_ssh() {
 	echo ">>>"
 
 	# Wait for vm ssh ready
-	while [[ $ready != 0 ]] && [[ $count -le 60 ]]; do
+	while [[ $ready != 0 ]] && [[ $count -le 120 ]]; do
 		echo ">>> Testing guest VM for SSH ... Attempt #$count ..."
 		ready=$(
 			ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami 2>&1 1>/dev/null
@@ -109,4 +122,4 @@ guest_test_ssh() {
 }
 
 guest_test_boot
-# guest_test_ssh
+guest_test_ssh
