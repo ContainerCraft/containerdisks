@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi
+FROM registry.access.redhat.com/ubi8/ubi-minimal
 ARG FLAVOR
 ARG TARGETARCH
 COPY kmi/${FLAVOR}/virt.sysprep           /meta/virt.sysprep
