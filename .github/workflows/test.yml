@@ -39,6 +39,4 @@ jobs:
         kubectl create secret generic kargo-sshpubkey-kc2user --from-file=key1=$HOME/.ssh/id_rsa.pub
 
     - name: Test Cluster
-      run: |
-        set -x
-        source ./hack/test.sh
+      run: bash hack/test.sh
