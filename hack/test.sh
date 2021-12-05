@@ -66,7 +66,7 @@ guest_test_boot () {
     echo ">>>"
     echo ">>> Kubevirt VM Booted Successfully! ... Continuing Test"
     echo ">>>"
-  elif [[ $ready != 0 ]] && [[ $count -gt 60 ]]; then
+  elif [[ $ready != 0 ]] && [[ $count -gt 120 ]]; then
     echo ">>>"
     echo ">>> Failed to detect guest boot"
     echo ">>>"
@@ -98,7 +98,7 @@ guest_test_ssh () {
     echo ">>>"
     echo ">>> Kubevirt VM Passed SSH Validation! ... Continuing Test"
     echo ">>>"
-  elif [[ $ready != 0 ]] && [[ $count -gt 60 ]]; then
+  elif [[ $ready != 0 ]] && [[ $count -gt 120 ]]; then
     echo ">>>"
     echo ">>> Failed ssh to Guest VM"
     echo ">>>"
