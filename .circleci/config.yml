@@ -9,8 +9,8 @@ aliases:
 
   ubuntu-flavors: &_ubuntu-flavors
     - ubuntu-18.04
-#    - ubuntu-20.04
-#    - ubuntu-21.10
+    - ubuntu-20.04
+    - ubuntu-21.10
 
   cache-key: &_cache-key
     # cache key contains three different ways to bust the cache:
