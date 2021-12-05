@@ -50,7 +50,7 @@ guest_test_boot() {
 	echo ">>>"
 
 	# Wait for vm to boot
-	while [[ $ready != 0 ]] && [[ $count -lt 60 ]]; do
+	while [[ $ready != 0 ]] && [[ $count -lt 120 ]]; do
 		set +xe
 		echo ">>> Waiting for guest VM to boot ... Attempt #$count ..."
 		virtctl guestosinfo testvm 2>&1
@@ -64,7 +64,7 @@ guest_test_boot() {
 		echo ">>>"
 		echo ">>> Kubevirt VM Booted Successfully! ... Continuing Test"
 		echo ">>>"
-	elif [[ $ready != 0 ]] || [[ $count -gt 60 ]]; then
+	elif [[ $ready != 0 ]] || [[ $count -gt 120 ]]; then
 		echo ">>>"
 		echo ">>> Failed to detect guest boot"
 		echo ">>>"
