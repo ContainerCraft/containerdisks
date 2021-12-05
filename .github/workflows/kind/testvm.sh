@@ -32,7 +32,7 @@ spec:
         devices:
           autoattachPodInterface: true
           autoattachSerialConsole: true
-          autoattachGraphicsDevice: false
+          autoattachGraphicsDevice: true
           networkInterfaceMultiqueue: false
           disks:
             - name: containerdisk
@@ -44,9 +44,9 @@ spec:
                 bus: virtio
         resources:
           limits:
-            memory: 1G
+            memory: 2G
           requests:
-            memory: 1G
+            memory: 2G
       hostname: testvm
       terminationGracePeriodSeconds: 0
       accessCredentials:
