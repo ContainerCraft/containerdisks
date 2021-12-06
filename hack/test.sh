@@ -14,7 +14,7 @@ FLAVOR=${FLAVOR:-$1}
 
 export FLAVOR
 
-KUBEVIRT_LATEST=$(curl -s https://api.github.com/repos/kubevirt/kubevirt/releases/latest | jq -r .tag_name)
+KUBEVIRT_LATEST="v0.47.1"
 
 # Install virtctl cli
 virtctl version --client || {
@@ -54,6 +54,7 @@ until kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubev
 
 # Deploy Test VM
 until bash .github/workflows/kind/testvm.sh; do sleep 1; done
+# until virtctl console testvm 2>&1 | tee -a /tmp/console.log; do sleep 1; done
 until kubectl wait --for=condition=ready pod -l test=kmi --timeout=240s; do sleep 1; done
 set -e
 

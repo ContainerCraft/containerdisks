@@ -9,8 +9,8 @@ aliases:
 
   ubuntu-flavors: &_ubuntu-flavors
     - ubuntu-18.04
-    - ubuntu-20.04
-    - ubuntu-21.10
+      #    - ubuntu-20.04
+      #    - ubuntu-21.10
 
   cache-key: &_cache-key
     # cache key contains three different ways to bust the cache:
@@ -63,12 +63,12 @@ workflows:
             parameters:
               flavor: *_ubuntu-flavors
 
-      # Trigger GitHub Actions E2E test workflow
+      # Trigger GitHub Actions E2E test and promotion workflow
       # - depends on all cradle jobs
       - trigger-tests:
           requires:
             - cradle-<< matrix.flavor >>
-          name: trigger-<< matrix.flavor >>-e2e-test
+          name: trigger-<< matrix.flavor >>-promotion
           matrix:
             parameters:
               flavor: *_ubuntu-flavors
@@ -270,7 +270,7 @@ executors:
       image: ubuntu-2004:202111-01
     environment:
       DOCKER_CLI_EXPERIMENTAL: enabled
-    resource_class: arm.large
+    resource_class: arm.medium
 
   # AMD64 Runner
   amd64:
@@ -279,4 +279,4 @@ executors:
       image: ubuntu-2004:202111-01
     environment:
       DOCKER_CLI_EXPERIMENTAL: enabled
-    resource_class: large
+    resource_class: medium

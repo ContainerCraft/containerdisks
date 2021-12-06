@@ -2,7 +2,6 @@ name: Update Image Index
 on:
   schedule:
     - cron: '0 0 * * *'
-  push:
 
 jobs:
   build:
@@ -21,4 +20,4 @@ jobs:
           git config user.email github-actions@github.com
           git stage -A
           git commit -m "auto update image index" --all 2>&1 || true
-          git push origin ccio
+          git push origin HEAD
