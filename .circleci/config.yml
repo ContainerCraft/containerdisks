@@ -26,7 +26,7 @@ aliases:
     # 1. the checksum of the flavor's sha256sum changes (written out in the workflow)
     # 2. the flavor's virt.sysprep file changes
     # 3. the number on the end (if all else fails, increase the number)
-    key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}-2
+    key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}-1
 
 #################################################################################
 # Job Scheduler

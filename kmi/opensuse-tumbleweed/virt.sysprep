@@ -1,3 +1,2 @@
 update
-install tmux,git,vim,net-tools,qemu-guest-agent
-run-command systemctl enable qemu-guest-agent
+install tmux,git,vim
