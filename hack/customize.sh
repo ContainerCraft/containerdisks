@@ -19,7 +19,7 @@ source kmi/"${FLAVOR}"/env.sh
 export LIBGUESTFS_BACKEND=direct
 
 NAME=${FLAVOR%%-*}
-VERSION=${FLAVOR##*-}
+VERSION=${FLAVOR#*-}
 
 QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
 QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
