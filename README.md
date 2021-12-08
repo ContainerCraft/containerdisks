@@ -89,6 +89,7 @@ These images also have automated maintenance for required compliance including:
 [Amazon Linux]:https://aws.amazon.com/amazon-linux-2
 [Arch Linux]:https://archlinux.org
 [CentOS]:https://www.centos.org
+[Debian]:https://www.debian.org
 [Fedora]:https://getfedora.org
 [Fedora CoreOS]:https://docs.fedoraproject.org/en-US/fedora-coreos
 [Neutrino]:https://github.com/ContainerCraft/neutrino
