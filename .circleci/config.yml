@@ -3,18 +3,23 @@ orbs:
   slack: circleci/slack@4.5.0
 
 aliases:
+
+  debian-flavors: &_debian-flavors
+    - debian-10
+    - debian-11
+
   fedora-flavors: &_fedora-flavors
     - fedora-34
     - fedora-35
+
+  opensuse-flavors: &_opensuse-flavors
+    - opensuse-leap-15
+    - opensuse-tumbleweed
 
   ubuntu-flavors: &_ubuntu-flavors
     - ubuntu-18.04
 #    - ubuntu-20.04
 #    - ubuntu-21.10
-
-  debian-flavors: &_debian-flavors
-    - debian-10
-    - debian-11
 
   cache-key: &_cache-key
     # cache key contains three different ways to bust the cache:
@@ -29,7 +34,7 @@ workflows:
 
   build-and-publish-dev:
     jobs:
-      # Fedora customize job matrix
+#      # Start Fedora #
 #      - customize:
 #          name: customize-<< matrix.flavor >>-<< matrix.arch >>
 #          matrix:
@@ -37,24 +42,6 @@ workflows:
 #              flavor: *_fedora-flavors
 #              arch: [amd64, arm64]
 
-      # Ubuntu customize job matrix
-      - customize:
-          name: customize-<< matrix.flavor >>-<< matrix.arch >>
-          matrix:
-            parameters:
-              flavor: *_ubuntu-flavors
-              arch: [amd64, arm64]
-
-      # Debian customize job matrix
-#      - customize:
-#          name: customize-<< matrix.flavor >>-<< matrix.arch >>
-#          matrix:
-#            parameters:
-#              flavor: *_debian-flavors
-#              arch: [amd64, arm64]
-
-      # Fedora cradle job matrix
-      # - depends on all Fedora customize jobs
 #      - cradle:
 #          requires:
 #            - customize-<< matrix.flavor >>-amd64
@@ -64,19 +51,49 @@ workflows:
 #            parameters:
 #              flavor: *_fedora-flavors
 
-      # Ubuntu cradle job matrix
-      # - depends on all Ubuntu customize jobs
-      - cradle:
-          requires:
-            - customize-<< matrix.flavor >>-amd64
-            - customize-<< matrix.flavor >>-arm64
-          name: cradle-<< matrix.flavor >>
-          matrix:
-            parameters:
-              flavor: *_ubuntu-flavors
+#      - trigger-tests:
+#          requires:
+#            - cradle-<< matrix.flavor >>
+#          name: trigger-<< matrix.flavor >>-promotion
+#          matrix:
+#            parameters:
+#              flavor: *_fedora-flavors
+#      # End Fedora #
 
-      # Debian cradle job matrix
-      # - depends on all Debian customize jobs
+#      # Start Ubuntu #
+#      - customize:
+#          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#          matrix:
+#            parameters:
+#              flavor: *_ubuntu-flavors
+#              arch: [amd64, arm64]
+
+#      - cradle:
+#          requires:
+#            - customize-<< matrix.flavor >>-amd64
+#            - customize-<< matrix.flavor >>-arm64
+#          name: cradle-<< matrix.flavor >>
+#          matrix:
+#            parameters:
+#              flavor: *_ubuntu-flavors
+
+#      - trigger-tests:
+#          requires:
+#            - cradle-<< matrix.flavor >>
+#          name: trigger-<< matrix.flavor >>-promotion
+#          matrix:
+#            parameters:
+#              flavor: *_ubuntu-flavors
+#      # End Ubuntu #
+
+#      # Start Debian #
+#      - customize:
+#          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#          matrix:
+#            parameters:
+#              flavor: *_debian-flavors
+#              arch: [amd64, arm64]
+
 #      - cradle:
 #          requires:
 #            - customize-<< matrix.flavor >>-amd64
@@ -86,18 +103,6 @@ workflows:
 #            parameters:
 #              flavor: *_debian-flavors
 
-      # Trigger GitHub Actions E2E test and promotion workflow
-      # - depends on Ubuntu cradle job
-      - trigger-tests:
-          requires:
-            - cradle-<< matrix.flavor >>
-          name: trigger-<< matrix.flavor >>-promotion
-          matrix:
-            parameters:
-              flavor: *_ubuntu-flavors
-
-      # Trigger GitHub Actions E2E test and promotion workflow
-      # - depends on Debian cradle job
 #      - trigger-tests:
 #          requires:
 #            - cradle-<< matrix.flavor >>
@@ -105,6 +110,32 @@ workflows:
 #          matrix:
 #            parameters:
 #              flavor: *_debian-flavors
+#     # End Debian #
+
+#     # Start openSUSE #
+      - customize:
+          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+          matrix:
+            parameters:
+              flavor: *_opensuse-flavors
+              arch: [amd64]
+
+      - cradle:
+          requires:
+            - customize-<< matrix.flavor >>-amd64
+          name: cradle-<< matrix.flavor >>
+          matrix:
+            parameters:
+              flavor: *_opensuse-flavors
+
+      - trigger-tests:
+          requires:
+            - cradle-<< matrix.flavor >>
+          name: trigger-<< matrix.flavor >>-promotion
+          matrix:
+            parameters:
+              flavor: *_opensuse-flavors
+#     # End openSUSE #
 
 #################################################################################
 # Reuseable Jobs
@@ -232,7 +263,7 @@ commands:
     steps:
       - run:
           command: |
-            echo $(jq -r .${FLAVOR%-*}.\"${FLAVOR##*-}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
+            echo $(jq -r .${FLAVOR%%-*}.\"${FLAVOR##*-}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
 
       - restore_cache:
           <<: *_cache-key

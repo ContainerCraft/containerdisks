@@ -96,13 +96,13 @@ target "fedora-35" {
   }
 }
 
-target "arch" {
+target "arch-latest" {
   inherits = ["defaults"]
   tags = [
     tag("arch", "latest")
   ]
   args = {
-    FLAVOR = "arch"
+    FLAVOR = "arch-latest"
   }
 }
 
@@ -123,5 +123,25 @@ target "debian-11" {
   ]
   args = {
     FLAVOR = "debian-11"
+  }
+}
+
+target "opensuse-leap-15" {
+  inherits = ["defaults"]
+  tags = [
+    tag("opensuse", "leap-15")
+  ]
+  args = {
+    FLAVOR = "opensuse-leap-15"
+  }
+}
+
+target "opensuse-tumbleweed" {
+  inherits = ["defaults"]
+  tags = [
+    tag("opensuse", "tumbleweed")
+  ]
+  args = {
+    FLAVOR = "opensuse-tumbleweed"
   }
 }

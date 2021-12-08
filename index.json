@@ -93,6 +93,22 @@
       }
     }
   },
+  "opensuse": {
+    "leap-15": {
+      "amd64": {
+        "url": "https://download.opensuse.org/distribution/leap/15.3/appliances/",
+        "image": "openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2",
+        "sha256sum": "ed2345654e5ee9332956838035b0a1dcafb98b9f0fefe628feeb61c7c6eb6ebb"
+      }
+    },
+    "tumbleweed": {
+      "amd64": {
+        "url": "https://download.opensuse.org/tumbleweed/appliances/",
+        "image": "openSUSE-Tumbleweed-JeOS.x86_64-OpenStack-Cloud.qcow2",
+        "sha256sum": "25f172754642622e566a8ba5f9fd2c7bb39ae1bba41f3bc3c8c720ba372355c6"
+      }
+    }
+  },
   "ubuntu": {
     "18.04": {
       "amd64": {

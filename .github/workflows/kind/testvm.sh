@@ -61,7 +61,7 @@ spec:
       volumes:
         - name: containerdisk
           containerDisk:
-            image: docker.io/containercraft/${FLAVOR//-/:}-dev
+            image: docker.io/containercraft/${FLAVOR/-/:}-dev
             imagePullPolicy: Always
         - name: cloudinitdisk
           cloudInitNoCloud:

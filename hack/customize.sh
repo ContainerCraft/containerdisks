@@ -18,7 +18,7 @@ source kmi/"${FLAVOR}"/env.sh
 # Required to support edge cases for some distributions
 export LIBGUESTFS_BACKEND=direct
 
-NAME=${FLAVOR%-*}
+NAME=${FLAVOR%%-*}
 VERSION=${FLAVOR##*-}
 
 QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
