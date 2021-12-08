@@ -13,7 +13,7 @@ aliases:
     - fedora-35
 
   opensuse-flavors: &_opensuse-flavors
-    - opensuse-leap-15
+    - opensuse-leap
     - opensuse-tumbleweed
 
   ubuntu-flavors: &_ubuntu-flavors
@@ -272,21 +272,24 @@ commands:
           name: Customize image
           no_output_timeout: 90m
           command: |
-            set -ex
 
             FLAVOR=<< parameters.flavor >>
             ARCH=<< parameters.arch >>
 
             # Check for && confirm cached customized image present || If not
             # present then customize and cache
-            [[ ! -f ${FLAVOR}-${ARCH}.qcow2 ]] && {
+            if [[ ! -f ${FLAVOR}-${ARCH}.qcow2 ]]; then
+              set -ex
 
               sudo apt-get update
               sudo apt-get install -y \
                 jq curl qemu-user libguestfs-tools qemu-user-static
 
               bash hack/customize.sh ${FLAVOR} ${ARCH}
-            } || echo "Detected cached disk image ... continuing"
+            else
+              echo "Detected cached disk image ... continuing"
+            fi
+
       - save_cache:
           <<: *_cache-key
           paths:
@@ -307,8 +310,7 @@ commands:
           at: /home/circleci/project/images
 
       - run:
-          command: |
-            ls -lah images/
+          command: ls -lah images/
 
       - enable-buildx
       - buildx-bake:

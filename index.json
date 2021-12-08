@@ -94,7 +94,7 @@
     }
   },
   "opensuse": {
-    "leap-15": {
+    "leap": {
       "amd64": {
         "url": "https://download.opensuse.org/distribution/leap/15.3/appliances/",
         "image": "openSUSE-Leap-15.3-JeOS.x86_64-OpenStack-Cloud.qcow2",

@@ -66,7 +66,7 @@ guest_test_boot() {
 	echo ">>>"
 
 	# Wait for vm to boot
-	while [[ $ready != 0 ]] && [[ $count -lt 120 ]]; do
+	while [[ $ready != 0 ]] && [[ $count -lt 60 ]]; do
 		echo ">>> Waiting for guest VM to boot ... Attempt #$count ..."
 		virtctl guestosinfo testvm 2>&1
 		ready=$(echo $?)
@@ -78,7 +78,7 @@ guest_test_boot() {
 		echo ">>>"
 		echo ">>> Kubevirt VM Booted Successfully! ... Continuing Test"
 		echo ">>>"
-	elif [[ $ready != 0 ]] || [[ $count -gt 120 ]]; then
+	elif [[ $ready != 0 ]] || [[ $count -gt 60 ]]; then
 		echo ">>>"
 		echo ">>> Failed to detect guest boot"
 		echo ">>>"
@@ -98,7 +98,7 @@ guest_test_ssh() {
 	echo ">>>"
 
 	# Wait for vm ssh ready
-	while [[ $ready != 0 ]] && [[ $count -le 120 ]]; do
+	while [[ $ready != 0 ]] && [[ $count -le 60 ]]; do
 		echo ">>> Testing guest VM for SSH ... Attempt #$count ..."
 		ready=$(
 			ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami 2>&1 1>/dev/null
@@ -112,7 +112,7 @@ guest_test_ssh() {
 		echo ">>>"
 		echo ">>> Kubevirt VM Passed SSH Validation! ... Continuing Test"
 		echo ">>>"
-	elif [[ $ready != 0 ]] || [[ $count -gt 120 ]]; then
+	elif [[ $ready != 0 ]] || [[ $count -gt 60 ]]; then
 		echo ">>>"
 		echo ">>> Failed ssh to Guest VM"
 		echo ">>>"
