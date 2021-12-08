@@ -100,10 +100,8 @@ guest_test_ssh() {
 	# Wait for vm ssh ready
 	while [[ $ready != 0 ]] && [[ $count -le 60 ]]; do
 		echo ">>> Testing guest VM for SSH ... Attempt #$count ..."
-		ready=$(
-			ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami 2>&1 1>/dev/null
-			echo $?
-		)
+		ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami
+		ready=$(echo $?)
 		((count += 1))
 		sleep 5
 	done
