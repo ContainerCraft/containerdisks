@@ -67,8 +67,9 @@ These images also have automated maintenance for required compliance including:
 | [AlmaLinux OS]   |        |          |    x    |          | |    X   |   X   |
 | [Alpine Linux]   |        |          |    x    |          | |    X   |   X   |
 | [Amazon Linux]   |        |          |    x    |          | |    X   |       |
-| [Arch Linux]     |        |          |    x    |          | |    X   |   X   |
+| [Arch Linux]     |        |          |    x    |          | |    X   |       |
 | [CentOS]         |        |          |    X    |          | |    X   |   X   |
+| [Debian]         |        |          |    X    |          | |    X   |   X   |
 | [Fedora]         |        |          |    X    |          | |    X   |   X   |
 | [Fedora CoreOS]  |        |          |    X    |          | |    X   |       |
 | [Neutrino]       |        |          |         |    X     | |    X   |       |
@@ -78,7 +79,7 @@ These images also have automated maintenance for required compliance including:
 | [OPNsense]       |        |          |         |    X     | |    X   |       |
 | [openSUSE]       |        |          |         |    X     | |    X   |       |
 | [PFSense]        |        |          |         |    X     | |    X   |       |
-| [Red Hat CoreOS] |        |          |         |    X     | |    X   |       |
+| [Red Hat CoreOS] |        |          |         |    X     | |    X   |   x   |
 | [Rocky Linux]    |        |          |         |    X     | |    X   |       |
 | [Ubuntu]         |        |          |    X    |          | |    X   |   X   |
 | [VyOS]           |        |          |    X    |          | |    X   |       |

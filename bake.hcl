@@ -11,7 +11,7 @@ variable "REPO" {
 }
 
 group "default" {
-  targets = ["ubuntu", "fedora", "arch"]
+  targets = ["ubuntu", "fedora", "arch", "debian"]
 }
 
 target "defaults" {
@@ -34,6 +34,10 @@ group "fedora" {
   targets = ["fedora-34", "fedora-35"]
 }
 
+group "debian" {
+  targets = ["debian-10", "debian-11"]
+}
+
 function "tag" {
   params = [image, tag]
   result = equal("", REPO) ? "docker.io/containercraft/${image}:${tag}-${FLAG}" : "${REPO}/${image}:${tag}-${FLAG}"
@@ -43,7 +47,7 @@ target "ubuntu-18.04" {
   inherits = ["defaults"]
   tags = [
     tag("ubuntu", "18.04"),
-    tag("ubuntu", "bionic"),
+    # tag("ubuntu", "bionic"),
   ]
   args = {
     FLAVOR = "ubuntu-18.04"
@@ -54,7 +58,7 @@ target "ubuntu-20.04" {
   inherits = ["defaults"]
   tags = [
     tag("ubuntu", "20.04"),
-    tag("ubuntu", "focal"),
+    # tag("ubuntu", "focal"),
   ]
   args = {
     FLAVOR = "ubuntu-20.04"
@@ -65,7 +69,7 @@ target "ubuntu-21.10" {
   inherits = ["defaults"]
   tags = [
     tag("ubuntu", "21.10"),
-    tag("ubuntu", "impish"),
+    # tag("ubuntu", "impish"),
   ]
   args = {
     FLAVOR = "ubuntu-21.10"
@@ -99,5 +103,25 @@ target "arch" {
   ]
   args = {
     FLAVOR = "arch"
+  }
+}
+
+target "debian-10" {
+  inherits = ["defaults"]
+  tags = [
+    tag("debian", "10")
+  ]
+  args = {
+    FLAVOR = "debian-10"
+  }
+}
+
+target "debian-11" {
+  inherits = ["defaults"]
+  tags = [
+    tag("debian", "11")
+  ]
+  args = {
+    FLAVOR = "debian-11"
   }
 }

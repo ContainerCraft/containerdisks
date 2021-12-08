@@ -12,9 +12,13 @@ aliases:
       #    - ubuntu-20.04
       #    - ubuntu-21.10
 
+  debian-flavors: &_debian-flavors
+    - debian-10
+    - debian-11
+
   cache-key: &_cache-key
     # cache key contains three different ways to bust the cache:
-    # 1. the checksum of the flavor's sha256sum changes
+    # 1. the checksum of the flavor's sha256sum changes (written out in the workflow)
     # 2. the flavor's virt.sysprep file changes
     # 3. the number on the end (if all else fails, increase the number)
     key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}-1
@@ -34,11 +38,19 @@ workflows:
 #              arch: [amd64, arm64]
 
       # Ubuntu customize job matrix
+#      - customize:
+#          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#          matrix:
+#            parameters:
+#              flavor: *_ubuntu-flavors
+#              arch: [amd64, arm64]
+
+      # Debian customize job matrix
       - customize:
           name: customize-<< matrix.flavor >>-<< matrix.arch >>
           matrix:
             parameters:
-              flavor: *_ubuntu-flavors
+              flavor: *_debian-flavors
               arch: [amd64, arm64]
 
       # Fedora cradle job matrix
@@ -54,6 +66,17 @@ workflows:
 
       # Ubuntu cradle job matrix
       # - depends on all Ubuntu customize jobs
+#      - cradle:
+#          requires:
+#            - customize-<< matrix.flavor >>-amd64
+#            - customize-<< matrix.flavor >>-arm64
+#          name: cradle-<< matrix.flavor >>
+#          matrix:
+#            parameters:
+#              flavor: *_ubuntu-flavors
+
+      # Debian cradle job matrix
+      # - depends on all Debian customize jobs
       - cradle:
           requires:
             - customize-<< matrix.flavor >>-amd64
@@ -61,7 +84,7 @@ workflows:
           name: cradle-<< matrix.flavor >>
           matrix:
             parameters:
-              flavor: *_ubuntu-flavors
+              flavor: *_debian-flavors
 
       # Trigger GitHub Actions E2E test and promotion workflow
       # - depends on all cradle jobs
@@ -71,7 +94,7 @@ workflows:
           name: trigger-<< matrix.flavor >>-promotion
           matrix:
             parameters:
-              flavor: *_ubuntu-flavors
+              flavor: *_debian-flavors
 
 #################################################################################
 # Reuseable Jobs
@@ -199,7 +222,7 @@ commands:
     steps:
       - run:
           command: |
-            echo $(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
+            echo $(jq -r .${FLAVOR%-*}.\"${FLAVOR##*-}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
 
       - restore_cache:
           <<: *_cache-key

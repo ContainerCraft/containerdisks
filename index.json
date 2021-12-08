@@ -41,6 +41,32 @@
       }
     }
   },
+  "debian": {
+    "10": {
+      "amd64": {
+        "url": "https://cloud.debian.org/images/cloud/buster/latest/",
+        "image": "debian-10-generic-amd64.qcow2",
+        "sha256sum": "b9868efeb11d39567f21bb5c2f91f69f3a6ffdf121aecaac564cfe091be0adba"
+      },
+      "arm64": {
+        "url": "https://cloud.debian.org/images/cloud/buster/latest/",
+        "image": "debian-10-generic-arm64.qcow2",
+        "sha256sum": "8f188014654d432bde7f8fefb6c17e09125f6daa50636f453f53fbcb5e07b6fc"
+      }
+    },
+    "11": {
+      "amd64": {
+        "url": "https://cloud.debian.org/images/cloud/bullseye/latest/",
+        "image": "debian-11-generic-amd64.qcow2",
+        "sha256sum": "504eaf474cc2802f416caa869833b563cc3d2da767ef93c610b3a4625bc64a1c"
+      },
+      "arm64": {
+        "url": "https://cloud.debian.org/images/cloud/bullseye/latest/",
+        "image": "debian-11-generic-arm64.qcow2",
+        "sha256sum": "99345973112b3f40aae445ce09b07c5d2e1cfc45ce9107c95eaa25077a0cea2b"
+      }
+    }
+  },
   "fedora": {
     "34": {
       "amd64": {
