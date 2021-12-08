@@ -54,17 +54,17 @@ until kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubev
 
 # Deploy Test VM
 until bash .github/workflows/kind/testvm.sh; do sleep 1; done
-# until virtctl console testvm 2>&1 | tee -a /tmp/console.log; do sleep 1; done
+# until virtctl console testvm 2>&1 | tee -a console.txt; do sleep 1; done
 until kubectl wait --for=condition=ready pod -l test=kmi --timeout=240s; do sleep 1; done
 set -e
 
 gather() {
-	kubectl get events -A --sort-by=.metadata.creationTimestamp > /tmp/events.txt
+	kubectl get events -A --sort-by=.metadata.creationTimestamp > events.txt
 }
 
 trap gather EXIT
 
-guest_test_boot() {
+guest_test_agent() {
 	set +xe
 
 	local ready=1
@@ -72,19 +72,19 @@ guest_test_boot() {
 	echo ">>>"
 
 	# Wait for vm to boot
-	while [[ $ready != 0 ]] && [[ $count -lt 60 ]]; do
-		echo ">>> Waiting for guest VM to boot ... Attempt #$count ..."
+	while [[ $ready -ne 0 ]] && [[ $count -lt 60 ]]; do
+		echo ">>> Waiting to connect to guest agent ... Attempt #$count ..."
 		virtctl guestosinfo testvm 2>&1
 		ready=$(echo $?)
 		((count += 1))
 		sleep 7
 	done
 
-	if [[ $ready == 0 ]]; then
+	if [[ $ready -eq 0 ]]; then
 		echo ">>>"
-		echo ">>> Kubevirt VM Booted Successfully! ... Continuing Test"
+		echo ">>> Connected to guest agent successfully ... Continuing test ..."
 		echo ">>>"
-	elif [[ $ready != 0 ]] || [[ $count -gt 60 ]]; then
+	elif [[ $ready -ne 0 ]] || [[ $count -gt 60 ]]; then
 		echo ">>>"
 		echo ">>> Failed to detect guest boot"
 		echo ">>>"
@@ -104,7 +104,7 @@ guest_test_ssh() {
 	echo ">>>"
 
 	# Wait for vm ssh ready
-	while [[ $ready != 0 ]] && [[ $count -le 60 ]]; do
+	while [[ $ready -ne 0 ]] && [[ $count -le 60 ]]; do
 		echo ">>> Testing guest VM for SSH ... Attempt #$count ..."
 		ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami
 		ready=$(echo $?)
@@ -112,11 +112,11 @@ guest_test_ssh() {
 		sleep 5
 	done
 
-	if [[ $ready == 0 ]]; then
+	if [[ $ready -eq 0 ]]; then
 		echo ">>>"
 		echo ">>> Kubevirt VM Passed SSH Validation! ... Continuing Test"
 		echo ">>>"
-	elif [[ $ready != 0 ]] || [[ $count -gt 60 ]]; then
+	elif [[ $ready -ne 0 ]] || [[ $count -gt 60 ]]; then
 		echo ">>>"
 		echo ">>> Failed ssh to Guest VM"
 		echo ">>>"
@@ -126,5 +126,7 @@ guest_test_ssh() {
 	set -xe
 }
 
-guest_test_boot
-guest_test_ssh
+guest_test_agent
+
+# TODO: re-enable ssh test
+# guest_test_ssh

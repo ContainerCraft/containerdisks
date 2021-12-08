@@ -26,24 +26,15 @@ jobs:
           cluster_name: kmi-test
           config: .github/workflows/kind/config.yml
 
-      - name: Prepare Cluster
-        run: |
-          set -x
-          kubectl cluster-info
-          kubectl get storageclass standard
-          kubectl get nodes -oyaml | grep 'test:' && echo "detected node label 'kmi=test'"
-          ls $HOME/.ssh/id_rsa || ssh-keygen -t rsa -N "" -f $HOME/.ssh/id_rsa
-          kubectl create secret generic kargo-sshpubkey-kc2user --from-file=key1=$HOME/.ssh/id_rsa.pub
-
-      - name: Test Cluster
+      - name: Test ${{ github.event.inputs.flavor }}
         run: bash hack/test.sh
 
       - name: Archive vm console log
         uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: ${{ github.event.inputs.flavor }}-logs
-          path: |
-            /tmp/*.txt
+          path: ${{ github.workspace }}
 
   promote-image:
     runs-on: ubuntu-latest
