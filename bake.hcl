@@ -128,6 +128,7 @@ target "debian-11" {
 
 target "opensuse-leap-15" {
   inherits = ["defaults"]
+  platforms = ["linux/amd64"]
   tags = [
     tag("opensuse", "leap-15")
   ]
@@ -138,6 +139,7 @@ target "opensuse-leap-15" {
 
 target "opensuse-tumbleweed" {
   inherits = ["defaults"]
+  platforms = ["linux/amd64"]
   tags = [
     tag("opensuse", "tumbleweed")
   ]
