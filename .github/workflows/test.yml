@@ -38,12 +38,12 @@ jobs:
       - name: Test Cluster
         run: bash hack/test.sh
 
-#      - name: Archive vm console log
-#        uses: actions/upload-artifact@v2
-#        with:
-#          name: ${{ github.event.inputs.flavor }}-console.log
-#          path: |
-#            /tmp/console.log
+      - name: Archive vm console log
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ github.event.inputs.flavor }}-logs
+          path: |
+            /tmp/*.txt
 
   promote-image:
     runs-on: ubuntu-latest
@@ -58,7 +58,7 @@ jobs:
         uses: sigstore/cosign-installer@main
 
       - name: Login Docker Hub
-        uses: docker/login-action@v1.10.0
+        uses: redhat-actions/podman-login@v1
         with:
           logout: false
           registry: docker.io
@@ -73,13 +73,11 @@ jobs:
 #          username: ${{ secrets.QUAY_USER }}
 #          password: ${{ secrets.QUAY_PASSWD }}
 
-      - name: Re-tag the image from -dev
+      - name: Copy the manifest to product tag
         run: |
-          docker pull docker.io/containercraft/${FLAVOR//-/:}-dev
-          docker tag docker.io/containercraft/${FLAVOR//-/:}-dev docker.io/containercraft/${FLAVOR//-/:}
-
-      - name: Push the image to production
-        run: docker push docker.io/containercraft/${FLAVOR//-/:}
+          skopeo copy --all \
+            docker://docker.io/containercraft/${FLAVOR//-/:}-dev
+            docker://docker.io/containercraft/${FLAVOR//-/:}
 
       - name: Sign the image
         run: cosign sign --recursive docker.io/containercraft/${FLAVOR//-/:}

@@ -58,6 +58,12 @@ until bash .github/workflows/kind/testvm.sh; do sleep 1; done
 until kubectl wait --for=condition=ready pod -l test=kmi --timeout=240s; do sleep 1; done
 set -e
 
+gather() {
+	kubectl get events -A --sort-by=.metadata.creationTimestamp > /tmp/events.txt
+}
+
+trap gather EXIT
+
 guest_test_boot() {
 	set +xe
 
