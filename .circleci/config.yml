@@ -9,8 +9,8 @@ aliases:
 
   ubuntu-flavors: &_ubuntu-flavors
     - ubuntu-18.04
-      #    - ubuntu-20.04
-      #    - ubuntu-21.10
+    - ubuntu-20.04
+    - ubuntu-21.10
 
   debian-flavors: &_debian-flavors
     - debian-10
@@ -38,12 +38,12 @@ workflows:
 #              arch: [amd64, arm64]
 
       # Ubuntu customize job matrix
-#      - customize:
-#          name: customize-<< matrix.flavor >>-<< matrix.arch >>
-#          matrix:
-#            parameters:
-#              flavor: *_ubuntu-flavors
-#              arch: [amd64, arm64]
+      - customize:
+          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+          matrix:
+            parameters:
+              flavor: *_ubuntu-flavors
+              arch: [amd64, arm64]
 
       # Debian customize job matrix
       - customize:
@@ -66,14 +66,14 @@ workflows:
 
       # Ubuntu cradle job matrix
       # - depends on all Ubuntu customize jobs
-#      - cradle:
-#          requires:
-#            - customize-<< matrix.flavor >>-amd64
-#            - customize-<< matrix.flavor >>-arm64
-#          name: cradle-<< matrix.flavor >>
-#          matrix:
-#            parameters:
-#              flavor: *_ubuntu-flavors
+      - cradle:
+          requires:
+            - customize-<< matrix.flavor >>-amd64
+            - customize-<< matrix.flavor >>-arm64
+          name: cradle-<< matrix.flavor >>
+          matrix:
+            parameters:
+              flavor: *_ubuntu-flavors
 
       # Debian cradle job matrix
       # - depends on all Debian customize jobs
@@ -87,7 +87,17 @@ workflows:
               flavor: *_debian-flavors
 
       # Trigger GitHub Actions E2E test and promotion workflow
-      # - depends on all cradle jobs
+      # - depends on Ubuntu cradle job
+      - trigger-tests:
+          requires:
+            - cradle-<< matrix.flavor >>
+          name: trigger-<< matrix.flavor >>-promotion
+          matrix:
+            parameters:
+              flavor: *_ubuntu-flavors
+
+      # Trigger GitHub Actions E2E test and promotion workflow
+      # - depends on Debian cradle job
       - trigger-tests:
           requires:
             - cradle-<< matrix.flavor >>
