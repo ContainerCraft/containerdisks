@@ -185,7 +185,7 @@ target "centos-9" {
 
 target "rhcos-4.9" {
   inherits = ["defaults"]
-  tag = [
+  tags = [
     tag("rhcos", "4.9")
   ]
   args = {
