@@ -28,11 +28,7 @@ aliases:
     - ubuntu-21.10
 
   cache-key: &_cache-key
-    # cache key contains three different ways to bust the cache:
-    # 1. the checksum of the flavor's sha256sum changes (written out in the workflow)
-    # 2. the flavor's virt.sysprep file changes
-    # 3. the number on the end (if all else fails, increase the number)
-    key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}-1
+    key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/checksum" }}
 
 #################################################################################
 # Job Scheduler
@@ -320,6 +316,7 @@ commands:
       - run:
           command: |
             echo $(jq -r .${FLAVOR%%-*}.\"${FLAVOR##*-}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
+            find km/${FLAVOR}/* -exec sha256sum {} \; > checksums
 
       - restore_cache:
           <<: *_cache-key

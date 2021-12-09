@@ -104,7 +104,7 @@
       },
       "arm64": {
         "url": "https://mirror.openshift.com/pub/openshift-v4/arm64/dependencies/rhcos/latest/latest/",
-        "image": "rhcos-openstack.arm64.qcow2.gz",
+        "image": "rhcos-openstack.aarch64.qcow2.gz",
         "sha256sum": "bd8badcb85d3c50d126b46bd3a2501db9b61e5456eac33a1299bc851dea337ad",
         "customize": false
       }
