@@ -182,3 +182,13 @@ target "centos-9" {
     FLAVOR = "centos-9"
   }
 }
+
+target "rhcos-4.9" {
+  inherits = ["defaults"]
+  tag = [
+    tag("rhcos", "4.9")
+  ]
+  args = {
+    FLAVOR = "rhcos-4.9"
+  }
+}
