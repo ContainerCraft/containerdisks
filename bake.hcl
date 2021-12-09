@@ -11,7 +11,14 @@ variable "REPO" {
 }
 
 group "default" {
-  targets = ["ubuntu", "fedora", "arch", "debian"]
+  targets = [
+    "ubuntu",
+    "fedora",
+    "arch",
+    "debian",
+    "opensuse",
+    "centos",
+  ]
 }
 
 target "defaults" {
@@ -36,6 +43,14 @@ group "fedora" {
 
 group "debian" {
   targets = ["debian-10", "debian-11"]
+}
+
+group "opensuse" {
+  targets = ["opensuse-leap-15", "opensuse-tumbleweed"]
+}
+
+group "centos" {
+  targets = ["centos-8", "centos-9"]
 }
 
 function "tag" {
@@ -145,5 +160,25 @@ target "opensuse-tumbleweed" {
   ]
   args = {
     FLAVOR = "opensuse-tumbleweed"
+  }
+}
+
+target "centos-8" {
+  inherits = ["defaults"]
+  tags = [
+    tag("centos", "8")
+  ]
+  args = {
+    FLAVOR = "centos-8"
+  }
+}
+
+target "centos-9" {
+  inherits = ["defaults"]
+  tags = [
+    tag("centos", "9")
+  ]
+  args = {
+    FLAVOR = "centos-9"
   }
 }
