@@ -38,7 +38,7 @@ echo "${SHA256SUM} ${QCOW2_TMPFILE}" |
 
 # Unarchive image
 if [[ "${QCOW2_TMPFILE}" =~ \.gz$ ]]; then
-	gunzip "${QCOW2_TMPFILE}"
+	gzip -d "${QCOW2_TMPFILE}"
 	QCOW2_TMPFILE=${QCOW2_TMPFILE/.gz/}
 fi
 
