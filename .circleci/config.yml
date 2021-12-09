@@ -316,7 +316,7 @@ commands:
       - run:
           command: |
             echo $(jq -r .${FLAVOR%%-*}.\"${FLAVOR##*-}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
-            find km/${FLAVOR}/* -exec sha256sum {} \; > checksums
+            find kmi/${FLAVOR}/* -exec sha256sum {} \; > checksums
 
       - restore_cache:
           <<: *_cache-key
