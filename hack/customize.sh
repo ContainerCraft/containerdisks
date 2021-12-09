@@ -37,9 +37,8 @@ echo "${SHA256SUM} ${QCOW2_TMPFILE}" |
 	echo "Invalid checksum: sha256sum check failed"
 
 # Unarchive image
-if [[ "${QCOW2_TMPFILE}" =~ \.gz$ ]]; then
+if [[ "${DOWNLOAD_FILE}" =~ \.gz$ ]]; then
 	gzip -d "${QCOW2_TMPFILE}"
-	QCOW2_TMPFILE=${QCOW2_TMPFILE/.gz/}
 fi
 
 # Grow disk size
