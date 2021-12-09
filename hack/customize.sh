@@ -39,16 +39,15 @@ echo "${SHA256SUM} ${DOWNLOAD_FILE}" |
 # Unarchive image
 if [[ "${DOWNLOAD_FILE}" =~ \.gz$ ]]; then
 	gzip -d "${DOWNLOAD_FILE}"
-	mv "${DOWNLOAD_FILE/.gz/}" "${QCOW2_TMPFILE}"
+	mv "${DOWNLOAD_FILE/.gz/}" "${QCOW2_FILE}"
 else
 	mv "${DOWNLOAD_FILE}" "${QCOW2_TMPFILE}"
 fi
 
-
-# Grow disk size
-qemu-img resize "${QCOW2_TMPFILE}" +20G
-
 if [[ "${CUSTOMIZE}" == "true" ]]; then
+	# Grow disk size
+	qemu-img resize "${QCOW2_TMPFILE}" +20G
+
 	# Source OS build variables
 	source kmi/"${FLAVOR}"/env.sh
 
@@ -59,16 +58,16 @@ if [[ "${CUSTOMIZE}" == "true" ]]; then
 		--add "${QCOW2_TMPFILE}" \
 		--commands-from-file kmi/"${FLAVOR}"/virt.sysprep \
 		--enable "${VIRT_SYSPREP_OPERATIONS}"
+
+	# Log disk image info
+	qemu-img info "${QCOW2_TMPFILE}"
+
+	# Sparsify
+	sudo virt-sparsify \
+		--verbose \
+		--compress \
+		"${QCOW2_TMPFILE}" \
+		"${QCOW2_FILE}"
 fi
 
-# Log disk image info
-qemu-img info "${QCOW2_TMPFILE}"
-
-# Sparsify
-sudo virt-sparsify \
-	--verbose \
-	--compress \
-	"${QCOW2_TMPFILE}" \
-	"${QCOW2_FILE}"
-
-sudo chown "${USER}":"${USER}" "${QCOW2_FILE}" && sudo rm "${QCOW2_TMPFILE}"
+sudo chown "${USER}":"${USER}" "${QCOW2_FILE}" && sudo rm -f "${QCOW2_TMPFILE}"
