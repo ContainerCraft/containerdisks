@@ -28,18 +28,22 @@ CUSTOMIZE=$(jq -r "."${NAME}".\""${VERSION}"\"."${ARCH}" | if has(\"customize\")
 
 # Download qcow2
 curl --verbose \
-	--output "${QCOW2_TMPFILE}" \
+	--output "${DOWNLOAD_FILE}" \
 	--location "${BASE_URL}"/"${DOWNLOAD_FILE}"
 
 # Verify Checksum
-echo "${SHA256SUM} ${QCOW2_TMPFILE}" |
+echo "${SHA256SUM} ${DOWNLOAD_FILE}" |
 	sha256sum --check --status ||
 	echo "Invalid checksum: sha256sum check failed"
 
 # Unarchive image
 if [[ "${DOWNLOAD_FILE}" =~ \.gz$ ]]; then
-	gzip -d "${QCOW2_TMPFILE}"
+	gzip -d "${DOWNLOAD_FILE}"
+	mv "${DOWNLOAD_FILE/.gz/}" "${QCOW2_TMPFILE}"
+else
+	mv "${DOWNLOAD_FILE}" "${QCOW2_TMPFILE}"
 fi
+
 
 # Grow disk size
 qemu-img resize "${QCOW2_TMPFILE}" +20G
