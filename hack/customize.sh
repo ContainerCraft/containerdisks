@@ -11,9 +11,6 @@ ARCH=${ARCH:-$2}
 
 set -ex
 
-# Source OS build variables
-source kmi/"${FLAVOR}"/env.sh
-
 # Disable libvirtd layer
 # Required to support edge cases for some distributions
 export LIBGUESTFS_BACKEND=direct
@@ -27,6 +24,7 @@ QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
 BASE_URL=$(jq -r ."${NAME}".\""${VERSION}"\"."${ARCH}".url index.json)
 SHA256SUM=$(jq -r ."${NAME}".\""${VERSION}"\"."${ARCH}".sha256sum index.json)
 DOWNLOAD_FILE=$(jq -r ."${NAME}".\""${VERSION}"\"."${ARCH}".image index.json)
+CUSTOMIZE=$(jq -r "."${NAME}".\""${VERSION}"\"."${ARCH}" | if has(\"customize\") then .customize else true end" index.json)
 
 # Download qcow2
 curl --verbose \
@@ -38,16 +36,27 @@ echo "${SHA256SUM} ${QCOW2_TMPFILE}" |
 	sha256sum --check --status ||
 	echo "Invalid checksum: sha256sum check failed"
 
+# Unarchive image
+if [[ "${QCOW2_TMPFILE}" =~ \.gz$ ]]; then
+	gunzip "${QCOW2_TMPFILE}"
+	QCOW2_TMPFILE=${QCOW2_TMPFILE/.gz/}
+fi
+
 # Grow disk size
 qemu-img resize "${QCOW2_TMPFILE}" +20G
 
-# Customize Disk Image
-sudo virt-sysprep \
-	--verbose \
-	--network \
-	--add "${QCOW2_TMPFILE}" \
-	--commands-from-file kmi/"${FLAVOR}"/virt.sysprep \
-	--enable "${VIRT_SYSPREP_OPERATIONS}"
+if [[ "${CUSTOMIZE}" == "true" ]]; then
+	# Source OS build variables
+	source kmi/"${FLAVOR}"/env.sh
+
+	# Customize Disk Image
+	sudo virt-sysprep \
+		--verbose \
+		--network \
+		--add "${QCOW2_TMPFILE}" \
+		--commands-from-file kmi/"${FLAVOR}"/virt.sysprep \
+		--enable "${VIRT_SYSPREP_OPERATIONS}"
+fi
 
 # Log disk image info
 qemu-img info "${QCOW2_TMPFILE}"

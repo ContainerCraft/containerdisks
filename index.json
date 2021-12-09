@@ -67,6 +67,7 @@
       }
     }
   },
+  "fcos": {},
   "fedora": {
     "34": {
       "amd64": {
@@ -90,6 +91,22 @@
         "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/aarch64/images",
         "image": "Fedora-Cloud-Base-35-1.2.aarch64.qcow2",
         "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6"
+      }
+    }
+  },
+  "rhcos": {
+    "4.9": {
+      "amd64": {
+        "url": "https://mirror.openshift.com/pub/openshift-v4/x86_64/dependencies/rhcos/latest/latest/",
+        "image": "rhcos-openstack.x86_64.qcow2.gz",
+        "sha256sum": "3466690807fb710102559ea57daac0484c59ed4d914996882d601b8bb7a7ada8",
+        "customize": false
+      },
+      "arm64": {
+        "url": "https://mirror.openshift.com/pub/openshift-v4/arm64/dependencies/rhcos/latest/latest/",
+        "image": "rhcos-openstack.arm64.qcow2.gz",
+        "sha256sum": "bd8badcb85d3c50d126b46bd3a2501db9b61e5456eac33a1299bc851dea337ad",
+        "customize": false
       }
     }
   },
