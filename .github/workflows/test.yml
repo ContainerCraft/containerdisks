@@ -67,7 +67,7 @@ jobs:
       - name: Copy the manifest to product tag
         run: |
           skopeo copy --all \
-            docker://docker.io/containercraft/${FLAVOR//-/:}-dev
+            docker://docker.io/containercraft/${FLAVOR//-/:}-dev \
             docker://docker.io/containercraft/${FLAVOR//-/:}
 
       - name: Sign the image
