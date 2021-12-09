@@ -191,7 +191,7 @@ workflows:
           name: trigger-<< matrix.flavor >>-promotion
           matrix:
             parameters:
-              flavor: *_rhco-sflavors
+              flavor: *_rhcos-flavors
        # End RHCOS #
 
 #################################################################################
