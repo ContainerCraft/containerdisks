@@ -14,6 +14,7 @@ set -ex
 # Disable libvirtd layer
 # Required to support edge cases for some distributions
 export LIBGUESTFS_BACKEND=direct
+export LIBGUESTFS_CACHEDIR=${HOME}
 
 NAME=${FLAVOR%%-*}
 VERSION=${FLAVOR#*-}
