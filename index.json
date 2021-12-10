@@ -86,12 +86,14 @@
       "amd64": {
         "url": "https://download.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/x86_64/images",
         "image": "Fedora-Cloud-Base-34-1.2.x86_64.qcow2",
-        "sha256sum": "fe84502779b3477284a8d4c86731f642ca10dd3984d2b5eccdf82630a9ca2de6"
+        "sha256sum": "fe84502779b3477284a8d4c86731f642ca10dd3984d2b5eccdf82630a9ca2de6",
+        "customize": false
       },
       "arm64": {
         "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/aarch64/images",
         "image": "Fedora-Cloud-Base-34-1.2.aarch64.qcow2",
-        "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6"
+        "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6",
+        "customize": false
       }
     },
     "35": {

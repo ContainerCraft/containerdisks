@@ -41,6 +41,9 @@ echo "${SHA256SUM} ${DOWNLOAD_FILE}" |
 if [[ "${DOWNLOAD_FILE}" =~ \.gz$ ]]; then
 	gzip -d "${DOWNLOAD_FILE}"
 	mv "${DOWNLOAD_FILE/.gz/}" "${QCOW2_FILE}"
+elif [[ "${DOWNLOAD_FILE}" =~ \.xz$ ]]; then
+	unxz "${DOWNLOAD_FILE}"
+	mv "${DOWNLOAD_FILE/.xz/}" "${QCOW2_FILE}"
 else
 	mv "${DOWNLOAD_FILE}" "${QCOW2_TMPFILE}"
 fi
