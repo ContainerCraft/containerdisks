@@ -192,3 +192,13 @@ target "rhcos-4.9" {
     FLAVOR = "rhcos-4.9"
   }
 }
+
+target "fcos-35" {
+  inherits = ["defaults"]
+  tags = [
+    tag("fcos", "35")
+  ]
+  args = {
+    FLAVOR = "fcos-35"
+  }
+}
