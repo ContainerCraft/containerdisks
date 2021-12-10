@@ -72,7 +72,7 @@ guest_test_agent() {
 	echo ">>>"
 
 	# Wait for vm to boot
-	while [[ $ready -ne 0 ]] && [[ $count -lt 60 ]]; do
+	while [[ $ready -ne 0 ]] && [[ $count -lt 120 ]]; do
 		echo ">>> Waiting to connect to guest agent ... Attempt #$count ..."
 		virtctl guestosinfo testvm 2>&1
 		ready=$(echo $?)
@@ -84,7 +84,7 @@ guest_test_agent() {
 		echo ">>>"
 		echo ">>> Connected to guest agent successfully ... Continuing test ..."
 		echo ">>>"
-	elif [[ $ready -ne 0 ]] || [[ $count -gt 60 ]]; then
+	elif [[ $ready -ne 0 ]] || [[ $count -gt 120 ]]; then
 		echo ">>>"
 		echo ">>> Failed to detect guest boot"
 		echo ">>>"
