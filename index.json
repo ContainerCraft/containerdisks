@@ -67,7 +67,20 @@
       }
     }
   },
-  "fcos": {},
+  "fcos": {
+    "35": {
+      "amd64": {
+        "url": "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/35.20211119.3.0/x86_64/",
+        "image": "fedora-coreos-35.20211119.3.0-qemu.x86_64.qcow2.xz",
+        "sha256sum": "62e08fcab692ab20d5b0450450628f163b556ab5e680d3d5197a39534158021a"
+      },
+      "arm64": {
+        "url": "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/35.20211119.3.0/aarch64/",
+        "image": "fedora-coreos-35.20211119.3.0-qemu.aarch64.qcow2.xz",
+        "sha256sum": "7c9efcfaddde900aecd233d922624afa1858a43dd749c39122807495e5c642a0"
+      }
+    }
+  },
   "fedora": {
     "34": {
       "amd64": {
