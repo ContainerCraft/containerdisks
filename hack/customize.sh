@@ -55,7 +55,6 @@ if [[ "${CUSTOMIZE}" == "true" ]]; then
 	sudo virt-sparsify \
 		--verbose \
 		--inplace \
-		--compress \
 		"${QCOW2_TMPFILE}"
 
 	# Customize Disk Image
