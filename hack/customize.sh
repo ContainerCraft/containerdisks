@@ -51,6 +51,13 @@ if [[ "${CUSTOMIZE}" == "true" ]]; then
 	# Source OS build variables
 	source kmi/"${FLAVOR}"/env.sh
 
+	# Pre-Sparsify
+	sudo virt-sparsify \
+		--verbose \
+		--inplace \
+		--compress \
+		"${QCOW2_TMPFILE}"
+
 	# Customize Disk Image
 	sudo virt-sysprep \
 		--verbose \
@@ -62,7 +69,7 @@ if [[ "${CUSTOMIZE}" == "true" ]]; then
 	# Log disk image info
 	qemu-img info "${QCOW2_TMPFILE}"
 
-	# Sparsify
+	# Post-Sparsify
 	sudo virt-sparsify \
 		--verbose \
 		--compress \
