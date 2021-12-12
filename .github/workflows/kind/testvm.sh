@@ -44,9 +44,9 @@ spec:
                 bus: virtio
         resources:
           limits:
-            memory: 2G
+            memory: 3G
           requests:
-            memory: 2G
+            memory: 3G
       hostname: testvm
       terminationGracePeriodSeconds: 0
       accessCredentials:

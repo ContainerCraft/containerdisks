@@ -15,6 +15,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Install bats
+        run: apt-get install -y bats
+
       - name: Prepare Node
         run: |
           docker volume create worker1-containerd
@@ -27,14 +30,16 @@ jobs:
           config: .github/workflows/kind/config.yml
 
       - name: Test ${{ github.event.inputs.flavor }}
-        run: bash hack/test.sh
+        run: |
+          bats tests/test.bats --show-output-of-passing-tests --timing --verbose-run
 
-      - name: Archive vm console log
+      - name: Archive test logs
         uses: actions/upload-artifact@v2
         if: always()
         with:
           name: ${{ github.event.inputs.flavor }}-logs
-          path: ${{ github.workspace }}
+          path: |
+            ${{ github.workspace }}/*.txt
 
   promote-image:
     runs-on: ubuntu-latest

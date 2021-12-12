@@ -10,8 +10,6 @@ FLAVOR=${FLAVOR:-$1}
 	exit 1
 }
 
-# TODO: validate flavor exists
-
 export FLAVOR
 
 KUBEVIRT_LATEST="v0.47.1"
@@ -60,6 +58,7 @@ set -e
 
 gather() {
 	kubectl get events -A --sort-by=.metadata.creationTimestamp > events.txt
+	kubectl describe vmi/test > pod.txt
 }
 
 trap gather EXIT

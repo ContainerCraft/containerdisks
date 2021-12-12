@@ -5,7 +5,7 @@ orbs:
 aliases:
   centos-flavors: &_centos-flavors
     - centos-9
-#   - centos-8
+    - centos-8
 
   debian-flavors: &_debian-flavors
     - debian-10
@@ -117,29 +117,29 @@ workflows:
 #      # End Ubuntu #
 #
 #      # Start Debian #
-#      - customize:
-#          name: customize-<< matrix.flavor >>-<< matrix.arch >>
-#          matrix:
-#            parameters:
-#              flavor: *_debian-flavors
-#              arch: [amd64, arm64]
-#
-#      - cradle:
-#          requires:
-#            - customize-<< matrix.flavor >>-amd64
-#            - customize-<< matrix.flavor >>-arm64
-#          name: cradle-<< matrix.flavor >>
-#          matrix:
-#            parameters:
-#              flavor: *_debian-flavors
-#
-#      - trigger-tests:
-#          requires:
-#            - cradle-<< matrix.flavor >>
-#          name: trigger-<< matrix.flavor >>-promotion
-#          matrix:
-#            parameters:
-#              flavor: *_debian-flavors
+      - customize:
+          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+          matrix:
+            parameters:
+              flavor: *_debian-flavors
+              arch: [amd64, arm64]
+
+      - cradle:
+          requires:
+            - customize-<< matrix.flavor >>-amd64
+            - customize-<< matrix.flavor >>-arm64
+          name: cradle-<< matrix.flavor >>
+          matrix:
+            parameters:
+              flavor: *_debian-flavors
+
+      - trigger-tests:
+          requires:
+            - cradle-<< matrix.flavor >>
+          name: trigger-<< matrix.flavor >>-promotion
+          matrix:
+            parameters:
+              flavor: *_debian-flavors
 #     # End Debian #
 #
 #      # Start openSUSE #
@@ -191,33 +191,33 @@ workflows:
 #         matrix:
 #           parameters:
 #             flavor: *_rhcos-flavors
-#      # End RHCOS #
+#     # End RHCOS #
 #
 #    # Start FCOS #
-     - customize:
-         name: customize-<< matrix.flavor >>-<< matrix.arch >>
-         matrix:
-           parameters:
-             flavor: *_fcos-flavors
-             arch: [amd64, arm64]
-
-     - cradle:
-         requires:
-           - customize-<< matrix.flavor >>-amd64
-           - customize-<< matrix.flavor >>-arm64
-         name: cradle-<< matrix.flavor >>
-         matrix:
-           parameters:
-             flavor: *_fcos-flavors
-
-     - trigger-tests:
-         requires:
-           - cradle-<< matrix.flavor >>
-         name: trigger-<< matrix.flavor >>-promotion
-         matrix:
-           parameters:
-             flavor: *_fcos-flavors
-#      # End FCOS #
+#     - customize:
+#         name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#         matrix:
+#           parameters:
+#             flavor: *_fcos-flavors
+#             arch: [amd64, arm64]
+#
+#     - cradle:
+#         requires:
+#           - customize-<< matrix.flavor >>-amd64
+#           - customize-<< matrix.flavor >>-arm64
+#         name: cradle-<< matrix.flavor >>
+#         matrix:
+#           parameters:
+#             flavor: *_fcos-flavors
+#
+#     - trigger-tests:
+#         requires:
+#           - cradle-<< matrix.flavor >>
+#         name: trigger-<< matrix.flavor >>-promotion
+#         matrix:
+#           parameters:
+#             flavor: *_fcos-flavors
+#    # End FCOS #
 
 
 #################################################################################
