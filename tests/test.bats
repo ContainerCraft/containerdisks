@@ -14,6 +14,15 @@ setup_file() {
 
 	export FLAVOR
 
+	# Install virtctl cli
+	virtctl version --client || {
+		VIRTCTL_RELEASE=$(curl -s https://api.github.com/repos/kubevirt/kubevirt/releases/latest | awk -F '["v,]' '/tag_name/{print $5}')
+		sudo curl --output /usr/local/bin/virtctl \
+			-L https://github.com/kubevirt/kubevirt/releases/download/v"${VIRTCTL_RELEASE}"/virtctl-v"${VIRTCTL_RELEASE}"-$(uname -s | awk '{print tolower($0)}')-amd64
+		sudo chmod +x /usr/local/bin/virtctl
+		virtctl version --client
+	}
+
 	# Only run these steps if not on github actions
 	if [[ -z "${GITHUB_ACTIONS}" ]]; then
 		kind delete cluster --name kmi-test || :
