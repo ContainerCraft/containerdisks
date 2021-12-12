@@ -1,81 +1,228 @@
-version: '2.1'
+version: "2.1"
 orbs:
   slack: circleci/slack@4.5.0
 
 aliases:
+  centos-flavors: &_centos-flavors
+    - centos-9
+    - centos-8
+
+  debian-flavors: &_debian-flavors
+    - debian-10
+    - debian-11
+
+  fcos-flavors: &_fcos-flavors
+    - fcos-35
+
   fedora-flavors: &_fedora-flavors
     - fedora-34
     - fedora-35
 
+  rhcos-flavors: &_rhcos-flavors
+    - rhcos-4.9
+
+  opensuse-flavors: &_opensuse-flavors
+#   - opensuse-tumbleweed
+    - opensuse-leap
+
   ubuntu-flavors: &_ubuntu-flavors
     - ubuntu-18.04
-#    - ubuntu-20.04
-#    - ubuntu-21.10
+    - ubuntu-20.04
+    - ubuntu-21.10
 
   cache-key: &_cache-key
-    key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/sha256sum-<< parameters.arch >>.txt" }}-{{ checksum "kmi/<< parameters.flavor >>/virt.sysprep" }}
+    key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "kmi/<< parameters.flavor >>/checksum" }}
 
 #################################################################################
 # Job Scheduler
 workflows:
-
   build-and-publish-dev:
     jobs:
-      # Fedora customize job matrix
+#      # Start CentOS #
 #      - customize:
 #          name: customize-<< matrix.flavor >>-<< matrix.arch >>
 #          matrix:
 #            parameters:
-#              flavor: *_fedora-flavors
+#              flavor: *_centos-flavors
 #              arch: [amd64, arm64]
-
-      # Ubuntu customize job matrix
-      - customize:
-          name: customize-<< matrix.flavor >>-<< matrix.arch >>
-          matrix:
-            parameters:
-              flavor: *_ubuntu-flavors
-              arch: [amd64, arm64]
-
-      # Fedora cradle job matrix
-      # - depends on all Fedora customize jobs
+#
 #      - cradle:
 #          requires:
 #            - customize-<< matrix.flavor >>-amd64
 #            - customize-<< matrix.flavor >>-arm64
 #          name: cradle-<< matrix.flavor >>
 #          matrix:
-#            alias: cradle-fedora
+#            parameters:
+#              flavor: *_centos-flavors
+#
+#      - trigger-tests:
+#          requires:
+#            - cradle-<< matrix.flavor >>
+#          name: trigger-<< matrix.flavor >>-promotion
+#          matrix:
+#            parameters:
+#              flavor: *_centos-flavors
+#      # End CentOS #
+#
+#      # Start Fedora #
+#      - customize:
+#          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#          matrix:
 #            parameters:
 #              flavor: *_fedora-flavors
+#              arch: [amd64, arm64]
+#
+#      - cradle:
+#          requires:
+#            - customize-<< matrix.flavor >>-amd64
+#            - customize-<< matrix.flavor >>-arm64
+#          name: cradle-<< matrix.flavor >>
+#          matrix:
+#            parameters:
+#              flavor: *_fedora-flavors
+#
+#      - trigger-tests:
+#          requires:
+#            - cradle-<< matrix.flavor >>
+#          name: trigger-<< matrix.flavor >>-promotion
+#          matrix:
+#            parameters:
+#              flavor: *_fedora-flavors
+#      # End Fedora #
+#
+#      # Start Ubuntu #
+#      - customize:
+#          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#          matrix:
+#            parameters:
+#              flavor: *_ubuntu-flavors
+#              arch: [amd64, arm64]
+#
+#      - cradle:
+#          requires:
+#            - customize-<< matrix.flavor >>-amd64
+#            - customize-<< matrix.flavor >>-arm64
+#          name: cradle-<< matrix.flavor >>
+#          matrix:
+#            parameters:
+#              flavor: *_ubuntu-flavors
+#
+#      - trigger-tests:
+#          requires:
+#            - cradle-<< matrix.flavor >>
+#          name: trigger-<< matrix.flavor >>-promotion
+#          matrix:
+#            parameters:
+#              flavor: *_ubuntu-flavors
+#      # End Ubuntu #
+#
+#      # Start Debian #
+      - customize:
+          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+          matrix:
+            parameters:
+              flavor: *_debian-flavors
+              arch: [amd64, arm64]
 
-      # Ubuntu cradle job matrix
-      # - depends on all Ubuntu customize jobs
       - cradle:
           requires:
             - customize-<< matrix.flavor >>-amd64
             - customize-<< matrix.flavor >>-arm64
           name: cradle-<< matrix.flavor >>
           matrix:
-            alias: cradle-ubuntu
             parameters:
-              flavor: *_ubuntu-flavors
+              flavor: *_debian-flavors
 
-      # Trigger GitHub Actions E2E test workflow
-      # - depends on all cradle jobs
       - trigger-tests:
           requires:
-#            - cradle-fedora
-            - cradle-ubuntu
-          name: trigger-<< matrix.flavor >>-e2e-test
+            - cradle-<< matrix.flavor >>
+          name: trigger-<< matrix.flavor >>-promotion
           matrix:
             parameters:
-              flavor: *_ubuntu-flavors
+              flavor: *_debian-flavors
+#     # End Debian #
+#
+#      # Start openSUSE #
+#       - customize:
+#           name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#           matrix:
+#             parameters:
+#               flavor: *_opensuse-flavors
+#               arch: [amd64]
+#
+#       - cradle:
+#           requires:
+#             - customize-<< matrix.flavor >>-amd64
+#           name: cradle-<< matrix.flavor >>
+#           matrix:
+#             parameters:
+#               flavor: *_opensuse-flavors
+#
+#       - trigger-tests:
+#           requires:
+#             - cradle-<< matrix.flavor >>
+#           name: trigger-<< matrix.flavor >>-promotion
+#           matrix:
+#             parameters:
+#               flavor: *_opensuse-flavors
+#     # End openSUSE #
+
+#    # Start RHCOS #
+#     - customize:
+#         name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#         matrix:
+#           parameters:
+#             flavor: *_rhcos-flavors
+#             arch: [amd64, arm64]
+
+#     - cradle:
+#         requires:
+#           - customize-<< matrix.flavor >>-amd64
+#           - customize-<< matrix.flavor >>-arm64
+#         name: cradle-<< matrix.flavor >>
+#         matrix:
+#           parameters:
+#             flavor: *_rhcos-flavors
+
+#     - trigger-tests:
+#         requires:
+#           - cradle-<< matrix.flavor >>
+#         name: trigger-<< matrix.flavor >>-promotion
+#         matrix:
+#           parameters:
+#             flavor: *_rhcos-flavors
+#     # End RHCOS #
+#
+#    # Start FCOS #
+#     - customize:
+#         name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#         matrix:
+#           parameters:
+#             flavor: *_fcos-flavors
+#             arch: [amd64, arm64]
+#
+#     - cradle:
+#         requires:
+#           - customize-<< matrix.flavor >>-amd64
+#           - customize-<< matrix.flavor >>-arm64
+#         name: cradle-<< matrix.flavor >>
+#         matrix:
+#           parameters:
+#             flavor: *_fcos-flavors
+#
+#     - trigger-tests:
+#         requires:
+#           - cradle-<< matrix.flavor >>
+#         name: trigger-<< matrix.flavor >>-promotion
+#         matrix:
+#           parameters:
+#             flavor: *_fcos-flavors
+#    # End FCOS #
+
 
 #################################################################################
 # Reuseable Jobs
 jobs:
-
   # Download & Prepare qcow2 image(s)
   customize:
     parameters:
@@ -138,7 +285,7 @@ commands:
               --header "Accept: application/vnd.github.everest-preview+json" \
               --data-raw '{"ref":"<< pipeline.git.branch >>", "inputs": {"flavor": "<< parameters.flavor >>"}' \
               https://api.github.com/repos/containercraft/kmi/actions/workflows/test.yml/dispatches
- 
+
   buildx-bake:
     description: "Runner: Execute Docker Buildx"
     parameters:
@@ -198,7 +345,8 @@ commands:
     steps:
       - run:
           command: |
-            echo $(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
+            echo $(jq -r .${FLAVOR%%-*}.\"${FLAVOR##*-}\".${ARCH}.sha256sum index.json) > kmi/${FLAVOR}/sha256sum-${ARCH}.txt
+            find kmi/${FLAVOR}/* -exec sha256sum {} \; > kmi/${FLAVOR}/checksum
 
       - restore_cache:
           <<: *_cache-key
@@ -207,67 +355,26 @@ commands:
           name: Customize image
           no_output_timeout: 90m
           command: |
-            set -x
 
-            customize_image() {
+            FLAVOR=<< parameters.flavor >>
+            ARCH=<< parameters.arch >>
 
-              # Install Qcow2 Build Dependencies
+            # Check for && confirm cached customized image present || If not
+            # present then customize and cache
+            if [[ ! -f ${FLAVOR}-${ARCH}.qcow2 ]]; then
+              set -ex
+
               sudo apt-get update
-              sudo apt-get install -y jq curl qemu-user libguestfs-tools qemu-user-static
+              sudo apt-get upgrade -y
+              sudo apt-get dist-upgrade -y
+              sudo apt-get install -y \
+                jq curl qemu-user libguestfs-tools qemu-user-static gzip
 
-              # Disable libvirtd layer 
-              # Required to support edge cases for some distributions
-              export LIBGUESTFS_BACKEND=direct
+              bash hack/customize.sh ${FLAVOR} ${ARCH}
+            else
+              echo "Detected cached disk image ... continuing"
+            fi
 
-              NAME=${FLAVOR%-*}
-              VERSION=${FLAVOR##*-}
-
-              QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
-              QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
-
-              BASE_URL=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.url index.json)
-              SHA256SUM=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.sha256sum index.json)
-              DOWNLOAD_FILE=$(jq -r .distributions.${NAME}.\"${VERSION}\".${ARCH}.image index.json)
-
-              # Source OS build variables
-              source kmi/${NAME}/env.sh
-
-              # Download qcow2
-              curl --verbose \
-                --output ${QCOW2_TMPFILE} \
-                --location ${BASE_URL}/${DOWNLOAD_FILE}
-
-              # Verify Checksum
-              echo "${SHA256SUM} ${QCOW2_TMPFILE}" \
-                | sha256sum --check --status \
-                || echo "Invalid checksum: sha256sum check failed"
-
-              # Grow disk size
-              qemu-img resize ${QCOW2_TMPFILE} +20G;
-
-              # Customize Disk Image
-              sudo virt-sysprep \
-                --verbose \
-                --network \
-                --add ${QCOW2_TMPFILE} \
-                --enable ${VIRT_SYSPREP_OPERATIONS} \
-                --commands-from-file kmi/${FLAVOR}/virt.sysprep
-
-              # Log disk image info
-              qemu-img info ${QCOW2_TMPFILE}
-
-              # Sparsify
-              sudo virt-sparsify \
-                --verbose \
-                --compress \
-                ${QCOW2_TMPFILE} \
-                ${QCOW2_FILE} \
-              && sudo chown ${USER}:${USER} ${QCOW2_FILE} \
-              && sudo rm ${QCOW2_TMPFILE};
-            }
-
-            # Check for && confirm cached customized image present || If not present then customize and cache
-            [[ ! -f << parameters.flavor >>-<< parameters.arch >>.qcow2 ]] && customize_image || echo "Detected cached disk image ... continuing"
       - save_cache:
           <<: *_cache-key
           paths:
@@ -288,8 +395,7 @@ commands:
           at: /home/circleci/project/images
 
       - run:
-          command: |
-            ls -lah images/
+          command: ls -lah images/
 
       - enable-buildx
       - buildx-bake:
@@ -307,7 +413,6 @@ commands:
 #################################################################################
 # Workflow Runner Instances
 executors:
-
   # ARM64 Runner
   arm64:
     machine:
@@ -315,7 +420,7 @@ executors:
       image: ubuntu-2004:202111-01
     environment:
       DOCKER_CLI_EXPERIMENTAL: enabled
-    resource_class: arm.large
+    resource_class: arm.medium
 
   # AMD64 Runner
   amd64:
@@ -324,4 +429,4 @@ executors:
       image: ubuntu-2004:202111-01
     environment:
       DOCKER_CLI_EXPERIMENTAL: enabled
-    resource_class: large
+    resource_class: medium
