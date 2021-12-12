@@ -39,7 +39,7 @@ setup_file() {
 	# Deploy Kubevirt
 	kubectl create namespace kubevirt
 
-	KUBEVIRT_LATEST="v0.47.1"
+	KUBEVIRT_LATEST="v0.48.0"
 	log "Installing KubeVirt ${KUBEVIRT_LATEST}"
 
 	kubectl apply -n kubevirt \
