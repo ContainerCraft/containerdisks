@@ -155,36 +155,36 @@
       "amd64": {
         "url": "https://cloud-images.ubuntu.com/bionic/current",
         "image": "bionic-server-cloudimg-amd64.img",
-        "sha256sum": "eeff819e8474babe95382c07608fdcea11ad99a3865962281ce219e749e492c9"
+        "sha256sum": "b9965af8bd0776e60aa182a3abf682a847757242868beb0f2c523f0bfc30a993"
       },
       "arm64": {
         "url": "https://cloud-images.ubuntu.com/bionic/current",
         "image": "bionic-server-cloudimg-arm64.img",
-        "sha256sum": "5985d8479c10d5f0af54939559bdf87f47a2390b8395dd0fb5060eb5457f3797"
+        "sha256sum": "1f6d092624ceb19c52e282daf068cb24ddf1ddb12f188c633203b58f6aaec980"
       }
     },
     "20.04": {
       "amd64": {
         "url": "https://cloud-images.ubuntu.com/focal/current",
         "image": "focal-server-cloudimg-amd64.img",
-        "sha256sum": "053da1ff7b713d39bbd816781a12c699fe1031ef8ab5b8a156fe441d1410eb67"
+        "sha256sum": "366bc2a44d7f5cfdd1726c0c2f4be17079ba2c346bff976e77ada95172d0e5f3"
       },
       "arm64": {
         "url": "https://cloud-images.ubuntu.com/focal/current",
         "image": "focal-server-cloudimg-arm64.img",
-        "sha256sum": "c41d6762bb8a3589ac3632db2a7f33d73381d3b8953b18e9db8579f88f5ea300"
+        "sha256sum": "23d38d35a069fdca307eb45d96bcbcfabb5354196f3e354103e6f9529cd6b2a8"
       }
     },
     "21.10": {
       "amd64": {
         "url": "https://cloud-images.ubuntu.com/impish/current",
         "image": "impish-server-cloudimg-amd64-disk-kvm.img",
-        "sha256sum": "4090e8317d9eecfddd0ca8c6fd11792209eaf13347d954e6e6119b0d41c69c41"
+        "sha256sum": "bb0e1c845e3ee50e977e7969f5c58de0c57cfe64c08f3c6279f141a8c76942f6"
       },
       "arm64": {
         "url": "https://cloud-images.ubuntu.com/impish/current",
         "image": "impish-server-cloudimg-arm64.img",
-        "sha256sum": "063fa690f56b11f6bb12eecabd9e140a82faa05e26aed89cc1b7efa4c86e3bf2"
+        "sha256sum": "a2f159e6e695f3cacc9cecc952ba514e65f9318197a1a37fc7cd4547d0ed9878"
       }
     }
   }
