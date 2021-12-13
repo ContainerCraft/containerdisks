@@ -38,7 +38,10 @@
         "url": "https://cloud.centos.org/centos/9-stream/aarch64/images",
         "image": "CentOS-Stream-GenericCloud-9-20211119.0.aarch64.qcow2",
         "sha256sum": "b68b6d8c3a9a82a41c94ca295ce127e15761c87f9ad33db9871f236252fce17b"
-      }
+      },
+      "skip": [
+        "ssh"
+      ]
     }
   },
   "debian": {
@@ -131,7 +134,10 @@
         "image": "rhcos-openstack.aarch64.qcow2.gz",
         "sha256sum": "bd8badcb85d3c50d126b46bd3a2501db9b61e5456eac33a1299bc851dea337ad",
         "customize": false
-      }
+      },
+      "skip": [
+        "ssh"
+      ]
     }
   },
   "opensuse": {
