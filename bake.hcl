@@ -29,10 +29,9 @@ target "defaults" {
     distribution-scope = "public"
     description = "Kubevirt Machine Image | ContainerCraft.io Reference Image",
     "io.k8s.description" = "ContainerCraft.io Maintained Public Reference KMI"
-    "org.opencontainers.image.title" = "${FLAVOR}-${TARGETARCH}"
+    "org.opencontainers.image.description" = "Kubevirt Machine Image"
     "org.opencontainers.image.source" = "https://github.com/ContainerCraft/kmi/"
     "org.opencontainers.image.authors" = "ContainerCraft.io"
-    "org.opencontainers.image.description" = "Kubevirt Machine Image | ${TARGETARCH} | ${FLAVOR}"
   }
 }
 
