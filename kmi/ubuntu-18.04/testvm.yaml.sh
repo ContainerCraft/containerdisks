@@ -49,34 +49,47 @@ spec:
             memory: 3G
       hostname: testvm
       terminationGracePeriodSeconds: 0
+      accessCredentials:
+      - sshPublicKey:
+          source:
+            secret:
+              secretName: kargo-sshpubkey-kc2user
+          propagationMethod:
+            qemuGuestAgent:
+              users:
+              - "kc2user"
       volumes:
         - name: containerdisk
           containerDisk:
             image: docker.io/containercraft/${FLAVOR/-/:}-dev
             imagePullPolicy: Always
         - name: cloudinitdisk
-          cloudInitConfigDrive:
-            userData: |-
-              {
-                "ignition": {
-                  "version": "3.2.0"
-                },
-                "passwd": {
-                  "users": [
-                    {
-                      "groups": [
-                        "adm",
-                        "sudo",
-                        "wheel",
-                        "systemd-journal"
-                      ],
-                      "name": "kc2user",
-                      "passwordHash": "$6$PNObhlqtbaVu81X9$NDUNjKfoCYIsq.fUvoDMYr62ijGUWiNgUpY.2zCl72JCxbg1plohB2pVHH1H7NUcj24S9xjLBUVt4/rbAkagq/",
-                      "sshAuthorizedKeys": [
-                        "$(cat ~/.ssh/id_rsa.pub)"
-                      ]
-                    }
-                  ]
-                }
-              }
+          cloudInitNoCloud:
+            networkData: |
+              version: 2
+              ethernets:
+                enp1s0:
+                  dhcp4: true
+                  dhcp6: false
+            userData: |
+              #cloud-config
+              ssh_pwauth: true
+              disable_root: true
+              chpasswd:
+                list: |
+                   kc2user:kc2user
+                expire: False
+              users:
+                - name: kc2user
+                  shell: /bin/bash
+                  lock_passwd: false
+                  sudo: ['ALL=(ALL) NOPASSWD:ALL']
+                  groups: sudo,wheel
+              growpart:
+                mode: auto
+                devices: ['/']
+                ignore_growroot_disabled: true
+              package_upgrade: false
+              runcmd:
+                - "setenforce 0"
 EOF
