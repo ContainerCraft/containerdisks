@@ -1,0 +1,216 @@
+Name:         testvm
+Namespace:    default
+Labels:       kubevirt.io/nodeName=kmi-test-worker
+              test=kmi
+Annotations:  kubevirt.io/latest-observed-api-version: v1
+              kubevirt.io/storage-observed-api-version: v1alpha3
+API Version:  kubevirt.io/v1
+Kind:         VirtualMachineInstance
+Metadata:
+  Creation Timestamp:  2021-12-14T01:10:07Z
+  Finalizers:
+    kubevirt.io/virtualMachineControllerFinalize
+    foregroundDeleteVirtualMachine
+  Generation:  11
+  Managed Fields:
+    API Version:  kubevirt.io/v1alpha3
+    Fields Type:  FieldsV1
+    fieldsV1:
+      f:metadata:
+        f:annotations:
+          .:
+          f:kubevirt.io/latest-observed-api-version:
+          f:kubevirt.io/storage-observed-api-version:
+        f:finalizers:
+          .:
+          v:"kubevirt.io/virtualMachineControllerFinalize":
+        f:labels:
+          .:
+          f:kubevirt.io/nodeName:
+          f:test:
+        f:ownerReferences:
+          .:
+          k:{"uid":"fd4913cd-bd17-47f0-8762-fa3d567077f1"}:
+      f:spec:
+        .:
+        f:domain:
+          .:
+          f:devices:
+            .:
+            f:autoattachGraphicsDevice:
+            f:autoattachPodInterface:
+            f:autoattachSerialConsole:
+            f:disks:
+            f:networkInterfaceMultiqueue:
+          f:firmware:
+            .:
+            f:uuid:
+          f:machine:
+            .:
+            f:type:
+          f:resources:
+            .:
+            f:limits:
+              .:
+              f:memory:
+            f:requests:
+              .:
+              f:memory:
+        f:hostname:
+        f:nodeSelector:
+          .:
+          f:test:
+        f:terminationGracePeriodSeconds:
+        f:volumes:
+      f:status:
+        .:
+        f:activePods:
+          .:
+          f:5ed782b8-a8ff-4b17-8be7-28c03fff30ea:
+        f:conditions:
+        f:guestOSInfo:
+        f:interfaces:
+        f:launcherContainerImageVersion:
+        f:migrationMethod:
+        f:migrationTransport:
+        f:nodeName:
+        f:phase:
+        f:phaseTransitionTimestamps:
+        f:qosClass:
+        f:virtualMachineRevisionName:
+        f:volumeStatus:
+    Manager:    Go-http-client
+    Operation:  Update
+    Time:       2021-12-14T01:10:16Z
+  Owner References:
+    API Version:           kubevirt.io/v1
+    Block Owner Deletion:  true
+    Controller:            true
+    Kind:                  VirtualMachine
+    Name:                  testvm
+    UID:                   fd4913cd-bd17-47f0-8762-fa3d567077f1
+  Resource Version:        7694
+  UID:                     f180ed59-32e2-4835-858b-5f617e324af5
+Spec:
+  Domain:
+    Cpu:
+      Cores:    1
+      Sockets:  1
+      Threads:  1
+    Devices:
+      Autoattach Graphics Device:  true
+      Autoattach Pod Interface:    true
+      Autoattach Serial Console:   true
+      Disks:
+        Boot Order:  1
+        Disk:
+          Bus:  virtio
+        Name:   containerdisk
+        Disk:
+          Bus:  virtio
+        Name:   cloudinitdisk
+      Interfaces:
+        Bridge:
+        Name:                        default
+      Network Interface Multiqueue:  false
+    Features:
+      Acpi:
+        Enabled:  true
+    Firmware:
+      Uuid:  5a9fc181-957e-5c32-9e5a-2de5e9673531
+    Machine:
+      Type:  q35
+    Resources:
+      Limits:
+        Memory:  3G
+      Requests:
+        Memory:  3G
+  Hostname:      testvm
+  Networks:
+    Name:  default
+    Pod:
+  Node Selector:
+    Test:                            kmi
+  Termination Grace Period Seconds:  0
+  Volumes:
+    Container Disk:
+      Image:              docker.io/containercraft/rhcos:4.9-dev
+      Image Pull Policy:  Always
+    Name:                 containerdisk
+    Cloud Init Config Drive:
+      User Data:  {
+  "ignition": {
+    "version": "3.2.0"
+  },
+  "passwd": {
+    "users": [
+      {
+        "groups": [
+          "sudo",
+          "wheel"
+        ],
+        "name": "core",
+        "passwordHash": "=4096P8t6rK66I/sjZYUcc7j38FRgpPVyou8lD6KUJwMaOHxV122hteL8iZ66gbrEjMJ5jsanIbWbCYZSzoxhyR/z1",
+        "sshAuthorizedKeys": [
+          "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAB/zPcAdyHRElufWDNQ1mZUWp4V9jDmaWX35ApsXgxfMHBuz3n8VLGVJuXodAAxeRbbE7Rws8BQcCH4DAMKKLHYZRdJtk3ZUw7rm0i/aq0wkeld7Yp6H/fv1ud3mudp7/+3fQ3gV8RmAO8+FS4jNBMciqtY6mWThKciwnkBWmH5atl6GsZ1ZQ+Y8+W4hXnaF6UEU1+xZ8ja+hu81a9fhejcV+m3RwT511kW5IXDe6wkq9tsIEC529VGI7XuySYvusbchivWYxmE+TBMmId3voGCfkl8hIemUG3/LvQWeK95B/6vBKDCFlmABn60zxrjPkdknWPbu4zg+VJWnslX+rDqSe2cBpHqQ8yDxegPcmXNKv2Qp0h8HhEljWoLc4U5x4hlceDraWBehj8i4N6p+Yt678+jUpOCwGC8z9l+zUrG6NPvbHZ2aIBC3eUteYPtmScNLvOiFASPo/9GQQDNqZclQZf5QGDToAV2rV1B4jJPV8fv/1rlgen6O1PNitKo9FlUfr0WA1IXev6CiJUt4x210BzhTlD84S2A0gHJRbeVVkjWKMx/vo/wqEKTg/vvzSOhFDDlKUxSsguL5rrtOxdGj4sUtjeVRuDjwk1u1DH8P75rI0R/1QaeDixJbRi8Q1315z+MrvJuvzJpMTieldqffNUnexMZcFox8yI8KlVt2U= usrbinkat@mprcs"
+        ]
+      }
+    ]
+  }
+}
+    Name:  cloudinitdisk
+Status:
+  Active Pods:
+    5ed782b8-a8ff-4b17-8be7-28c03fff30ea:  kmi-test-worker
+  Conditions:
+    Last Probe Time:       <nil>
+    Last Transition Time:  2021-12-14T01:10:13Z
+    Status:                True
+    Type:                  Ready
+    Last Probe Time:       <nil>
+    Last Transition Time:  <nil>
+    Message:               cannot migrate VMI which does not use masquerade to connect to the pod network
+    Reason:                InterfaceNotLiveMigratable
+    Status:                False
+    Type:                  LiveMigratable
+    Last Probe Time:       2021-12-14T01:15:55Z
+    Last Transition Time:  <nil>
+    Status:                True
+    Type:                  AgentConnected
+    Last Probe Time:       2021-12-14T01:15:55Z
+    Last Transition Time:  <nil>
+    Status:                True
+    Type:                  AgentVersionNotSupported
+  Guest OS Info:
+  Interfaces:
+    Interface Name:                  enp1s0
+    Mac:                             46:21:9d:2c:d1:e2
+    Name:                            default
+  Launcher Container Image Version:  quay.io/kubevirt/virt-launcher:v0.47.1
+  Migration Method:                  BlockMigration
+  Migration Transport:               Unix
+  Node Name:                         kmi-test-worker
+  Phase:                             Running
+  Phase Transition Timestamps:
+    Phase:                        Pending
+    Phase Transition Timestamp:   2021-12-14T01:10:07Z
+    Phase:                        Scheduling
+    Phase Transition Timestamp:   2021-12-14T01:10:07Z
+    Phase:                        Scheduled
+    Phase Transition Timestamp:   2021-12-14T01:10:13Z
+    Phase:                        Running
+    Phase Transition Timestamp:   2021-12-14T01:10:16Z
+  Qos Class:                      Burstable
+  Virtual Machine Revision Name:  revision-start-vm-fd4913cd-bd17-47f0-8762-fa3d567077f1-1
+  Volume Status:
+    Name:    cloudinitdisk
+    Size:    1048576
+    Target:  vdb
+    Name:    containerdisk
+    Target:  vda
+Events:
+  Type    Reason            Age    From                       Message
+  ----    ------            ----   ----                       -------
+  Normal  SuccessfulCreate  6m10s  virtualmachine-controller  Created virtual machine pod virt-launcher-testvm-wwhjb
+  Normal  Created           6m1s   virt-handler               VirtualMachineInstance defined.
+  Normal  Started           6m1s   virt-handler               VirtualMachineInstance started.

@@ -62,7 +62,7 @@ setup_file() {
 
 	log "Deploying test VM (${FLAVOR})"
 	# Deploy Test VM
-	bash .github/workflows/kind/testvm.sh
+	bash ./kmi/${FLAVOR}/testvm.yaml.sh
 	# until virtctl console testvm 2>&1 >> console.txt; do sleep 1; done
 }
 
