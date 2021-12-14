@@ -68,8 +68,8 @@ spec:
                         "sudo",
                         "wheel"
                       ],
-                      "name": "kc2admin",
-                      "passwordHash": "$6$rounds=4096$9v6s9WTmwObj4RMl$EY6.9DOetVg9WKIvJAT4j2TDnyk5nuYdRXrKawpv3Cqivy0HQhWRM3S4Sd1TNFQfPLFsjHBOeMhFjpXny7vcR/",
+                      "name": "kc2user",
+                      "passwordHash": "$6$rounds=4096$IV0aD.lNu0iVn1ew$8YFNQDewBb1VI/vXzXN4UFXcm81PmkZTAnBhEyhAUvs34KMb2k/r4lQtHaDzvXkxxVJfXo5N/hz7grJffDuLi/",
                       "sshAuthorizedKeys": [
                         "$(cat ~/.ssh/id_rsa.pub)"
                       ]

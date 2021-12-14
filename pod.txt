@@ -7,7 +7,7 @@ Annotations:  kubevirt.io/latest-observed-api-version: v1
 API Version:  kubevirt.io/v1
 Kind:         VirtualMachineInstance
 Metadata:
-  Creation Timestamp:  2021-12-14T01:10:07Z
+  Creation Timestamp:  2021-12-14T01:36:46Z
   Finalizers:
     kubevirt.io/virtualMachineControllerFinalize
     foregroundDeleteVirtualMachine
@@ -30,7 +30,7 @@ Metadata:
           f:test:
         f:ownerReferences:
           .:
-          k:{"uid":"fd4913cd-bd17-47f0-8762-fa3d567077f1"}:
+          k:{"uid":"89ad46ba-8fe8-4d59-9143-1b6f82d65ed2"}:
       f:spec:
         .:
         f:domain:
@@ -66,7 +66,7 @@ Metadata:
         .:
         f:activePods:
           .:
-          f:5ed782b8-a8ff-4b17-8be7-28c03fff30ea:
+          f:359775da-09c2-4837-82e6-ec18ba03d03f:
         f:conditions:
         f:guestOSInfo:
         f:interfaces:
@@ -81,16 +81,16 @@ Metadata:
         f:volumeStatus:
     Manager:    Go-http-client
     Operation:  Update
-    Time:       2021-12-14T01:10:16Z
+    Time:       2021-12-14T01:36:54Z
   Owner References:
     API Version:           kubevirt.io/v1
     Block Owner Deletion:  true
     Controller:            true
     Kind:                  VirtualMachine
     Name:                  testvm
-    UID:                   fd4913cd-bd17-47f0-8762-fa3d567077f1
-  Resource Version:        7694
-  UID:                     f180ed59-32e2-4835-858b-5f617e324af5
+    UID:                   89ad46ba-8fe8-4d59-9143-1b6f82d65ed2
+  Resource Version:        2165
+  UID:                     b99b83c8-62ef-4eba-982d-3f1c67c0f745
 Spec:
   Domain:
     Cpu:
@@ -149,8 +149,8 @@ Spec:
           "sudo",
           "wheel"
         ],
-        "name": "core",
-        "passwordHash": "=4096P8t6rK66I/sjZYUcc7j38FRgpPVyou8lD6KUJwMaOHxV122hteL8iZ66gbrEjMJ5jsanIbWbCYZSzoxhyR/z1",
+        "name": "kc2user",
+        "passwordHash": "=4096v6s9WTmwObj4RMl.9DOetVg9WKIvJAT4j2TDnyk5nuYdRXrKawpv3Cqivy0HQhWRM3S4Sd1TNFQfPLFsjHBOeMhFjpXny7vcR/",
         "sshAuthorizedKeys": [
           "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAB/zPcAdyHRElufWDNQ1mZUWp4V9jDmaWX35ApsXgxfMHBuz3n8VLGVJuXodAAxeRbbE7Rws8BQcCH4DAMKKLHYZRdJtk3ZUw7rm0i/aq0wkeld7Yp6H/fv1ud3mudp7/+3fQ3gV8RmAO8+FS4jNBMciqtY6mWThKciwnkBWmH5atl6GsZ1ZQ+Y8+W4hXnaF6UEU1+xZ8ja+hu81a9fhejcV+m3RwT511kW5IXDe6wkq9tsIEC529VGI7XuySYvusbchivWYxmE+TBMmId3voGCfkl8hIemUG3/LvQWeK95B/6vBKDCFlmABn60zxrjPkdknWPbu4zg+VJWnslX+rDqSe2cBpHqQ8yDxegPcmXNKv2Qp0h8HhEljWoLc4U5x4hlceDraWBehj8i4N6p+Yt678+jUpOCwGC8z9l+zUrG6NPvbHZ2aIBC3eUteYPtmScNLvOiFASPo/9GQQDNqZclQZf5QGDToAV2rV1B4jJPV8fv/1rlgen6O1PNitKo9FlUfr0WA1IXev6CiJUt4x210BzhTlD84S2A0gHJRbeVVkjWKMx/vo/wqEKTg/vvzSOhFDDlKUxSsguL5rrtOxdGj4sUtjeVRuDjwk1u1DH8P75rI0R/1QaeDixJbRi8Q1315z+MrvJuvzJpMTieldqffNUnexMZcFox8yI8KlVt2U= usrbinkat@mprcs"
         ]
@@ -161,10 +161,10 @@ Spec:
     Name:  cloudinitdisk
 Status:
   Active Pods:
-    5ed782b8-a8ff-4b17-8be7-28c03fff30ea:  kmi-test-worker
+    359775da-09c2-4837-82e6-ec18ba03d03f:  kmi-test-worker
   Conditions:
     Last Probe Time:       <nil>
-    Last Transition Time:  2021-12-14T01:10:13Z
+    Last Transition Time:  2021-12-14T01:36:52Z
     Status:                True
     Type:                  Ready
     Last Probe Time:       <nil>
@@ -173,18 +173,18 @@ Status:
     Reason:                InterfaceNotLiveMigratable
     Status:                False
     Type:                  LiveMigratable
-    Last Probe Time:       2021-12-14T01:15:55Z
+    Last Probe Time:       2021-12-14T01:42:54Z
     Last Transition Time:  <nil>
     Status:                True
     Type:                  AgentConnected
-    Last Probe Time:       2021-12-14T01:15:55Z
+    Last Probe Time:       2021-12-14T01:42:54Z
     Last Transition Time:  <nil>
     Status:                True
     Type:                  AgentVersionNotSupported
   Guest OS Info:
   Interfaces:
     Interface Name:                  enp1s0
-    Mac:                             46:21:9d:2c:d1:e2
+    Mac:                             c2:a4:02:c7:a7:3f
     Name:                            default
   Launcher Container Image Version:  quay.io/kubevirt/virt-launcher:v0.47.1
   Migration Method:                  BlockMigration
@@ -193,15 +193,15 @@ Status:
   Phase:                             Running
   Phase Transition Timestamps:
     Phase:                        Pending
-    Phase Transition Timestamp:   2021-12-14T01:10:07Z
+    Phase Transition Timestamp:   2021-12-14T01:36:46Z
     Phase:                        Scheduling
-    Phase Transition Timestamp:   2021-12-14T01:10:07Z
+    Phase Transition Timestamp:   2021-12-14T01:36:46Z
     Phase:                        Scheduled
-    Phase Transition Timestamp:   2021-12-14T01:10:13Z
+    Phase Transition Timestamp:   2021-12-14T01:36:52Z
     Phase:                        Running
-    Phase Transition Timestamp:   2021-12-14T01:10:16Z
+    Phase Transition Timestamp:   2021-12-14T01:36:54Z
   Qos Class:                      Burstable
-  Virtual Machine Revision Name:  revision-start-vm-fd4913cd-bd17-47f0-8762-fa3d567077f1-1
+  Virtual Machine Revision Name:  revision-start-vm-89ad46ba-8fe8-4d59-9143-1b6f82d65ed2-1
   Volume Status:
     Name:    cloudinitdisk
     Size:    1048576
@@ -211,6 +211,6 @@ Status:
 Events:
   Type    Reason            Age    From                       Message
   ----    ------            ----   ----                       -------
-  Normal  SuccessfulCreate  6m10s  virtualmachine-controller  Created virtual machine pod virt-launcher-testvm-wwhjb
-  Normal  Created           6m1s   virt-handler               VirtualMachineInstance defined.
-  Normal  Started           6m1s   virt-handler               VirtualMachineInstance started.
+  Normal  SuccessfulCreate  6m20s  virtualmachine-controller  Created virtual machine pod virt-launcher-testvm-rqscz
+  Normal  Created           6m12s  virt-handler               VirtualMachineInstance defined.
+  Normal  Started           6m12s  virt-handler               VirtualMachineInstance started.
