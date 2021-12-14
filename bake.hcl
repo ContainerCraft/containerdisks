@@ -207,6 +207,7 @@ target "fcos-35" {
 
 target "freebsd-13" {
   inherits = ["defaults"]
+  platforms = ["linux/amd64"]
   tags = [
     tag("freebsd", "13")
   ]
