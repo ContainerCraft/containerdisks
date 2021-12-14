@@ -62,8 +62,8 @@ setup_file() {
 
 	log "Deploying test VM (${FLAVOR})"
 	# Deploy Test VM
-	kubectl delete vm testvm || echo
-	bash ./kmi/${FLAVOR}/testvm.yaml.sh
+	kubectl delete vm testvm || :
+	bash kmi/${FLAVOR}/testvm.yaml.sh
 	# until virtctl console testvm 2>&1 >> console.txt; do sleep 1; done
 }
 
@@ -76,6 +76,8 @@ teardown_file() {
 	# TODO: gather cloud-init logs
 
 	# TODO: add flag to disable teardown
+	kubectl delete vm testvm || :
+
 	# if not running in GHA CI, teardown
 	if [[ -z "${GITHUB_ACTIONS}" ]]; then
 		log "Destroying cluster..."
@@ -84,23 +86,23 @@ teardown_file() {
 }
 
 setup() {
-	SKIP=$(jq -r "."${FLAVOR%%-*}".\""${FLAVOR#*-}"\".skip // [] | join(\"|\")" index.json)
-	if [[ ! -z ${SKIP} ]] && [[ "${BATS_TEST_NAME}" =~ ($SKIP) ]]; then
+	SKIP=$(jq -r ".${FLAVOR%%-*}.\""${FLAVOR#*-}"\".skip // [] | join(\"|\")" index.json)
+	if [[ -n ${SKIP} ]] && [[ "${BATS_TEST_NAME}" =~ ($SKIP) ]]; then
 		skip "Test is disabled"
 	fi
 }
 
 @test "VM pods become ready" {
 	run tests/wait-for-ready.sh
-	[ $status = 0 ]
+	[ $status -eq 0 ]
 }
 
 @test "QEMU guest agent starts on boot" {
 	run tests/qemu-guest-agent.sh
-	[ $status = 0 ]
+	[ $status -eq 0 ]
 }
 
 @test "guest ssh connects successfully" {
 	run tests/guest-ssh.sh
-	[ $status = 0 ]
+	[ $status -eq 0 ]
 }
