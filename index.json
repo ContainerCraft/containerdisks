@@ -112,6 +112,19 @@
       }
     }
   },
+  "freebsd": {
+    "13": {
+      "amd64": {
+        "url": "https://object-storage.public.mtl1.vexxhost.net/swift/v1/1dbafeefbd4f4c80864414a441e72dd2/bsd-cloud-image.org/images/freebsd/13.0/2021-12-14/",
+        "image": "freebsd-13.0-zfs.qcow2",
+        "sha256sum": "c96141268b741154ebbdac235c946582eda8718cf6901a762f14ea69bd869dda",
+        "customize": false
+      },
+      "skip": [
+        "ssh"
+      ]
+    }
+  },
   "rhcos": {
     "4.9": {
       "amd64": {

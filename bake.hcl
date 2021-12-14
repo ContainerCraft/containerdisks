@@ -204,3 +204,13 @@ target "fcos-35" {
     FLAVOR = "fcos-35"
   }
 }
+
+target "freebsd-13" {
+  inherits = ["defaults"]
+  tags = [
+    tag("freebsd", "13")
+  ]
+  args = {
+    FLAVOR = "freebsd-13"
+  }
+}
