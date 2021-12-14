@@ -28,7 +28,9 @@ DOWNLOAD_FILE=$(jq -r ."${NAME}".\""${VERSION}"\"."${ARCH}".image index.json)
 CUSTOMIZE=$(jq -r "."${NAME}".\""${VERSION}"\"."${ARCH}" | if has(\"customize\") then .customize else true end" index.json)
 
 # Download qcow2
-curl --verbose \
+curl \
+	--fail \
+	--verbose \
 	--output "${DOWNLOAD_FILE}" \
 	--location "${BASE_URL}"/"${DOWNLOAD_FILE}"
 
