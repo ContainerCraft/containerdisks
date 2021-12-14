@@ -97,7 +97,10 @@
         "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/aarch64/images",
         "image": "Fedora-Cloud-Base-34-1.2.aarch64.qcow2",
         "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6"
-      }
+      },
+      "skip": [
+        "ssh"
+      ]
     },
     "35": {
       "amd64": {
@@ -109,7 +112,10 @@
         "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/aarch64/images",
         "image": "Fedora-Cloud-Base-35-1.2.aarch64.qcow2",
         "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6"
-      }
+      },
+      "skip": [
+        "ssh"
+      ]
     }
   },
   "rhcos": {

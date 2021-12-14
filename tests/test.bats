@@ -34,10 +34,10 @@ setup_file() {
 
 	ls "$HOME"/.ssh/id_rsa || ssh-keygen -t rsa -N "" -f "$HOME"/.ssh/id_rsa
 	kubectl create secret generic kargo-sshpubkey-kc2user \
-		--from-file=key1="$HOME"/.ssh/id_rsa.pub
+		--from-file=key1="$HOME"/.ssh/id_rsa.pub --dry-run=client -oyaml | kubectl apply -f -
 
 	# Deploy Kubevirt
-	kubectl create namespace kubevirt
+	kubectl create namespace kubevirt --dry-run=client -oyaml | kubectl apply -f -
 
 	KUBEVIRT_LATEST="v0.47.1"
 	log "Installing KubeVirt ${KUBEVIRT_LATEST}"
@@ -49,7 +49,7 @@ setup_file() {
 		-f https://github.com/kubevirt/kubevirt/releases/download/"${KUBEVIRT_LATEST}"/kubevirt-cr.yaml
 
 	kubectl create configmap kubevirt-config -n kubevirt \
-		--from-literal debug.useEmulation=true
+		--from-literal debug.useEmulation=true --dry-run=client -oyaml | kubectl apply -f -
 
 	log "Waiting for KubeVirt to be ready"
 
@@ -62,6 +62,7 @@ setup_file() {
 
 	log "Deploying test VM (${FLAVOR})"
 	# Deploy Test VM
+	kubectl delete vm testvm || echo
 	bash ./kmi/${FLAVOR}/testvm.yaml.sh
 	# until virtctl console testvm 2>&1 >> console.txt; do sleep 1; done
 }

@@ -1,124 +1,241 @@
 NAMESPACE            LAST SEEN   TYPE      REASON                    OBJECT                                                                MESSAGE
-kube-system          18m         Normal    LeaderElection            lease/kube-controller-manager                                         kmi-test-control-plane_3188b27c-c86a-4373-af18-977561a1f52e became leader
-default              18m         Normal    NodeHasSufficientMemory   node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeHasSufficientMemory
-default              18m         Normal    NodeHasNoDiskPressure     node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeHasNoDiskPressure
-default              18m         Normal    NodeHasSufficientPID      node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeHasSufficientPID
-default              18m         Normal    NodeAllocatableEnforced   node/kmi-test-control-plane                                           Updated Node Allocatable limit across pods
-kube-system          18m         Normal    LeaderElection            lease/kube-scheduler                                                  kmi-test-control-plane_ff79dbc2-5e72-4f69-ac58-ce02d849da74 became leader
-default              18m         Normal    Starting                  node/kmi-test-control-plane                                           Starting kubelet.
-default              18m         Normal    RegisteredNode            node/kmi-test-control-plane                                           Node kmi-test-control-plane event: Registered Node kmi-test-control-plane in Controller
-local-path-storage   18m         Normal    ScalingReplicaSet         deployment/local-path-provisioner                                     Scaled up replica set local-path-provisioner-85494db59d to 1
-kube-system          18m         Normal    SuccessfulCreate          daemonset/kindnet                                                     Created pod: kindnet-swb2t
-kube-system          18m         Normal    Scheduled                 pod/kube-proxy-jrvfj                                                  Successfully assigned kube-system/kube-proxy-jrvfj to kmi-test-control-plane
-kube-system          18m         Normal    Scheduled                 pod/kindnet-swb2t                                                     Successfully assigned kube-system/kindnet-swb2t to kmi-test-control-plane
-kube-system          18m         Normal    ScalingReplicaSet         deployment/coredns                                                    Scaled up replica set coredns-78fcd69978 to 2
-kube-system          18m         Normal    SuccessfulCreate          daemonset/kube-proxy                                                  Created pod: kube-proxy-jrvfj
-kube-system          18m         Normal    Pulled                    pod/kindnet-swb2t                                                     Container image "docker.io/kindest/kindnetd:v20211103-24515ddb" already present on machine
-kube-system          18m         Normal    Started                   pod/kube-proxy-jrvfj                                                  Started container kube-proxy
-local-path-storage   18m         Warning   FailedScheduling          pod/local-path-provisioner-85494db59d-w898s                           0/1 nodes are available: 1 node(s) had taint {node.kubernetes.io/not-ready: }, that the pod didn't tolerate.
-kube-system          18m         Normal    Pulled                    pod/kube-proxy-jrvfj                                                  Container image "k8s.gcr.io/kube-proxy:v1.22.2" already present on machine
-kube-system          18m         Normal    SuccessfulCreate          replicaset/coredns-78fcd69978                                         Created pod: coredns-78fcd69978-m7wdr
-kube-system          18m         Normal    SuccessfulCreate          replicaset/coredns-78fcd69978                                         Created pod: coredns-78fcd69978-7qtqb
-local-path-storage   18m         Normal    SuccessfulCreate          replicaset/local-path-provisioner-85494db59d                          Created pod: local-path-provisioner-85494db59d-w898s
-kube-system          18m         Warning   FailedScheduling          pod/coredns-78fcd69978-7qtqb                                          0/1 nodes are available: 1 node(s) had taint {node.kubernetes.io/not-ready: }, that the pod didn't tolerate.
-kube-system          18m         Normal    Created                   pod/kindnet-swb2t                                                     Created container kindnet-cni
-kube-system          18m         Warning   FailedScheduling          pod/coredns-78fcd69978-m7wdr                                          0/1 nodes are available: 1 node(s) had taint {node.kubernetes.io/not-ready: }, that the pod didn't tolerate.
-kube-system          18m         Normal    Created                   pod/kube-proxy-jrvfj                                                  Created container kube-proxy
-kube-system          18m         Normal    Started                   pod/kindnet-swb2t                                                     Started container kindnet-cni
-local-path-storage   18m         Normal    Scheduled                 pod/local-path-provisioner-85494db59d-w898s                           Successfully assigned local-path-storage/local-path-provisioner-85494db59d-w898s to kmi-test-control-plane
-local-path-storage   18m         Normal    Pulled                    pod/local-path-provisioner-85494db59d-w898s                           Container image "docker.io/rancher/local-path-provisioner:v0.0.14" already present on machine
-kube-system          18m         Normal    Created                   pod/coredns-78fcd69978-m7wdr                                          Created container coredns
-default              18m         Normal    NodeReady                 node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeReady
-kube-system          18m         Normal    Pulled                    pod/coredns-78fcd69978-m7wdr                                          Container image "k8s.gcr.io/coredns/coredns:v1.8.4" already present on machine
-kube-system          18m         Normal    Scheduled                 pod/coredns-78fcd69978-m7wdr                                          Successfully assigned kube-system/coredns-78fcd69978-m7wdr to kmi-test-control-plane
-kube-system          18m         Normal    Scheduled                 pod/coredns-78fcd69978-7qtqb                                          Successfully assigned kube-system/coredns-78fcd69978-7qtqb to kmi-test-control-plane
-local-path-storage   18m         Normal    Started                   pod/local-path-provisioner-85494db59d-w898s                           Started container local-path-provisioner
-kube-system          18m         Normal    Created                   pod/coredns-78fcd69978-7qtqb                                          Created container coredns
-kube-system          18m         Normal    Pulled                    pod/coredns-78fcd69978-7qtqb                                          Container image "k8s.gcr.io/coredns/coredns:v1.8.4" already present on machine
-local-path-storage   18m         Normal    LeaderElection            endpoints/rancher.io-local-path                                       local-path-provisioner-85494db59d-w898s_477b09a7-f995-4dd2-b24b-b57530a05c51 became leader
-kube-system          18m         Normal    Started                   pod/coredns-78fcd69978-m7wdr                                          Started container coredns
-local-path-storage   18m         Normal    Created                   pod/local-path-provisioner-85494db59d-w898s                           Created container local-path-provisioner
-kube-system          18m         Normal    Started                   pod/coredns-78fcd69978-7qtqb                                          Started container coredns
-default              18m         Normal    NodeHasNoDiskPressure     node/kmi-test-worker                                                  Node kmi-test-worker status is now: NodeHasNoDiskPressure
-kube-system          18m         Normal    SuccessfulCreate          daemonset/kube-proxy                                                  Created pod: kube-proxy-bffvt
-default              18m         Normal    RegisteredNode            node/kmi-test-worker                                                  Node kmi-test-worker event: Registered Node kmi-test-worker in Controller
-default              18m         Normal    NodeHasSufficientMemory   node/kmi-test-worker                                                  Node kmi-test-worker status is now: NodeHasSufficientMemory
-kube-system          18m         Normal    Scheduled                 pod/kube-proxy-bffvt                                                  Successfully assigned kube-system/kube-proxy-bffvt to kmi-test-worker
-kube-system          18m         Normal    Scheduled                 pod/kindnet-6ljzz                                                     Successfully assigned kube-system/kindnet-6ljzz to kmi-test-worker
-kube-system          18m         Normal    SuccessfulCreate          daemonset/kindnet                                                     Created pod: kindnet-6ljzz
-kube-system          18m         Normal    Created                   pod/kube-proxy-bffvt                                                  Created container kube-proxy
-kube-system          18m         Normal    Started                   pod/kube-proxy-bffvt                                                  Started container kube-proxy
-kube-system          18m         Normal    Pulled                    pod/kube-proxy-bffvt                                                  Container image "k8s.gcr.io/kube-proxy:v1.22.2" already present on machine
-kube-system          18m         Normal    Pulled                    pod/kindnet-6ljzz                                                     Container image "docker.io/kindest/kindnetd:v20211103-24515ddb" already present on machine
-kube-system          18m         Normal    Created                   pod/kindnet-6ljzz                                                     Created container kindnet-cni
-kube-system          17m         Normal    Started                   pod/kindnet-6ljzz                                                     Started container kindnet-cni
-kubevirt             17m         Normal    Pulled                    pod/virt-operator-6fbd74566c-jc6hh                                    Container image "quay.io/kubevirt/virt-operator:v0.47.1" already present on machine
-kubevirt             17m         Normal    Created                   pod/virt-operator-6fbd74566c-jc6hh                                    Created container virt-operator
-kubevirt             17m         Normal    SuccessfulCreate          replicaset/virt-operator-6fbd74566c                                   Created pod: virt-operator-6fbd74566c-jc6hh
-kubevirt             17m         Normal    ScalingReplicaSet         deployment/virt-operator                                              Scaled up replica set virt-operator-6fbd74566c to 2
-kubevirt             17m         Normal    Created                   pod/virt-operator-6fbd74566c-4ll4z                                    Created container virt-operator
-kubevirt             17m         Normal    Pulled                    pod/virt-operator-6fbd74566c-4ll4z                                    Container image "quay.io/kubevirt/virt-operator:v0.47.1" already present on machine
-kubevirt             17m         Normal    Scheduled                 pod/virt-operator-6fbd74566c-4ll4z                                    Successfully assigned kubevirt/virt-operator-6fbd74566c-4ll4z to kmi-test-worker
-kubevirt             17m         Normal    SuccessfulCreate          replicaset/virt-operator-6fbd74566c                                   Created pod: virt-operator-6fbd74566c-4ll4z
-kubevirt             17m         Normal    Scheduled                 pod/virt-operator-6fbd74566c-jc6hh                                    Successfully assigned kubevirt/virt-operator-6fbd74566c-jc6hh to kmi-test-worker
-kubevirt             17m         Normal    Started                   pod/virt-operator-6fbd74566c-4ll4z                                    Started container virt-operator
-kubevirt             17m         Normal    Started                   pod/virt-operator-6fbd74566c-jc6hh                                    Started container virt-operator
-kubevirt             17m         Normal    LeaderElection            endpoints/virt-operator                                               virt-operator-6fbd74566c-jc6hh became leader
-kubevirt             16m         Normal    Pulled                    pod/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-job9--1-pgxzg   Container image "quay.io/kubevirt/virt-operator:v0.47.1" already present on machine
-kubevirt             16m         Normal    Created                   pod/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-job9--1-pgxzg   Created container install-strategy-upload
-kubevirt             16m         Normal    SuccessfulCreate          job/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-job9tgvc        Created pod: kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-job9--1-pgxzg
-kubevirt             16m         Normal    Scheduled                 pod/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-job9--1-pgxzg   Successfully assigned kubevirt/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-job9--1-pgxzg to kmi-test-worker
-kubevirt             16m         Normal    Started                   pod/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-job9--1-pgxzg   Started container install-strategy-upload
-kubevirt             16m         Normal    Completed                 job/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-job9tgvc        Job completed
-kubevirt             16m         Normal    Created                   pod/virt-api-86f9d6d4f-6zchd                                          Created container virt-api
-kubevirt             16m         Normal    Pulled                    pod/virt-api-86f9d6d4f-6zchd                                          Container image "quay.io/kubevirt/virt-api:v0.47.1" already present on machine
-kubevirt             16m         Normal    Started                   pod/virt-api-86f9d6d4f-6zchd                                          Started container virt-api
-kubevirt             16m         Normal    Scheduled                 pod/virt-api-86f9d6d4f-bgppx                                          Successfully assigned kubevirt/virt-api-86f9d6d4f-bgppx to kmi-test-worker
-kubevirt             16m         Normal    Pulled                    pod/virt-api-86f9d6d4f-bgppx                                          Container image "quay.io/kubevirt/virt-api:v0.47.1" already present on machine
-kubevirt             16m         Normal    Scheduled                 pod/virt-api-86f9d6d4f-6zchd                                          Successfully assigned kubevirt/virt-api-86f9d6d4f-6zchd to kmi-test-worker
-kubevirt             16m         Normal    Started                   pod/virt-api-86f9d6d4f-bgppx                                          Started container virt-api
-kubevirt             16m         Normal    SuccessfulCreate          replicaset/virt-api-86f9d6d4f                                         Created pod: virt-api-86f9d6d4f-6zchd
-kubevirt             16m         Normal    SuccessfulCreate          replicaset/virt-api-86f9d6d4f                                         Created pod: virt-api-86f9d6d4f-bgppx
-kubevirt             16m         Normal    NoPods                    poddisruptionbudget/virt-api-pdb                                      No matching pods found
-kubevirt             16m         Normal    ScalingReplicaSet         deployment/virt-api                                                   Scaled up replica set virt-api-86f9d6d4f to 2
-kubevirt             16m         Normal    Created                   pod/virt-api-86f9d6d4f-bgppx                                          Created container virt-api
-kubevirt             16m         Normal    SuccessfulCreate          daemonset/virt-handler                                                Created pod: virt-handler-l5lsq
-kubevirt             16m         Normal    Created                   pod/virt-controller-54b79f5db-r9g2r                                   Created container virt-controller
-kubevirt             16m         Normal    Started                   pod/virt-controller-54b79f5db-r9g2r                                   Started container virt-controller
-kubevirt             16m         Normal    Scheduled                 pod/virt-controller-54b79f5db-slwzs                                   Successfully assigned kubevirt/virt-controller-54b79f5db-slwzs to kmi-test-worker
-kubevirt             16m         Normal    Pulled                    pod/virt-controller-54b79f5db-slwzs                                   Container image "quay.io/kubevirt/virt-controller:v0.47.1" already present on machine
-kubevirt             16m         Normal    Created                   pod/virt-controller-54b79f5db-slwzs                                   Created container virt-controller
-kubevirt             16m         Normal    Started                   pod/virt-controller-54b79f5db-slwzs                                   Started container virt-controller
-kubevirt             16m         Normal    SuccessfulCreate          replicaset/virt-controller-54b79f5db                                  Created pod: virt-controller-54b79f5db-r9g2r
-kubevirt             16m         Normal    SuccessfulCreate          replicaset/virt-controller-54b79f5db                                  Created pod: virt-controller-54b79f5db-slwzs
-kubevirt             16m         Normal    Pulled                    pod/virt-controller-54b79f5db-r9g2r                                   Container image "quay.io/kubevirt/virt-controller:v0.47.1" already present on machine
-kubevirt             16m         Normal    ScalingReplicaSet         deployment/virt-controller                                            Scaled up replica set virt-controller-54b79f5db to 2
-kubevirt             16m         Normal    Scheduled                 pod/virt-controller-54b79f5db-r9g2r                                   Successfully assigned kubevirt/virt-controller-54b79f5db-r9g2r to kmi-test-worker
-kubevirt             16m         Normal    Scheduled                 pod/virt-handler-l5lsq                                                Successfully assigned kubevirt/virt-handler-l5lsq to kmi-test-worker
-kubevirt             16m         Normal    Pulled                    pod/virt-handler-l5lsq                                                Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
-kubevirt             16m         Normal    Created                   pod/virt-handler-l5lsq                                                Created container virt-launcher
-kubevirt             16m         Normal    Started                   pod/virt-handler-l5lsq                                                Started container virt-launcher
-kubevirt             16m         Normal    NoPods                    poddisruptionbudget/virt-controller-pdb                               No matching pods found
-kubevirt             16m         Normal    Started                   pod/virt-handler-l5lsq                                                Started container virt-handler
-kubevirt             16m         Normal    Pulled                    pod/virt-handler-l5lsq                                                Container image "quay.io/kubevirt/virt-handler:v0.47.1" already present on machine
-kubevirt             16m         Normal    Created                   pod/virt-handler-l5lsq                                                Created container virt-handler
-kubevirt             16m         Normal    LeaderElection            endpoints/virt-controller                                             virt-controller-54b79f5db-slwzs became leader
-default              15m         Normal    SuccessfulCreate          virtualmachine/testvm                                                 Started the virtual machine by creating the new virtual machine instance testvm
-default              15m         Normal    Scheduled                 pod/virt-launcher-testvm-qk6l4                                        Successfully assigned default/virt-launcher-testvm-qk6l4 to kmi-test-worker
-default              15m         Normal    SuccessfulCreate          virtualmachineinstance/testvm                                         Created virtual machine pod virt-launcher-testvm-qk6l4
-default              15m         Normal    Pulled                    pod/virt-launcher-testvm-qk6l4                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
-default              15m         Normal    Created                   pod/virt-launcher-testvm-qk6l4                                        Created container container-disk-binary
-default              15m         Normal    Started                   pod/virt-launcher-testvm-qk6l4                                        Started container container-disk-binary
-default              15m         Normal    Pulling                   pod/virt-launcher-testvm-qk6l4                                        Pulling image "docker.io/containercraft/fcos:35-dev"
-default              15m         Normal    Pulled                    pod/virt-launcher-testvm-qk6l4                                        Successfully pulled image "docker.io/containercraft/fcos:35-dev" in 38.834342516s
-default              15m         Normal    Created                   pod/virt-launcher-testvm-qk6l4                                        Created container volumecontainerdisk-init
-default              15m         Normal    Pulling                   pod/virt-launcher-testvm-qk6l4                                        Pulling image "docker.io/containercraft/fcos:35-dev"
-default              15m         Normal    Created                   pod/virt-launcher-testvm-qk6l4                                        Created container compute
-default              15m         Normal    Started                   pod/virt-launcher-testvm-qk6l4                                        Started container compute
-default              15m         Normal    Started                   pod/virt-launcher-testvm-qk6l4                                        Started container volumecontainerdisk-init
-default              15m         Normal    Pulled                    pod/virt-launcher-testvm-qk6l4                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
-default              15m         Normal    Pulled                    pod/virt-launcher-testvm-qk6l4                                        Successfully pulled image "docker.io/containercraft/fcos:35-dev" in 922.617561ms
-default              15m         Normal    Created                   pod/virt-launcher-testvm-qk6l4                                        Created container volumecontainerdisk
-default              15m         Normal    Started                   pod/virt-launcher-testvm-qk6l4                                        Started container volumecontainerdisk
-default              15m         Normal    Started                   virtualmachineinstance/testvm                                         VirtualMachineInstance started.
-default              15m         Normal    Created                   virtualmachineinstance/testvm                                         VirtualMachineInstance defined.
+default              33m         Normal    NodeHasSufficientMemory   node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeHasSufficientMemory
+default              33m         Normal    NodeHasNoDiskPressure     node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeHasNoDiskPressure
+default              33m         Normal    NodeHasSufficientPID      node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeHasSufficientPID
+default              33m         Normal    Starting                  node/kmi-test-control-plane                                           Starting kubelet.
+default              33m         Normal    NodeHasSufficientMemory   node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeHasSufficientMemory
+default              33m         Normal    NodeHasNoDiskPressure     node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeHasNoDiskPressure
+default              33m         Normal    NodeHasSufficientPID      node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeHasSufficientPID
+default              33m         Normal    NodeAllocatableEnforced   node/kmi-test-control-plane                                           Updated Node Allocatable limit across pods
+kube-system          33m         Normal    LeaderElection            lease/kube-controller-manager                                         kmi-test-control-plane_ca0bacdf-73e1-4837-9018-8c53649dac23 became leader
+kube-system          33m         Normal    LeaderElection            lease/kube-scheduler                                                  kmi-test-control-plane_3b85f202-d109-4ebf-8ae3-68b6ceeeb335 became leader
+kube-system          33m         Warning   NodeNotReady              pod/kube-scheduler-kmi-test-control-plane                             Node is not ready
+kube-system          33m         Normal    Scheduled                 pod/kube-proxy-7z65h                                                  Successfully assigned kube-system/kube-proxy-7z65h to kmi-test-control-plane
+kube-system          33m         Normal    SuccessfulCreate          daemonset/kube-proxy                                                  Created pod: kube-proxy-7z65h
+default              33m         Normal    RegisteredNode            node/kmi-test-control-plane                                           Node kmi-test-control-plane event: Registered Node kmi-test-control-plane in Controller
+kube-system          33m         Warning   NodeNotReady              pod/kube-controller-manager-kmi-test-control-plane                    Node is not ready
+kube-system          33m         Warning   NodeNotReady              pod/kube-apiserver-kmi-test-control-plane                             Node is not ready
+kube-system          33m         Normal    SuccessfulCreate          daemonset/kindnet                                                     Created pod: kindnet-f8lmt
+kube-system          33m         Warning   NodeNotReady              pod/etcd-kmi-test-control-plane                                       Node is not ready
+kube-system          33m         Normal    Scheduled                 pod/kindnet-f8lmt                                                     Successfully assigned kube-system/kindnet-f8lmt to kmi-test-control-plane
+kube-system          33m         Normal    SuccessfulCreate          replicaset/coredns-78fcd69978                                         Created pod: coredns-78fcd69978-hr7zb
+kube-system          33m         Warning   FailedScheduling          pod/coredns-78fcd69978-hr7zb                                          0/1 nodes are available: 1 node(s) had taint {node.kubernetes.io/not-ready: }, that the pod didn't tolerate.
+local-path-storage   33m         Warning   FailedScheduling          pod/local-path-provisioner-85494db59d-cqnnd                           0/1 nodes are available: 1 node(s) had taint {node.kubernetes.io/not-ready: }, that the pod didn't tolerate.
+kube-system          33m         Warning   FailedMount               pod/kindnet-f8lmt                                                     MountVolume.SetUp failed for volume "kube-api-access-x49bc" : configmap "kube-root-ca.crt" not found
+kube-system          33m         Normal    Created                   pod/kube-proxy-7z65h                                                  Created container kube-proxy
+kube-system          33m         Normal    Pulled                    pod/kube-proxy-7z65h                                                  Container image "k8s.gcr.io/kube-proxy:v1.22.2" already present on machine
+kube-system          33m         Normal    SuccessfulCreate          replicaset/coredns-78fcd69978                                         Created pod: coredns-78fcd69978-gch8h
+local-path-storage   33m         Normal    SuccessfulCreate          replicaset/local-path-provisioner-85494db59d                          Created pod: local-path-provisioner-85494db59d-cqnnd
+local-path-storage   33m         Normal    ScalingReplicaSet         deployment/local-path-provisioner                                     Scaled up replica set local-path-provisioner-85494db59d to 1
+kube-system          33m         Normal    ScalingReplicaSet         deployment/coredns                                                    Scaled up replica set coredns-78fcd69978 to 2
+kube-system          33m         Warning   FailedMount               pod/kube-proxy-7z65h                                                  MountVolume.SetUp failed for volume "kube-api-access-nkkmm" : configmap "kube-root-ca.crt" not found
+kube-system          33m         Warning   FailedScheduling          pod/coredns-78fcd69978-gch8h                                          0/1 nodes are available: 1 node(s) had taint {node.kubernetes.io/not-ready: }, that the pod didn't tolerate.
+kube-system          33m         Normal    Started                   pod/kindnet-f8lmt                                                     Started container kindnet-cni
+kube-system          33m         Normal    Created                   pod/kindnet-f8lmt                                                     Created container kindnet-cni
+kube-system          33m         Normal    Pulled                    pod/kindnet-f8lmt                                                     Container image "docker.io/kindest/kindnetd:v20211103-24515ddb" already present on machine
+kube-system          33m         Normal    Started                   pod/kube-proxy-7z65h                                                  Started container kube-proxy
+local-path-storage   33m         Normal    Scheduled                 pod/local-path-provisioner-85494db59d-cqnnd                           Successfully assigned local-path-storage/local-path-provisioner-85494db59d-cqnnd to kmi-test-control-plane
+default              33m         Normal    NodeReady                 node/kmi-test-control-plane                                           Node kmi-test-control-plane status is now: NodeReady
+kube-system          33m         Normal    Scheduled                 pod/coredns-78fcd69978-hr7zb                                          Successfully assigned kube-system/coredns-78fcd69978-hr7zb to kmi-test-control-plane
+kube-system          33m         Normal    Scheduled                 pod/coredns-78fcd69978-gch8h                                          Successfully assigned kube-system/coredns-78fcd69978-gch8h to kmi-test-control-plane
+kube-system          33m         Normal    Pulled                    pod/coredns-78fcd69978-gch8h                                          Container image "k8s.gcr.io/coredns/coredns:v1.8.4" already present on machine
+local-path-storage   33m         Normal    Pulled                    pod/local-path-provisioner-85494db59d-cqnnd                           Container image "docker.io/rancher/local-path-provisioner:v0.0.14" already present on machine
+kube-system          33m         Normal    Created                   pod/coredns-78fcd69978-hr7zb                                          Created container coredns
+kube-system          33m         Normal    Created                   pod/coredns-78fcd69978-gch8h                                          Created container coredns
+kube-system          33m         Normal    Started                   pod/coredns-78fcd69978-gch8h                                          Started container coredns
+local-path-storage   33m         Normal    Started                   pod/local-path-provisioner-85494db59d-cqnnd                           Started container local-path-provisioner
+local-path-storage   33m         Normal    LeaderElection            endpoints/rancher.io-local-path                                       local-path-provisioner-85494db59d-cqnnd_1b8a37e6-e402-4758-be56-bed59560280a became leader
+kube-system          33m         Normal    Started                   pod/coredns-78fcd69978-hr7zb                                          Started container coredns
+kube-system          33m         Normal    Pulled                    pod/coredns-78fcd69978-hr7zb                                          Container image "k8s.gcr.io/coredns/coredns:v1.8.4" already present on machine
+local-path-storage   33m         Normal    Created                   pod/local-path-provisioner-85494db59d-cqnnd                           Created container local-path-provisioner
+default              32m         Normal    NodeHasSufficientMemory   node/kmi-test-worker                                                  Node kmi-test-worker status is now: NodeHasSufficientMemory
+default              32m         Normal    NodeHasNoDiskPressure     node/kmi-test-worker                                                  Node kmi-test-worker status is now: NodeHasNoDiskPressure
+default              32m         Normal    RegisteredNode            node/kmi-test-worker                                                  Node kmi-test-worker event: Registered Node kmi-test-worker in Controller
+kube-system          32m         Normal    Scheduled                 pod/kube-proxy-5ht78                                                  Successfully assigned kube-system/kube-proxy-5ht78 to kmi-test-worker
+kube-system          32m         Normal    SuccessfulCreate          daemonset/kube-proxy                                                  Created pod: kube-proxy-5ht78
+kube-system          32m         Normal    Scheduled                 pod/kindnet-496vz                                                     Successfully assigned kube-system/kindnet-496vz to kmi-test-worker
+kube-system          32m         Normal    SuccessfulCreate          daemonset/kindnet                                                     Created pod: kindnet-496vz
+kube-system          32m         Normal    Started                   pod/kube-proxy-5ht78                                                  Started container kube-proxy
+kube-system          32m         Normal    Pulled                    pod/kindnet-496vz                                                     Container image "docker.io/kindest/kindnetd:v20211103-24515ddb" already present on machine
+kube-system          32m         Normal    Created                   pod/kube-proxy-5ht78                                                  Created container kube-proxy
+kube-system          32m         Normal    Pulled                    pod/kube-proxy-5ht78                                                  Container image "k8s.gcr.io/kube-proxy:v1.22.2" already present on machine
+kube-system          32m         Normal    Started                   pod/kindnet-496vz                                                     Started container kindnet-cni
+kube-system          32m         Normal    Created                   pod/kindnet-496vz                                                     Created container kindnet-cni
+kubevirt             32m         Warning   FailedScheduling          pod/virt-operator-6fbd74566c-w6s4z                                    0/2 nodes are available: 1 node(s) had taint {node-role.kubernetes.io/master: }, that the pod didn't tolerate, 1 node(s) had taint {node.kubernetes.io/not-ready: }, that the pod didn't tolerate.
+kubevirt             32m         Normal    ScalingReplicaSet         deployment/virt-operator                                              Scaled up replica set virt-operator-6fbd74566c to 2
+kubevirt             32m         Normal    SuccessfulCreate          replicaset/virt-operator-6fbd74566c                                   Created pod: virt-operator-6fbd74566c-w6s4z
+kubevirt             32m         Warning   FailedScheduling          pod/virt-operator-6fbd74566c-jt9cd                                    0/2 nodes are available: 1 node(s) had taint {node-role.kubernetes.io/master: }, that the pod didn't tolerate, 1 node(s) had taint {node.kubernetes.io/not-ready: }, that the pod didn't tolerate.
+kubevirt             32m         Normal    SuccessfulCreate          replicaset/virt-operator-6fbd74566c                                   Created pod: virt-operator-6fbd74566c-jt9cd
+kubevirt             32m         Normal    Pulled                    pod/virt-operator-6fbd74566c-w6s4z                                    Container image "quay.io/kubevirt/virt-operator:v0.47.1" already present on machine
+kubevirt             32m         Normal    Pulled                    pod/virt-operator-6fbd74566c-jt9cd                                    Container image "quay.io/kubevirt/virt-operator:v0.47.1" already present on machine
+kubevirt             32m         Normal    Created                   pod/virt-operator-6fbd74566c-w6s4z                                    Created container virt-operator
+kubevirt             32m         Normal    Started                   pod/virt-operator-6fbd74566c-w6s4z                                    Started container virt-operator
+kubevirt             32m         Normal    TaintManagerEviction      pod/virt-operator-6fbd74566c-jt9cd                                    Cancelling deletion of Pod kubevirt/virt-operator-6fbd74566c-jt9cd
+kubevirt             32m         Normal    Scheduled                 pod/virt-operator-6fbd74566c-w6s4z                                    Successfully assigned kubevirt/virt-operator-6fbd74566c-w6s4z to kmi-test-worker
+kubevirt             32m         Normal    Started                   pod/virt-operator-6fbd74566c-jt9cd                                    Started container virt-operator
+kubevirt             32m         Normal    Scheduled                 pod/virt-operator-6fbd74566c-jt9cd                                    Successfully assigned kubevirt/virt-operator-6fbd74566c-jt9cd to kmi-test-worker
+kubevirt             32m         Normal    TaintManagerEviction      pod/virt-operator-6fbd74566c-w6s4z                                    Cancelling deletion of Pod kubevirt/virt-operator-6fbd74566c-w6s4z
+kubevirt             32m         Normal    Created                   pod/virt-operator-6fbd74566c-jt9cd                                    Created container virt-operator
+kubevirt             32m         Normal    LeaderElection            endpoints/virt-operator                                               virt-operator-6fbd74566c-w6s4z became leader
+kubevirt             32m         Normal    SuccessfulCreate          job/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-jobmjhst        Created pod: kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-jobm--1-clxds
+kubevirt             32m         Normal    Scheduled                 pod/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-jobm--1-clxds   Successfully assigned kubevirt/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-jobm--1-clxds to kmi-test-worker
+kubevirt             32m         Normal    Pulled                    pod/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-jobm--1-clxds   Container image "quay.io/kubevirt/virt-operator:v0.47.1" already present on machine
+kubevirt             32m         Normal    Started                   pod/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-jobm--1-clxds   Started container install-strategy-upload
+kubevirt             32m         Normal    Created                   pod/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-jobm--1-clxds   Created container install-strategy-upload
+kubevirt             32m         Normal    Completed                 job/kubevirt-18a1f6d18c2f5f620c2cde4f617b5798338df1b3-jobmjhst        Job completed
+kubevirt             32m         Normal    Scheduled                 pod/virt-api-86f9d6d4f-dddzc                                          Successfully assigned kubevirt/virt-api-86f9d6d4f-dddzc to kmi-test-worker
+kubevirt             32m         Normal    Created                   pod/virt-api-86f9d6d4f-pwxsr                                          Created container virt-api
+kubevirt             32m         Normal    Created                   pod/virt-api-86f9d6d4f-dddzc                                          Created container virt-api
+kubevirt             32m         Normal    Pulled                    pod/virt-api-86f9d6d4f-dddzc                                          Container image "quay.io/kubevirt/virt-api:v0.47.1" already present on machine
+kubevirt             32m         Normal    Scheduled                 pod/virt-api-86f9d6d4f-pwxsr                                          Successfully assigned kubevirt/virt-api-86f9d6d4f-pwxsr to kmi-test-worker
+kubevirt             32m         Normal    SuccessfulCreate          replicaset/virt-api-86f9d6d4f                                         Created pod: virt-api-86f9d6d4f-dddzc
+kubevirt             32m         Normal    NoPods                    poddisruptionbudget/virt-api-pdb                                      No matching pods found
+kubevirt             32m         Normal    ScalingReplicaSet         deployment/virt-api                                                   Scaled up replica set virt-api-86f9d6d4f to 2
+kubevirt             32m         Normal    SuccessfulCreate          replicaset/virt-api-86f9d6d4f                                         Created pod: virt-api-86f9d6d4f-pwxsr
+kubevirt             32m         Normal    Pulled                    pod/virt-api-86f9d6d4f-pwxsr                                          Container image "quay.io/kubevirt/virt-api:v0.47.1" already present on machine
+kubevirt             32m         Normal    Started                   pod/virt-api-86f9d6d4f-pwxsr                                          Started container virt-api
+kubevirt             32m         Normal    Started                   pod/virt-api-86f9d6d4f-dddzc                                          Started container virt-api
+kubevirt             31m         Normal    Scheduled                 pod/virt-controller-54b79f5db-mcgwj                                   Successfully assigned kubevirt/virt-controller-54b79f5db-mcgwj to kmi-test-worker
+kubevirt             31m         Normal    Scheduled                 pod/virt-handler-655vc                                                Successfully assigned kubevirt/virt-handler-655vc to kmi-test-worker
+kubevirt             31m         Normal    SuccessfulCreate          replicaset/virt-controller-54b79f5db                                  Created pod: virt-controller-54b79f5db-bt4z8
+kubevirt             31m         Normal    SuccessfulCreate          replicaset/virt-controller-54b79f5db                                  Created pod: virt-controller-54b79f5db-mcgwj
+kubevirt             31m         Normal    ScalingReplicaSet         deployment/virt-controller                                            Scaled up replica set virt-controller-54b79f5db to 2
+kubevirt             31m         Normal    Scheduled                 pod/virt-controller-54b79f5db-bt4z8                                   Successfully assigned kubevirt/virt-controller-54b79f5db-bt4z8 to kmi-test-worker
+kubevirt             31m         Normal    SuccessfulCreate          daemonset/virt-handler                                                Created pod: virt-handler-655vc
+kubevirt             31m         Normal    NoPods                    poddisruptionbudget/virt-controller-pdb                               No matching pods found
+kubevirt             31m         Normal    Started                   pod/virt-controller-54b79f5db-mcgwj                                   Started container virt-controller
+kubevirt             31m         Normal    Pulled                    pod/virt-controller-54b79f5db-mcgwj                                   Container image "quay.io/kubevirt/virt-controller:v0.47.1" already present on machine
+kubevirt             31m         Normal    Created                   pod/virt-controller-54b79f5db-bt4z8                                   Created container virt-controller
+kubevirt             31m         Normal    Started                   pod/virt-handler-655vc                                                Started container virt-launcher
+kubevirt             31m         Normal    Started                   pod/virt-controller-54b79f5db-bt4z8                                   Started container virt-controller
+kubevirt             31m         Normal    Created                   pod/virt-controller-54b79f5db-mcgwj                                   Created container virt-controller
+kubevirt             31m         Normal    Created                   pod/virt-handler-655vc                                                Created container virt-launcher
+kubevirt             31m         Normal    Pulled                    pod/virt-controller-54b79f5db-bt4z8                                   Container image "quay.io/kubevirt/virt-controller:v0.47.1" already present on machine
+kubevirt             31m         Normal    Pulled                    pod/virt-handler-655vc                                                Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+kubevirt             31m         Normal    Created                   pod/virt-handler-655vc                                                Created container virt-handler
+kubevirt             31m         Normal    Pulled                    pod/virt-handler-655vc                                                Container image "quay.io/kubevirt/virt-handler:v0.47.1" already present on machine
+kubevirt             31m         Normal    Started                   pod/virt-handler-655vc                                                Started container virt-handler
+kubevirt             31m         Normal    LeaderElection            endpoints/virt-controller                                             virt-controller-54b79f5db-mcgwj became leader
+default              31m         Normal    SuccessfulCreate          virtualmachine/testvm                                                 Started the virtual machine by creating the new virtual machine instance testvm
+default              31m         Normal    Created                   pod/virt-launcher-testvm-4n8vx                                        Created container container-disk-binary
+default              31m         Normal    Pulled                    pod/virt-launcher-testvm-4n8vx                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+default              31m         Normal    Scheduled                 pod/virt-launcher-testvm-4n8vx                                        Successfully assigned default/virt-launcher-testvm-4n8vx to kmi-test-worker
+default              31m         Normal    SuccessfulCreate          virtualmachineinstance/testvm                                         Created virtual machine pod virt-launcher-testvm-4n8vx
+default              31m         Normal    Pulling                   pod/virt-launcher-testvm-4n8vx                                        Pulling image "docker.io/containercraft/fedora:34-dev"
+default              31m         Normal    Started                   pod/virt-launcher-testvm-4n8vx                                        Started container container-disk-binary
+default              31m         Normal    Pulled                    pod/virt-launcher-testvm-4n8vx                                        Successfully pulled image "docker.io/containercraft/fedora:34-dev" in 8.620471829s
+default              31m         Normal    Created                   pod/virt-launcher-testvm-4n8vx                                        Created container volumecontainerdisk-init
+default              31m         Normal    Started                   pod/virt-launcher-testvm-4n8vx                                        Started container volumecontainerdisk-init
+default              31m         Normal    Pulling                   pod/virt-launcher-testvm-4n8vx                                        Pulling image "docker.io/containercraft/fedora:34-dev"
+default              31m         Normal    Started                   pod/virt-launcher-testvm-4n8vx                                        Started container compute
+default              31m         Normal    Created                   pod/virt-launcher-testvm-4n8vx                                        Created container compute
+default              31m         Normal    Pulled                    pod/virt-launcher-testvm-4n8vx                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+default              31m         Normal    Created                   pod/virt-launcher-testvm-4n8vx                                        Created container volumecontainerdisk
+default              31m         Normal    Pulled                    pod/virt-launcher-testvm-4n8vx                                        Successfully pulled image "docker.io/containercraft/fedora:34-dev" in 927.941755ms
+default              31m         Normal    Started                   pod/virt-launcher-testvm-4n8vx                                        Started container volumecontainerdisk
+default              31m         Normal    Created                   virtualmachineinstance/testvm                                         VirtualMachineInstance defined.
+default              31m         Normal    Started                   virtualmachineinstance/testvm                                         VirtualMachineInstance started.
+default              13m         Normal    Killing                   pod/virt-launcher-testvm-4n8vx                                        Stopping container volumecontainerdisk
+default              13m         Normal    Deleted                   virtualmachineinstance/testvm                                         VirtualMachineInstance stopping
+default              13m         Normal    Deleted                   virtualmachineinstance/testvm                                         Signaled Deletion
+default              13m         Normal    Stopped                   virtualmachineinstance/testvm                                         The VirtualMachineInstance was shut down.
+default              13m         Normal    SuccessfulDelete          virtualmachineinstance/testvm                                         Deleted virtual machine pod virt-launcher-testvm-4n8vx
+default              13m         Normal    Killing                   pod/virt-launcher-testvm-4n8vx                                        Stopping container compute
+default              13m         Normal    SuccessfulCreate          virtualmachineinstance/testvm                                         Created virtual machine pod virt-launcher-testvm-tqq6s
+default              13m         Normal    SuccessfulCreate          virtualmachine/testvm                                                 Started the virtual machine by creating the new virtual machine instance testvm
+default              13m         Normal    Scheduled                 pod/virt-launcher-testvm-tqq6s                                        Successfully assigned default/virt-launcher-testvm-tqq6s to kmi-test-worker
+default              13m         Normal    Created                   pod/virt-launcher-testvm-tqq6s                                        Created container container-disk-binary
+default              13m         Normal    Pulled                    pod/virt-launcher-testvm-tqq6s                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+default              13m         Normal    Started                   pod/virt-launcher-testvm-tqq6s                                        Started container container-disk-binary
+default              13m         Normal    Pulling                   pod/virt-launcher-testvm-tqq6s                                        Pulling image "docker.io/containercraft/fedora:34-dev"
+default              13m         Normal    Pulled                    pod/virt-launcher-testvm-tqq6s                                        Successfully pulled image "docker.io/containercraft/fedora:34-dev" in 958.207611ms
+default              13m         Normal    Created                   pod/virt-launcher-testvm-tqq6s                                        Created container volumecontainerdisk-init
+default              13m         Normal    Started                   pod/virt-launcher-testvm-tqq6s                                        Started container volumecontainerdisk-init
+default              13m         Normal    Created                   pod/virt-launcher-testvm-tqq6s                                        Created container compute
+default              13m         Normal    Pulled                    pod/virt-launcher-testvm-tqq6s                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+default              13m         Normal    Pulling                   pod/virt-launcher-testvm-tqq6s                                        Pulling image "docker.io/containercraft/fedora:34-dev"
+default              13m         Normal    Started                   pod/virt-launcher-testvm-tqq6s                                        Started container compute
+default              13m         Normal    Pulled                    pod/virt-launcher-testvm-tqq6s                                        Successfully pulled image "docker.io/containercraft/fedora:34-dev" in 861.591594ms
+default              13m         Normal    Created                   pod/virt-launcher-testvm-tqq6s                                        Created container volumecontainerdisk
+default              13m         Normal    Started                   pod/virt-launcher-testvm-tqq6s                                        Started container volumecontainerdisk
+default              13m         Normal    Created                   virtualmachineinstance/testvm                                         VirtualMachineInstance defined.
+default              13m         Normal    Started                   virtualmachineinstance/testvm                                         VirtualMachineInstance started.
+default              7m15s       Normal    Killing                   pod/virt-launcher-testvm-tqq6s                                        Stopping container compute
+default              7m15s       Normal    Deleted                   virtualmachineinstance/testvm                                         VirtualMachineInstance stopping
+default              7m15s       Normal    Stopped                   virtualmachineinstance/testvm                                         The VirtualMachineInstance was shut down.
+default              7m15s       Normal    Killing                   pod/virt-launcher-testvm-tqq6s                                        Stopping container volumecontainerdisk
+default              7m15s       Normal    Deleted                   virtualmachineinstance/testvm                                         Signaled Deletion
+default              7m15s       Normal    SuccessfulDelete          virtualmachineinstance/testvm                                         Deleted virtual machine pod virt-launcher-testvm-tqq6s
+default              7m14s       Warning   FailedCreate              virtualmachine/testvm                                                 Error creating virtual machine instance: object is being deleted: virtualmachineinstances.kubevirt.io "testvm" already exists
+default              7m13s       Normal    SuccessfulCreate          virtualmachine/testvm                                                 Started the virtual machine by creating the new virtual machine instance testvm
+default              7m12s       Normal    Scheduled                 pod/virt-launcher-testvm-mtpbk                                        Successfully assigned default/virt-launcher-testvm-mtpbk to kmi-test-worker
+default              7m12s       Normal    Pulled                    pod/virt-launcher-testvm-mtpbk                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+default              7m12s       Normal    SuccessfulCreate          virtualmachineinstance/testvm                                         Created virtual machine pod virt-launcher-testvm-mtpbk
+default              7m12s       Normal    Created                   pod/virt-launcher-testvm-mtpbk                                        Created container container-disk-binary
+default              7m11s       Normal    Started                   pod/virt-launcher-testvm-mtpbk                                        Started container container-disk-binary
+default              7m11s       Normal    Pulling                   pod/virt-launcher-testvm-mtpbk                                        Pulling image "docker.io/containercraft/fedora:34-dev"
+default              7m10s       Normal    Created                   pod/virt-launcher-testvm-mtpbk                                        Created container volumecontainerdisk-init
+default              7m10s       Normal    Pulled                    pod/virt-launcher-testvm-mtpbk                                        Successfully pulled image "docker.io/containercraft/fedora:34-dev" in 960.032722ms
+default              7m9s        Normal    Started                   pod/virt-launcher-testvm-mtpbk                                        Started container volumecontainerdisk-init
+default              7m9s        Normal    Created                   pod/virt-launcher-testvm-mtpbk                                        Created container compute
+default              7m9s        Normal    Pulled                    pod/virt-launcher-testvm-mtpbk                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+default              7m8s        Normal    Pulling                   pod/virt-launcher-testvm-mtpbk                                        Pulling image "docker.io/containercraft/fedora:34-dev"
+default              7m8s        Normal    Started                   pod/virt-launcher-testvm-mtpbk                                        Started container compute
+default              7m8s        Normal    Pulled                    pod/virt-launcher-testvm-mtpbk                                        Successfully pulled image "docker.io/containercraft/fedora:34-dev" in 911.57912ms
+default              7m7s        Normal    Started                   pod/virt-launcher-testvm-mtpbk                                        Started container volumecontainerdisk
+default              7m7s        Normal    Created                   pod/virt-launcher-testvm-mtpbk                                        Created container volumecontainerdisk
+default              7m5s        Normal    Started                   virtualmachineinstance/testvm                                         VirtualMachineInstance started.
+default              7m6s        Normal    Created                   virtualmachineinstance/testvm                                         VirtualMachineInstance defined.
+default              4m54s       Normal    Deleted                   virtualmachineinstance/testvm                                         VirtualMachineInstance stopping
+default              4m54s       Normal    Killing                   pod/virt-launcher-testvm-mtpbk                                        Stopping container volumecontainerdisk
+default              4m54s       Normal    Deleted                   virtualmachineinstance/testvm                                         Signaled Deletion
+default              4m51s       Normal    Killing                   pod/virt-launcher-testvm-mtpbk                                        Stopping container compute
+default              4m54s       Normal    Stopped                   virtualmachineinstance/testvm                                         The VirtualMachineInstance was shut down.
+default              4m54s       Normal    SuccessfulDelete          virtualmachineinstance/testvm                                         Deleted virtual machine pod virt-launcher-testvm-mtpbk
+default              4m53s       Warning   FailedCreate              virtualmachine/testvm                                                 Error creating virtual machine instance: object is being deleted: virtualmachineinstances.kubevirt.io "testvm" already exists
+default              4m52s       Normal    SuccessfulCreate          virtualmachine/testvm                                                 Started the virtual machine by creating the new virtual machine instance testvm
+default              4m52s       Normal    Scheduled                 pod/virt-launcher-testvm-csdqj                                        Successfully assigned default/virt-launcher-testvm-csdqj to kmi-test-worker
+default              4m52s       Normal    SuccessfulCreate          virtualmachineinstance/testvm                                         Created virtual machine pod virt-launcher-testvm-csdqj
+default              4m51s       Normal    Created                   pod/virt-launcher-testvm-csdqj                                        Created container container-disk-binary
+default              4m51s       Normal    Pulled                    pod/virt-launcher-testvm-csdqj                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+default              4m51s       Warning   FailedKillPod             pod/virt-launcher-testvm-mtpbk                                        error killing pod: failed to "KillContainer" for "compute" with KillContainerError: "rpc error: code = NotFound desc = an error occurred when try to find container \"3ba6f46754704c518af6dd101887ae916cd468c0416c9d3876a74e79631a3ce8\": not found"
+default              4m51s       Normal    Started                   pod/virt-launcher-testvm-csdqj                                        Started container container-disk-binary
+default              4m50s       Normal    Pulling                   pod/virt-launcher-testvm-csdqj                                        Pulling image "docker.io/containercraft/fedora:34-dev"
+default              4m49s       Normal    Created                   pod/virt-launcher-testvm-csdqj                                        Created container volumecontainerdisk-init
+default              4m49s       Normal    Pulled                    pod/virt-launcher-testvm-csdqj                                        Successfully pulled image "docker.io/containercraft/fedora:34-dev" in 942.29104ms
+default              4m49s       Normal    Started                   pod/virt-launcher-testvm-csdqj                                        Started container volumecontainerdisk-init
+default              4m48s       Normal    Pulled                    pod/virt-launcher-testvm-csdqj                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+default              4m48s       Normal    Started                   pod/virt-launcher-testvm-csdqj                                        Started container compute
+default              4m48s       Normal    Pulling                   pod/virt-launcher-testvm-csdqj                                        Pulling image "docker.io/containercraft/fedora:34-dev"
+default              4m48s       Normal    Created                   pod/virt-launcher-testvm-csdqj                                        Created container compute
+default              4m47s       Normal    Created                   pod/virt-launcher-testvm-csdqj                                        Created container volumecontainerdisk
+default              4m47s       Normal    Started                   pod/virt-launcher-testvm-csdqj                                        Started container volumecontainerdisk
+default              4m47s       Normal    Pulled                    pod/virt-launcher-testvm-csdqj                                        Successfully pulled image "docker.io/containercraft/fedora:34-dev" in 856.033344ms
+default              4m45s       Normal    Started                   virtualmachineinstance/testvm                                         VirtualMachineInstance started.
+default              4m45s       Normal    Created                   virtualmachineinstance/testvm                                         VirtualMachineInstance defined.
+default              72s         Normal    Killing                   pod/virt-launcher-testvm-csdqj                                        Stopping container volumecontainerdisk
+default              72s         Normal    SuccessfulDelete          virtualmachineinstance/testvm                                         Deleted virtual machine pod virt-launcher-testvm-csdqj
+default              72s         Normal    Killing                   pod/virt-launcher-testvm-csdqj                                        Stopping container compute
+default              71s         Normal    Stopped                   virtualmachineinstance/testvm                                         The VirtualMachineInstance was shut down.
+default              71s         Normal    Deleted                   virtualmachineinstance/testvm                                         VirtualMachineInstance stopping
+default              71s         Normal    Deleted                   virtualmachineinstance/testvm                                         Signaled Deletion
+default              70s         Warning   FailedCreate              virtualmachine/testvm                                                 Error creating virtual machine instance: object is being deleted: virtualmachineinstances.kubevirt.io "testvm" already exists
+default              69s         Normal    SuccessfulCreate          virtualmachine/testvm                                                 Started the virtual machine by creating the new virtual machine instance testvm
+default              69s         Normal    SuccessfulCreate          virtualmachineinstance/testvm                                         Created virtual machine pod virt-launcher-testvm-v7whv
+default              69s         Normal    Scheduled                 pod/virt-launcher-testvm-v7whv                                        Successfully assigned default/virt-launcher-testvm-v7whv to kmi-test-worker
+default              68s         Normal    Created                   pod/virt-launcher-testvm-v7whv                                        Created container container-disk-binary
+default              68s         Normal    Pulled                    pod/virt-launcher-testvm-v7whv                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+default              68s         Normal    Started                   pod/virt-launcher-testvm-v7whv                                        Started container container-disk-binary
+default              67s         Normal    Pulling                   pod/virt-launcher-testvm-v7whv                                        Pulling image "docker.io/containercraft/fedora:34-dev"
+default              66s         Normal    Created                   pod/virt-launcher-testvm-v7whv                                        Created container volumecontainerdisk-init
+default              66s         Normal    Pulled                    pod/virt-launcher-testvm-v7whv                                        Successfully pulled image "docker.io/containercraft/fedora:34-dev" in 895.349952ms
+default              66s         Normal    Started                   pod/virt-launcher-testvm-v7whv                                        Started container volumecontainerdisk-init
+default              65s         Normal    Started                   pod/virt-launcher-testvm-v7whv                                        Started container compute
+default              65s         Normal    Pulling                   pod/virt-launcher-testvm-v7whv                                        Pulling image "docker.io/containercraft/fedora:34-dev"
+default              65s         Normal    Pulled                    pod/virt-launcher-testvm-v7whv                                        Container image "quay.io/kubevirt/virt-launcher:v0.47.1" already present on machine
+default              65s         Normal    Created                   pod/virt-launcher-testvm-v7whv                                        Created container compute
+default              64s         Normal    Created                   pod/virt-launcher-testvm-v7whv                                        Created container volumecontainerdisk
+default              64s         Normal    Pulled                    pod/virt-launcher-testvm-v7whv                                        Successfully pulled image "docker.io/containercraft/fedora:34-dev" in 857.005175ms
+default              63s         Normal    Started                   pod/virt-launcher-testvm-v7whv                                        Started container volumecontainerdisk
+default              62s         Normal    Created                   virtualmachineinstance/testvm                                         VirtualMachineInstance defined.
+default              62s         Normal    Started                   virtualmachineinstance/testvm                                         VirtualMachineInstance started.

@@ -42,11 +42,16 @@ spec:
             - name: cloudinitdisk
               disk:
                 bus: virtio
+        cpu:
+          cores: 1
+          threads: 1
+          sockets: 1
+          model: host-model
         resources:
           limits:
-            memory: 3G
+            memory: 4G
           requests:
-            memory: 3G
+            memory: 4G
       hostname: testvm
       terminationGracePeriodSeconds: 0
       volumes:
