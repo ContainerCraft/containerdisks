@@ -42,10 +42,10 @@ echo "${SHA256SUM} ${DOWNLOAD_FILE}" |
 # Unarchive image
 if [[ "${DOWNLOAD_FILE}" =~ \.gz$ ]]; then
 	gzip -d "${DOWNLOAD_FILE}"
-	mv "${DOWNLOAD_FILE/.gz/}" "${QCOW2_FILE}"
+	mv "${DOWNLOAD_FILE/.gz/}" "${QCOW2_TMPFILE}"
 elif [[ "${DOWNLOAD_FILE}" =~ \.xz$ ]]; then
 	unxz "${DOWNLOAD_FILE}"
-	mv "${DOWNLOAD_FILE/.xz/}" "${QCOW2_FILE}"
+	mv "${DOWNLOAD_FILE/.xz/}" "${QCOW2_TMPFILE}"
 else
 	mv "${DOWNLOAD_FILE}" "${QCOW2_TMPFILE}"
 fi
@@ -80,6 +80,8 @@ if [[ "${CUSTOMIZE}" == "true" ]]; then
 		--compress \
 		"${QCOW2_TMPFILE}" \
 		"${QCOW2_FILE}"
+else
+	mv "${QCOW2_TMPFILE}" "${QCOW2_FILE}"
 fi
 
 sudo chown "${USER}":"${USER}" "${QCOW2_FILE}" && sudo rm -f "${QCOW2_TMPFILE}"
