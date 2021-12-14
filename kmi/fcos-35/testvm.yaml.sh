@@ -59,7 +59,7 @@ spec:
             userData: |-
               {
                 "ignition": {
-                  "version": "3.2.0"
+                  "version": "3.3.0"
                 },
                 "passwd": {
                   "users": [
@@ -68,13 +68,25 @@ spec:
                         "adm",
                         "sudo",
                         "wheel",
+                        "docker",
                         "systemd-journal"
                       ],
                       "name": "kc2user",
-                      "passwordHash": "$6$PNObhlqtbaVu81X9$NDUNjKfoCYIsq.fUvoDMYr62ijGUWiNgUpY.2zCl72JCxbg1plohB2pVHH1H7NUcj24S9xjLBUVt4/rbAkagq/",
+                      "passwordHash": "$y$j9T$g4gmvVc2wOkbIgwHmmwB9.$Vb/kJJ6P/6Fr9/r.c0l7XhFvElEyMkUtQnFKG/8icE6",
                       "sshAuthorizedKeys": [
                         "$(cat ~/.ssh/id_rsa.pub)"
                       ]
+                    }
+                  ]
+                },
+                "storage": {
+                  "files": [
+                    {
+                      "path": "/etc/ssh/sshd_config.d/20-enable-passwords.conf",
+                      "contents": {
+                        "source": "data:,PasswordAuthentication%20yes%0A"
+                      },
+                      "mode": 420
                     }
                   ]
                 }
