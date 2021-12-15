@@ -30,7 +30,7 @@ setup_file() {
 		kind create cluster --config .github/workflows/kind/config.yml
 	fi
 
-	kubectl cluster-info
+	kubectl cluster-info || (log "Failed to get cluster info" && exit 1)
 
 	ls "$HOME"/.ssh/id_rsa || ssh-keygen -t rsa -N "" -f "$HOME"/.ssh/id_rsa
 	kubectl create secret generic kargo-sshpubkey-kc2user \

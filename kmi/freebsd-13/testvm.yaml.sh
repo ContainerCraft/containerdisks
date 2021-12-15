@@ -74,11 +74,12 @@ spec:
                     dhcp4: true
             userData: |
               #cloud-config
+              chpasswd:
+                list: |
+                   kc2user:kc2user
               users:
+                - default
                 - name: kc2user
-                  sudo: ['ALL=(ALL) NOPASSWD:ALL']
-                  groups: sudo,wheel
                   ssh-authorized-keys:
                     - $(cat ~/.ssh/id_rsa.pub)
-              package_upgrade: false
 EOF
