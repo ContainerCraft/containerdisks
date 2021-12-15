@@ -119,10 +119,7 @@
         "image": "freebsd-13.0-zfs.qcow2",
         "sha256sum": "c96141268b741154ebbdac235c946582eda8718cf6901a762f14ea69bd869dda",
         "customize": false
-      },
-      "skip": [
-        "ssh"
-      ]
+      }
     }
   },
   "rhcos": {
