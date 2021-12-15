@@ -65,13 +65,6 @@ spec:
             imagePullPolicy: Always
         - name: cloudinitdisk
           cloudInitNoCloud:
-            networkData: |
-              version: 2
-              ethernets:
-                eth0:
-                  match:
-                    mac_address: "$(sudo cat /sys/class/net/$(ip route show default | awk '/default/ {print $5}' | uniq)/address)"
-                    dhcp4: true
             userData: |
               #cloud-config
               chpasswd:
