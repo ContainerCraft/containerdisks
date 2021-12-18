@@ -173,24 +173,24 @@
       "amd64": {
         "url": "https://cloud-images.ubuntu.com/focal/current",
         "image": "focal-server-cloudimg-amd64.img",
-        "sha256sum": "54ef97298b296577126f1c54511d37aa3657493ca8e35c633f6c6d35a7e5a0d4"
+        "sha256sum": "d64bc2978f3b4e14017d8600715f3a67291df9141eec6bc3ac6daee0a7881fbc"
       },
       "arm64": {
         "url": "https://cloud-images.ubuntu.com/focal/current",
         "image": "focal-server-cloudimg-arm64.img",
-        "sha256sum": "cdcff794f113bff82ff27452f02695bbc66c35deeaf5e4358e769fd36c4cdb68"
+        "sha256sum": "410cb40ecca4169ed8c65108aad4b504f2ef034acd1429b1a79cd151e00e5b00"
       }
     },
     "21.10": {
       "amd64": {
         "url": "https://cloud-images.ubuntu.com/impish/current",
         "image": "impish-server-cloudimg-amd64-disk-kvm.img",
-        "sha256sum": "bb0e1c845e3ee50e977e7969f5c58de0c57cfe64c08f3c6279f141a8c76942f6"
+        "sha256sum": "66ed22e22472d49b271a263dc8b70474d6f8e29a82c081b0c6f6e20710d1caf0"
       },
       "arm64": {
         "url": "https://cloud-images.ubuntu.com/impish/current",
         "image": "impish-server-cloudimg-arm64.img",
-        "sha256sum": "a2f159e6e695f3cacc9cecc952ba514e65f9318197a1a37fc7cd4547d0ed9878"
+        "sha256sum": "f438080ce2e126d898094e1abe2b8f1fc5ddc46e3a856d938bc1cf7b3ab52001"
       }
     }
   }
