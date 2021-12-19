@@ -3,7 +3,7 @@
 DIR="$(cd "$(dirname "$BATS_TEST_FILENAME")" >/dev/null 2>&1 && pwd)"
 source "${DIR}/common.bash"
 
-retry=60
+retry=90
 ready=1
 count=1
 

@@ -38,10 +38,7 @@
         "url": "https://cloud.centos.org/centos/9-stream/aarch64/images",
         "image": "CentOS-Stream-GenericCloud-9-20211119.0.aarch64.qcow2",
         "sha256sum": "b68b6d8c3a9a82a41c94ca295ce127e15761c87f9ad33db9871f236252fce17b"
-      },
-      "skip": [
-        "ssh"
-      ]
+      }
     }
   },
   "debian": {
@@ -74,14 +71,14 @@
     "35": {
       "amd64": {
         "url": "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/35.20211119.3.0/x86_64",
-        "image": "fedora-coreos-35.20211119.3.0-qemu.x86_64.qcow2.xz",
-        "sha256sum": "62e08fcab692ab20d5b0450450628f163b556ab5e680d3d5197a39534158021a",
+        "image": "fedora-coreos-35.20211119.3.0-openstack.x86_64.qcow2.xz",
+        "sha256sum": "c4f952cbd2b0fc5fc750468974aecbf80b3e6318a048d6e049484bbc0fc307b4",
         "customize": false
       },
       "arm64": {
         "url": "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/35.20211119.3.0/aarch64",
-        "image": "fedora-coreos-35.20211119.3.0-qemu.aarch64.qcow2.xz",
-        "sha256sum": "7c9efcfaddde900aecd233d922624afa1858a43dd749c39122807495e5c642a0",
+        "image": "fedora-coreos-35.20211119.3.0-openstack.aarch64.qcow2.xz",
+        "sha256sum": "9724ae2e4caf766a9f7514099d9fde9c3468c549c9db28a371e1ea2667539ae4",
         "customize": false
       },
       "skip": [
@@ -100,10 +97,7 @@
         "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/34/Cloud/aarch64/images",
         "image": "Fedora-Cloud-Base-34-1.2.aarch64.qcow2",
         "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6"
-      },
-      "skip": [
-        "ssh"
-      ]
+      }
     },
     "35": {
       "amd64": {
@@ -115,10 +109,17 @@
         "url": "https://dl.fedoraproject.org/pub/fedora/linux/releases/35/Cloud/aarch64/images",
         "image": "Fedora-Cloud-Base-35-1.2.aarch64.qcow2",
         "sha256sum": "c71f2e6ce75b516d565e2c297ea9994c69b946cb3eaa0a4bbea400dbd6f59ae6"
-      },
-      "skip": [
-        "ssh"
-      ]
+      }
+    }
+  },
+  "freebsd": {
+    "13": {
+      "amd64": {
+        "url": "https://object-storage.public.mtl1.vexxhost.net/swift/v1/1dbafeefbd4f4c80864414a441e72dd2/bsd-cloud-image.org/images/freebsd/13.0/2021-12-14",
+        "image": "freebsd-13.0-zfs.qcow2",
+        "sha256sum": "c96141268b741154ebbdac235c946582eda8718cf6901a762f14ea69bd869dda",
+        "customize": false
+      }
     }
   },
   "rhcos": {
@@ -134,10 +135,7 @@
         "image": "rhcos-openstack.aarch64.qcow2.gz",
         "sha256sum": "bd8badcb85d3c50d126b46bd3a2501db9b61e5456eac33a1299bc851dea337ad",
         "customize": false
-      },
-      "skip": [
-        "ssh"
-      ]
+      }
     }
   },
   "opensuse": {
