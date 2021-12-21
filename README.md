@@ -7,9 +7,6 @@ This is recommended for production use.
     
 The CCIO kmi project aims to maintain all published distributions up to date with N-1 Versions. Additional versions may also be maintained where community interest and contributor support allows.
 
-### Issue Tracking:
-CCIO KMI Repo Issues on the [ContainerCraft/qubo](https://github.com/ContainerCraft/qubo/issues) repo for now
-
 ### Image Criteria:
 ####    Planned
 Planned images represent distributions we hope to, or are actively working to publish and support.
