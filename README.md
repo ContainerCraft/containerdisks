@@ -7,6 +7,32 @@ This is recommended for production use.
     
 The CCIO kmi project aims to maintain all published distributions up to date with N-1 Versions. Additional versions may also be maintained where community interest and contributor support allows.
 
+------
+> Distribution Table
+    
+| Flavor           | Stable | Proposed | Preview | Planned  | | x86_64 | arm64 |
+|:-----------------|:------:|:--------:|:-------:|:--------:|-|:------:|:-----:|
+| [AlmaLinux OS]   |        |          |    X    |          | |    X   |   X   |
+| [Alpine Linux]   |        |          |         |          | |        |       |
+| [Amazon Linux]   |        |          |    X    |          | |    X   |       |
+| [Arch Linux]     |        |          |         |          | |        |       |
+| [CentOS]         |        |     X    |         |          | |    X   |   X   |
+| [Debian]         |        |     X    |         |          | |    X   |   X   |
+| [Fedora]         |        |     X    |         |          | |    X   |   X   |
+| [Fedora CoreOS]  |        |     X    |         |          | |    X   |   X   |
+| [FreeBSD]        |        |          |    X    |          | |    X   |       |
+| [Neutrino]       |        |          |         |          | |        |       |
+| [NixOS]          |        |          |         |     X    | |        |       |
+| [OpenBSD]        |        |          |         |          | |        |       |
+| [OpenWRT]        |        |          |         |          | |        |       |
+| [OPNsense]       |        |          |         |          | |        |       |
+| [openSUSE]       |        |          |    X    |          | |    X   |       |
+| [PFSense]        |        |          |         |          | |        |       |
+| [Red Hat CoreOS] |        |          |    X    |          | |    X   |   X   |
+| [Rocky Linux]    |        |          |         |          | |        |       |
+| [Ubuntu]         |        |     X    |         |          | |    X   |   X   |
+| [VyOS]           |        |          |    X    |          | |    X   |       |
+    
 ### Image Criteria:
 ####    Planned
 Planned images represent distributions we hope to, or are actively working to publish and support.
@@ -55,32 +81,6 @@ These images also have automated maintenance for required compliance including:
     
 *cloud-init requirement may be waived on case by case basis    
 **upstream requirement may be waived on case by case basis
-    
-------
-> Distribution Release Chart
-    
-| Flavor           | Stable | Proposed | Preview | Planned  | | x86_64 | arm64 |
-|:-----------------|:------:|:--------:|:-------:|:--------:|-|:------:|:-----:|
-| [AlmaLinux OS]   |        |          |    X    |          | |    X   |   X   |
-| [Alpine Linux]   |        |          |         |          | |        |       |
-| [Amazon Linux]   |        |          |    X    |          | |    X   |       |
-| [Arch Linux]     |        |          |         |          | |        |       |
-| [CentOS]         |        |     X    |         |          | |    X   |   X   |
-| [Debian]         |        |     X    |         |          | |    X   |   X   |
-| [Fedora]         |        |     X    |         |          | |    X   |   X   |
-| [Fedora CoreOS]  |        |     X    |         |          | |    X   |   X   |
-| [FreeBSD]        |        |          |    X    |          | |    X   |       |
-| [Neutrino]       |        |          |         |          | |        |       |
-| [NixOS]          |        |          |         |     X    | |        |       |
-| [OpenBSD]        |        |          |         |          | |        |       |
-| [OpenWRT]        |        |          |         |          | |        |       |
-| [OPNsense]       |        |          |         |          | |        |       |
-| [openSUSE]       |        |          |    X    |          | |    X   |       |
-| [PFSense]        |        |          |         |          | |        |       |
-| [Red Hat CoreOS] |        |          |    X    |          | |    X   |   X   |
-| [Rocky Linux]    |        |          |         |          | |        |       |
-| [Ubuntu]         |        |     X    |         |          | |    X   |   X   |
-| [VyOS]           |        |          |    X    |          | |    X   |       |
     
 [AlmaLinux OS]:https://almalinux.org
 [Alpine Linux]:https://www.alpinelinux.org
