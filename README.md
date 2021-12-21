@@ -64,24 +64,25 @@ These images also have automated maintenance for required compliance including:
     
 | Flavor           | Stable | Proposed | Preview | Planned  | | x86_64 | arm64 |
 |:-----------------|:------:|:--------:|:-------:|:--------:|-|:------:|:-----:|
-| [AlmaLinux OS]   |        |          |    x    |          | |    X   |   X   |
-| [Alpine Linux]   |        |          |    x    |          | |    X   |   X   |
-| [Amazon Linux]   |        |          |    x    |          | |    X   |       |
-| [Arch Linux]     |        |          |    x    |          | |    X   |       |
-| [CentOS]         |        |          |    X    |          | |    X   |   X   |
-| [Debian]         |        |          |    X    |          | |    X   |   X   |
-| [Fedora]         |        |          |    X    |          | |    X   |   X   |
-| [Fedora CoreOS]  |        |          |    X    |          | |    X   |       |
-| [Neutrino]       |        |          |         |    X     | |    X   |       |
-| [NixOS]          |        |          |         |    X     | |    X   |       |
-| [OpenBSD]        |        |          |         |    X     | |    X   |       |
-| [OpenWRT]        |        |          |         |    X     | |    X   |   X   |
-| [OPNsense]       |        |          |         |    X     | |    X   |       |
-| [openSUSE]       |        |          |         |    X     | |    X   |       |
-| [PFSense]        |        |          |         |    X     | |    X   |       |
-| [Red Hat CoreOS] |        |          |         |    X     | |    X   |   x   |
-| [Rocky Linux]    |        |          |         |    X     | |    X   |       |
-| [Ubuntu]         |        |          |    X    |          | |    X   |   X   |
+| [AlmaLinux OS]   |        |          |    X    |          | |    X   |   X   |
+| [Alpine Linux]   |        |          |         |          | |        |       |
+| [Amazon Linux]   |        |          |    X    |          | |    X   |       |
+| [Arch Linux]     |        |          |         |          | |        |       |
+| [CentOS]         |        |     X    |         |          | |    X   |   X   |
+| [Debian]         |        |     X    |         |          | |    X   |   X   |
+| [Fedora]         |        |     X    |         |          | |    X   |   X   |
+| [Fedora CoreOS]  |        |     X    |         |          | |    X   |   X   |
+| [FreeBSD]        |        |          |    X    |          | |    X   |       |
+| [Neutrino]       |        |          |         |          | |        |       |
+| [NixOS]          |        |          |         |     X    | |        |       |
+| [OpenBSD]        |        |          |         |          | |        |       |
+| [OpenWRT]        |        |          |         |          | |        |       |
+| [OPNsense]       |        |          |         |          | |        |       |
+| [openSUSE]       |        |          |    X    |          | |    X   |       |
+| [PFSense]        |        |          |         |          | |        |       |
+| [Red Hat CoreOS] |        |          |    X    |          | |    X   |   X   |
+| [Rocky Linux]    |        |          |         |          | |        |       |
+| [Ubuntu]         |        |     X    |         |          | |    X   |   X   |
 | [VyOS]           |        |          |    X    |          | |    X   |       |
     
 [AlmaLinux OS]:https://almalinux.org
@@ -92,6 +93,7 @@ These images also have automated maintenance for required compliance including:
 [Debian]:https://www.debian.org
 [Fedora]:https://getfedora.org
 [Fedora CoreOS]:https://docs.fedoraproject.org/en-US/fedora-coreos
+[FreeBSD]:https://www.freebsd.org
 [Neutrino]:https://github.com/ContainerCraft/neutrino
 [NixOS]:https://nixos.org
 [OpenBSD]:https://www.openbsd.org
