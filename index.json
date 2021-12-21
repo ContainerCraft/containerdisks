@@ -161,7 +161,7 @@
       },
       "arm64": {
         "url": "https://download.rockylinux.org/pub/rocky/8/images/",
-        "image": "Rocky-8-GenericCloud-8.5-20211114.1.aarch64.qcow2",
+        "image": "Rocky-8-GenericCloud-8.5.20211114.1.aarch64.qcow2",
         "sha256sum": "f13cfa7b5e449cc165181a1efbea5b1cdce73ef6a5d6bb24c22b50f67f1f8fe2"
       }
     }
