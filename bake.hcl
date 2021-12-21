@@ -224,5 +224,14 @@ target "almalinux-8" {
   args = {
     FLAVOR = "almalinux-8"
   }
+}
 
+target "rocky-8" {
+  inherits = ["defaults"]
+  tags = [
+    tag("rocky", "8")
+  ]
+  args = {
+    FLAVOR = "rocky-8"
+  }
 }

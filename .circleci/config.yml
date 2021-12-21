@@ -27,6 +27,9 @@ aliases:
   rhcos-flavors: &_rhcos-flavors
     - rhcos-4.9
 
+  rocky-flavors: &_rocky-flavors
+    - rocky-8
+
   opensuse-flavors: &_opensuse-flavors
     - opensuse-tumbleweed
 #   - opensuse-leap
@@ -44,12 +47,12 @@ aliases:
 workflows:
   build-and-publish-dev:
     jobs:
-      # Start AlmaLinux #
+      # Start Rocky #
       - customize:
           name: customize-<< matrix.flavor >>-<< matrix.arch >>
           matrix:
             parameters:
-              flavor: *_almalinux-flavors
+              flavor: *_rocky-flavors
               arch: [amd64, arm64]
 
       - cradle:
@@ -59,7 +62,7 @@ workflows:
           name: cradle-<< matrix.flavor >>
           matrix:
             parameters:
-              flavor: *_almalinux-flavors
+              flavor: *_rocky-flavors
 
       - trigger-tests:
           requires:
@@ -67,8 +70,34 @@ workflows:
           name: trigger-<< matrix.flavor >>-promotion
           matrix:
             parameters:
-              flavor: *_almalinux-flavors
-      # End AlmaLinux #
+              flavor: *_rocky-flavors
+      # End Rocky #
+
+#      # Start AlmaLinux #
+#      - customize:
+#          name: customize-<< matrix.flavor >>-<< matrix.arch >>
+#          matrix:
+#            parameters:
+#              flavor: *_almalinux-flavors
+#              arch: [amd64, arm64]
+#
+#      - cradle:
+#          requires:
+#            - customize-<< matrix.flavor >>-amd64
+#            - customize-<< matrix.flavor >>-arm64
+#          name: cradle-<< matrix.flavor >>
+#          matrix:
+#            parameters:
+#              flavor: *_almalinux-flavors
+#
+#      - trigger-tests:
+#          requires:
+#            - cradle-<< matrix.flavor >>
+#          name: trigger-<< matrix.flavor >>-promotion
+#          matrix:
+#            parameters:
+#              flavor: *_almalinux-flavors
+#      # End AlmaLinux #
 #
 #      # Start CentOS #
 #      - customize:
