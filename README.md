@@ -29,7 +29,7 @@ The CCIO kmi project aims to maintain all published distributions up to date wit
 | [openSUSE]       |        |          |    X    |          | |    X   |       |
 | [PFSense]        |        |          |         |          | |        |       |
 | [Red Hat CoreOS] |        |          |    X    |          | |    X   |   X   |
-| [Rocky Linux]    |        |          |         |          | |        |       |
+| [Rocky Linux]    |        |          |    X    |          | |    X   |   X   |
 | [Ubuntu]         |        |     X    |         |          | |    X   |   X   |
 | [VyOS]           |        |          |    X    |          | |    X   |       |
     
