@@ -68,6 +68,7 @@ setup_file() {
 
 teardown_file() {
 	log "Tearing down..."
+
 	kubectl get events -A --sort-by=.metadata.creationTimestamp > events.txt
 	kubectl describe vmi/testvm > pod.txt
 
