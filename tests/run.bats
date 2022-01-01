@@ -85,19 +85,28 @@ teardown_file() {
 }
 
 setup() {
+	# skip all remaining tests if there is a failure
+	[ ! -f ${BATS_PARENT_TMPNAME}.skip ] || skip "skip remaining tests"
+
 	load common
+	log "Running ${BATS_TEST_NAME//_/ }..."
 	SKIP=$(jq -r ".${FLAVOR%%-*}.\"${FLAVOR#*-}\".skip // [] | join(\"|\")" index.json)
 	if [[ -n ${SKIP} ]] && [[ "${BATS_TEST_NAME}" =~ ($SKIP) ]]; then
 		skip "Test is disabled"
 	fi
 }
 
-@test "VM pods become ready" {
+teardown() {
+	# force skip all remaining tests if a test fails
+	[ -n "$BATS_TEST_COMPLETED" ] || touch ${BATS_PARENT_TMPNAME}.skip
+}
+
+@test "vm pods become ready" {
 	run retry 5 kubectl wait --for=condition=ready pod -l test=kmi --timeout=240s
 	[ $status -eq 0 ]
 }
 
-@test "QEMU guest agent starts on boot" {
+@test "qemu-guest-agent starts on boot" {
 	run retry 120 virtctl guestosinfo testvm 2>&1
 	[ $status -eq 0 ]
 }
