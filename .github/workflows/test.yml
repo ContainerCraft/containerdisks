@@ -1,5 +1,6 @@
 name: Test and Promote KMIs
 on:
+  pull_request:
   workflow_dispatch:
     inputs:
       flavor:
@@ -30,7 +31,7 @@ jobs:
 
       - name: Deploy and test ${{ env.FLAVOR }}
         run: |
-          bats tests/test.bats --show-output-of-passing-tests --timing --verbose-run
+          bats tests/run.bats --show-output-of-passing-tests --timing --verbose-run
 
       - name: Archive test logs
         uses: actions/upload-artifact@v2
@@ -42,6 +43,7 @@ jobs:
 
   promote-image:
     runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
     needs: e2e-test
     permissions:
       id-token: write
