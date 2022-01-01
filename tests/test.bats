@@ -18,7 +18,7 @@ setup_file() {
 	virtctl version --client || {
 		VIRTCTL_RELEASE=$(curl -s https://api.github.com/repos/kubevirt/kubevirt/releases/latest | awk -F '["v,]' '/tag_name/{print $5}')
 		sudo curl --output /usr/local/bin/virtctl \
-			-L https://github.com/kubevirt/kubevirt/releases/download/v"${VIRTCTL_RELEASE}"/virtctl-v"${VIRTCTL_RELEASE}"-$(uname -s | awk '{print tolower($0)}')-amd64
+			-L https://github.com/kubevirt/kubevirt/releases/download/v"${VIRTCTL_RELEASE}"/virtctl-v"${VIRTCTL_RELEASE}"-"$(uname -s | awk '{print tolower($0)}')"-amd64
 		sudo chmod +x /usr/local/bin/virtctl
 		virtctl version --client
 	}
@@ -61,15 +61,13 @@ setup_file() {
 	until kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-handler; do sleep 1; done
 
 	log "Deploying test VM (${FLAVOR})"
-	# Deploy Test VM
 	kubectl delete vm testvm || :
-	bash kmi/${FLAVOR}/testvm.yaml.sh
+	bash kmi/"${FLAVOR}"/testvm.yaml.sh
 	# until virtctl console testvm 2>&1 >> console.txt; do sleep 1; done
 }
 
 teardown_file() {
 	log "Tearing down..."
-	log "Gathering logs..."
 	kubectl get events -A --sort-by=.metadata.creationTimestamp > events.txt
 	kubectl describe vmi/testvm > pod.txt
 
@@ -86,23 +84,24 @@ teardown_file() {
 }
 
 setup() {
-	SKIP=$(jq -r ".${FLAVOR%%-*}.\""${FLAVOR#*-}"\".skip // [] | join(\"|\")" index.json)
+	load common
+	SKIP=$(jq -r ".${FLAVOR%%-*}.\"${FLAVOR#*-}\".skip // [] | join(\"|\")" index.json)
 	if [[ -n ${SKIP} ]] && [[ "${BATS_TEST_NAME}" =~ ($SKIP) ]]; then
 		skip "Test is disabled"
 	fi
 }
 
 @test "VM pods become ready" {
-	run tests/wait-for-ready.sh
+	run retry 5 kubectl wait --for=condition=ready pod -l test=kmi --timeout=240s
 	[ $status -eq 0 ]
 }
 
 @test "QEMU guest agent starts on boot" {
-	run tests/qemu-guest-agent.sh
+	run retry 120 virtctl guestosinfo testvm 2>&1
 	[ $status -eq 0 ]
 }
 
 @test "guest ssh connects successfully" {
-	run tests/guest-ssh.sh
+	run retry 10 ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami
 	[ $status -eq 0 ]
 }
