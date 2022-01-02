@@ -31,7 +31,7 @@ jobs:
 
       - name: Deploy and test ${{ env.FLAVOR }}
         run: |
-          kubectl taint nodes --all --overwrite node-role.kubernetes.io/master-
+          kubectl taint nodes --all --overwrite node-role.kubernetes.io/master- || echo
           bats tests/run.bats --show-output-of-passing-tests --timing --verbose-run
 
       - name: Archive test logs
