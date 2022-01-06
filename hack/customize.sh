@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Requires libguestfs-tools, jq, and curl
+# Requires libguestfs-tools and curl
 
 FLAVOR=${FLAVOR:-$1}
 ARCH=${ARCH:-$2}
 
-([[ -z ${FLAVOR} ]] || [[ -z ${ARCH} ]]) && {
+if [[ -z ${FLAVOR} ]] || [[ -z ${ARCH} ]]; then
 	echo "Error: \$FLAVOR and \$ARCH must be passed in"
 	exit 1
-}
+fi
 
 set -ex
 
@@ -16,16 +16,34 @@ set -ex
 export LIBGUESTFS_BACKEND=direct
 export LIBGUESTFS_CACHEDIR=${HOME}
 
-NAME=${FLAVOR%%-*}
-VERSION=${FLAVOR#*-}
-
 QCOW2_FILE=${FLAVOR}-${ARCH}.qcow2
 QCOW2_TMPFILE=tmp.${FLAVOR}-${ARCH}.qcow2
 
-BASE_URL=$(jq -r ."${NAME}".\""${VERSION}"\"."${ARCH}".url index.json)
-SHA256SUM=$(jq -r ."${NAME}".\""${VERSION}"\"."${ARCH}".sha256sum index.json)
-DOWNLOAD_FILE=$(jq -r ."${NAME}".\""${VERSION}"\"."${ARCH}".image index.json)
-CUSTOMIZE=$(jq -r "."${NAME}".\""${VERSION}"\"."${ARCH}" | if has(\"customize\") then .customize else true end" index.json)
+# Source OS build variables
+BASE_URL=
+DOWNLOAD_FILE=
+SHASUM="${ARCH^^}_SHA256SUM"
+CUSTOMIZE=true
+VIRT_SYSPREP_OPERATIONS=
+
+# shellcheck disable=SC1090
+source images/"${FLAVOR}"/env.sh
+
+SUMMER=sha256sum
+if [[ -z "${!SHASUM}" ]]; then
+	SHASUM="${ARCH^^}_SHA512SUM"
+	SUMMER=sha512sum
+fi
+
+if [[ -z "${DOWNLOAD_FILE}" ]]; then
+	__DL_FILE="${ARCH^^}_DOWNLOAD_FILE"
+	DOWNLOAD_FILE="${!__DL_FILE}"
+fi
+
+if [[ -z "${BASE_URL}" ]]; then
+	__BASE_URL="${ARCH^^}__BASE_URL"
+	BASE_URL="${!__BASE_URL}"
+fi
 
 # Download qcow2
 curl \
@@ -35,9 +53,9 @@ curl \
 	--location "${BASE_URL}"/"${DOWNLOAD_FILE}"
 
 # Verify Checksum
-echo "${SHA256SUM} ${DOWNLOAD_FILE}" |
-	sha256sum --check --status ||
-	echo "Invalid checksum: sha256sum check failed"
+echo "${!SHASUM} ${DOWNLOAD_FILE}" |
+	${SUMMER} --check --status ||
+	(echo "Invalid checksum: ${SUMMER} check failed" && exit 1)
 
 # Unarchive image
 if [[ "${DOWNLOAD_FILE}" =~ \.gz$ ]]; then
@@ -54,9 +72,6 @@ if [[ "${CUSTOMIZE}" == "true" ]]; then
 	# Grow disk size
 	qemu-img resize "${QCOW2_TMPFILE}" +20G
 
-	# Source OS build variables
-	source kmi/"${FLAVOR}"/env.sh
-
 	# Pre-Sparsify
 	sudo virt-sparsify \
 		--verbose \
@@ -68,7 +83,7 @@ if [[ "${CUSTOMIZE}" == "true" ]]; then
 		--verbose \
 		--network \
 		--add "${QCOW2_TMPFILE}" \
-		--commands-from-file kmi/"${FLAVOR}"/virt.sysprep \
+		--commands-from-file images/"${FLAVOR}"/virt.sysprep \
 		--enable "${VIRT_SYSPREP_OPERATIONS}"
 
 	# Log disk image info

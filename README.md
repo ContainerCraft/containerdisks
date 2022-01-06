@@ -1,15 +1,15 @@
-# Kubevirt Machine Images
+# KubeVirt Machine Images
 This repo facilitates kubevirt machine image build and publishing pipelines.
-    
+
 Pipelines are run weekly at minimum to package each distribution and version
 with the latest updates. Images can be used via tag by digest in your VirtualMachine definitions.
 This is recommended for production use.
-    
+
 The CCIO kmi project aims to maintain all published distributions up to date with N-1 Versions. Additional versions may also be maintained where community interest and contributor support allows.
 
 ------
 > Distribution Table
-    
+
 | Flavor           | Stable | Proposed | Preview | Planned  | | x86_64 | arm64 |
 |:-----------------|:------:|:--------:|:-------:|:--------:|-|:------:|:-----:|
 | [AlmaLinux OS]   |        |          |    X    |          | |    X   |   X   |
@@ -32,7 +32,7 @@ The CCIO kmi project aims to maintain all published distributions up to date wit
 | [Rocky Linux]    |        |          |    X    |          | |    X   |   X   |
 | [Ubuntu]         |        |     X    |         |          | |    X   |   X   |
 | [VyOS]           |        |          |    X    |          | |    X   |       |
-    
+
 ### Image Criteria:
 ####    Planned
 Planned images represent distributions we hope to, or are actively working to publish and support.
@@ -77,11 +77,11 @@ These images also have automated maintenance for required compliance including:
   - README
     - stateless nat "Try Me" yaml or command
     - living document of common uses and applications for the published image
-  - Ready for PR to kubevirt/containerdisks upstream catalog**    
-    
-*cloud-init requirement may be waived on case by case basis    
+  - Ready for PR to kubevirt/containerdisks upstream catalog**
+
+*cloud-init requirement may be waived on case by case basis
 **upstream requirement may be waived on case by case basis
-    
+
 [AlmaLinux OS]:https://almalinux.org
 [Alpine Linux]:https://www.alpinelinux.org
 [Amazon Linux]:https://aws.amazon.com/amazon-linux-2

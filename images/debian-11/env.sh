@@ -1,0 +1,5 @@
+VIRT_SYSPREP_OPERATIONS=user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache
+BASE_URL=https://cloud.debian.org/images/cloud/bullseye/latest/
+DOWNLOAD_FILE=debian-11-generic-${ARCH}.qcow2
+AMD64_SHA512SUM=0948dc56b4834a7755e4eae7d5532e138b90484a949161ffe9fc6894c7a14b1bd32ebf96fa3f3d03d498fe7ee125f8014f31bfab5825915a93de9330df814f7b
+ARM64_SHA512SUM=753f1a1ce06125f28491d47c88e8b863a3a52ef5616cce5da1e7e21f54b5241851a18a343f164427a5c06ed39c77a7beabb22285b07d7dbf1d00b162e9cc24b8
