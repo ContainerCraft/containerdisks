@@ -3,14 +3,12 @@
 setup_file() {
 
 	load common
-
 	log "Setting up..."
 
 	FLAVOR=${FLAVOR:-$1}
-	[[ -z ${FLAVOR} ]] && {
-		log "\$FLAVOR must be passed in"
-		exit 1
-	}
+	if [[ -n ${FLAVOR} ]]; then
+		log "\$FLAVOR must be passed in" && exit 1
+	fi
 
 	export FLAVOR
 
@@ -39,14 +37,14 @@ setup_file() {
 	# Deploy Kubevirt
 	kubectl create namespace kubevirt --dry-run=client -oyaml | kubectl apply -f -
 
-	KUBEVIRT_LATEST="v0.48.1"
-	log "Installing KubeVirt ${KUBEVIRT_LATEST}"
+	KUBEVIRT_VERSION="v0.47.1"
+	log "Installing KubeVirt ${KUBEVIRT_VERSION}"
 
 	kubectl apply -n kubevirt \
-		-f https://github.com/kubevirt/kubevirt/releases/download/"${KUBEVIRT_LATEST}"/kubevirt-operator.yaml
+		-f https://github.com/kubevirt/kubevirt/releases/download/"${KUBEVIRT_VERSION}"/kubevirt-operator.yaml
 
 	kubectl apply -n kubevirt \
-		-f https://github.com/kubevirt/kubevirt/releases/download/"${KUBEVIRT_LATEST}"/kubevirt-cr.yaml
+		-f https://github.com/kubevirt/kubevirt/releases/download/"${KUBEVIRT_VERSION}"/kubevirt-cr.yaml
 
 	kubectl create configmap kubevirt-config -n kubevirt \
 		--from-literal debug.useEmulation=true --dry-run=client -oyaml | kubectl apply -f -
@@ -62,7 +60,7 @@ setup_file() {
 
 	log "Deploying test VM (${FLAVOR})"
 	kubectl delete vm testvm || :
-	bash kmi/"${FLAVOR}"/testvm.yaml.sh
+	bash images/"${FLAVOR}"/testvm.yaml.sh
 	# until virtctl console testvm 2>&1 >> console.txt; do sleep 1; done
 }
 
@@ -71,6 +69,8 @@ teardown_file() {
 
 	kubectl get events -A --sort-by=.metadata.creationTimestamp > events.txt
 	kubectl describe vmi/testvm > pod.txt
+	kubectl get kubevirt -n kubevirt kubevirt -o yaml > kubevirt.yaml
+	kubectl get daemonsets -n kubevirt virt-handler -o yaml > virt-handler-ds.yaml
 
 	# TODO: gather cloud-init logs
 
@@ -86,11 +86,11 @@ teardown_file() {
 
 setup() {
 	# skip all remaining tests if there is a failure
-	[ ! -f ${BATS_PARENT_TMPNAME}.skip ] || skip "skip remaining tests"
+	[[ ! -f "${BATS_PARENT_TMPNAME}".skip ]] || skip "skipping remaining tests"
 
 	load common
-	log "Running ${BATS_TEST_NAME//_/ }..."
-	SKIP=$(jq -r ".${FLAVOR%%-*}.\"${FLAVOR#*-}\".skip // [] | join(\"|\")" index.json)
+	log "Running test '${BATS_TEST_DESCRIPTION}'..."
+	source images/"${FLAVOR}"/env.sh
 	if [[ -n ${SKIP} ]] && [[ "${BATS_TEST_NAME}" =~ ($SKIP) ]]; then
 		skip "Test is disabled"
 	fi
@@ -98,7 +98,7 @@ setup() {
 
 teardown() {
 	# force skip all remaining tests if a test fails
-	[ -n "$BATS_TEST_COMPLETED" ] || touch ${BATS_PARENT_TMPNAME}.skip
+	[[ -n "${BATS_TEST_COMPLETED}" ]] || touch "${BATS_PARENT_TMPNAME}".skip
 }
 
 @test "vm pods become ready" {

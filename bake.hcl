@@ -10,17 +10,6 @@ variable "REPO" {
   default = ""
 }
 
-group "default" {
-  targets = [
-    "ubuntu",
-    "fedora",
-    "arch",
-    "debian",
-    "opensuse",
-    "centos",
-  ]
-}
-
 target "defaults" {
   dockerfile = "Containerfile"
   platforms = ["linux/arm64", "linux/amd64"]
@@ -33,26 +22,6 @@ target "defaults" {
     "org.opencontainers.image.source" = "https://github.com/ContainerCraft/kmi/"
     "org.opencontainers.image.authors" = "ContainerCraft.io"
   }
-}
-
-group "ubuntu" {
-  targets = ["ubuntu-18.04", "ubuntu-20.04", "ubuntu-21.10"]
-}
-
-group "fedora" {
-  targets = ["fedora-34", "fedora-35"]
-}
-
-group "debian" {
-  targets = ["debian-10", "debian-11"]
-}
-
-group "opensuse" {
-  targets = ["opensuse-leap-15", "opensuse-tumbleweed"]
-}
-
-group "centos" {
-  targets = ["centos-8", "centos-9"]
 }
 
 function "tag" {
@@ -113,13 +82,13 @@ target "fedora-35" {
   }
 }
 
-target "arch-latest" {
+target "archlinux-latest" {
   inherits = ["defaults"]
   tags = [
-    tag("arch", "latest")
+    tag("archlinux", "latest")
   ]
   args = {
-    FLAVOR = "arch-latest"
+    FLAVOR = "archlinux-latest"
   }
 }
 

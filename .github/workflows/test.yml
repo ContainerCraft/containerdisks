@@ -23,7 +23,7 @@ jobs:
           docker volume create worker1-containerd
           docker volume create control1-containerd
 
-      - name: Create kind cluster QuboCI
+      - name: Create kind cluster
         uses: helm/kind-action@v1.2.0
         with:
           cluster_name: kmi-test
@@ -31,7 +31,6 @@ jobs:
 
       - name: Deploy and test ${{ env.FLAVOR }}
         run: |
-          kubectl taint nodes --all --overwrite node-role.kubernetes.io/master- || echo
           bats tests/run.bats --show-output-of-passing-tests --timing --verbose-run
 
       - name: Archive test logs
@@ -41,6 +40,7 @@ jobs:
           name: ${{ env.FLAVOR }}-logs
           path: |
             ${{ github.workspace }}/*.txt
+            ${{ github.workspace }}/*.yaml
 
   promote-image:
     runs-on: ubuntu-latest

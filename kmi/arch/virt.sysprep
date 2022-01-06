@@ -1,6 +1,0 @@
-edit /etc/default/grub:s/^GRUB_CMDLINE_LINUX_DEFAULT=\"/&console=ttyS0 /
-run-command grub-mkconfig -o /boot/grub/grub.cfg
-run-command pacman-key --init && pacman-key --populate
-update
-install qemu-guest-agent,libguestfs
-run-command systemctl enable qemu-guest-agent
