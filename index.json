@@ -187,12 +187,12 @@
       "amd64": {
         "url": "https://cloud-images.ubuntu.com/bionic/current",
         "image": "bionic-server-cloudimg-amd64.img",
-        "sha256sum": "7bd21b98e344f57796d7514fa0f9af59c9b57b266253e8fbc113c2f8cd1b8da6"
+        "sha256sum": "e381b61ab8576a965c9b7bf7dfae937454abde59af12f71f0dc391692628e31a"
       },
       "arm64": {
         "url": "https://cloud-images.ubuntu.com/bionic/current",
         "image": "bionic-server-cloudimg-arm64.img",
-        "sha256sum": "1be2d046a9a1d5aa6a22830313eb6b1d40c1e7297aad103493e8057f4d30798a"
+        "sha256sum": "4f4d019125f724eb67e0bb381782e51447d43eb7d28ae2d0d0f387d07fcdca71"
       }
     },
     "20.04": {
