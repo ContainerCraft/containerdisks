@@ -199,12 +199,12 @@
       "amd64": {
         "url": "https://cloud-images.ubuntu.com/focal/current",
         "image": "focal-server-cloudimg-amd64.img",
-        "sha256sum": "9885804a77e0d7572787ba89e1f3998bdbe45005cb5c51d391d3c6647fdeedb0"
+        "sha256sum": "aca84294a3d22936fcfd3503d0a7578988e4dfaa615f3b9cd14adb1461c5fe29"
       },
       "arm64": {
         "url": "https://cloud-images.ubuntu.com/focal/current",
         "image": "focal-server-cloudimg-arm64.img",
-        "sha256sum": "e9cae16ff305e63d3fced6290c8cffcabf2eec33953e58c1d6d0365e069d7105"
+        "sha256sum": "ab4445082fe4f5a34bb479f18186fa8dfe8ae2d3dda6bcec3e6630cea9d58888"
       }
     },
     "21.10": {
