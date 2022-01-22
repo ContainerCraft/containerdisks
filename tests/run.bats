@@ -5,8 +5,7 @@ setup_file() {
 	load common
 	log "Setting up..."
 
-	FLAVOR=${FLAVOR:-$1}
-	if [[ -n ${FLAVOR} ]]; then
+	if [[ -z ${FLAVOR} ]]; then
 		log "\$FLAVOR must be passed in" && exit 1
 	fi
 
@@ -37,7 +36,7 @@ setup_file() {
 	# Deploy Kubevirt
 	kubectl create namespace kubevirt --dry-run=client -oyaml | kubectl apply -f -
 
-	KUBEVIRT_VERSION="v0.47.1"
+	KUBEVIRT_VERSION="v0.49.0"
 	log "Installing KubeVirt ${KUBEVIRT_VERSION}"
 
 	kubectl apply -n kubevirt \
@@ -46,8 +45,9 @@ setup_file() {
 	kubectl apply -n kubevirt \
 		-f https://github.com/kubevirt/kubevirt/releases/download/"${KUBEVIRT_VERSION}"/kubevirt-cr.yaml
 
-	kubectl create configmap kubevirt-config -n kubevirt \
-		--from-literal debug.useEmulation=true --dry-run=client -oyaml | kubectl apply -f -
+	kubectl patch -n kubevirt \
+		kubevirt kubevirt --type=merge \
+		--patch '{"spec":{"configuration":{"developerConfiguration":{"useEmulation":true}}}}'
 
 	log "Waiting for KubeVirt to be ready"
 
@@ -71,6 +71,10 @@ teardown_file() {
 	kubectl describe vmi/testvm > pod.txt
 	kubectl get kubevirt -n kubevirt kubevirt -o yaml > kubevirt.yaml
 	kubectl get daemonsets -n kubevirt virt-handler -o yaml > virt-handler-ds.yaml
+	kubectl get nodes -o yaml > nodes.yaml
+	for pod in $(kubectl get pod -n kubevirt -o name | grep virt-operator); do
+		kubectl logs "${pod}" -n kubevirt > "${pod/\//-}-logs.txt"
+	done
 
 	# TODO: gather cloud-init logs
 
