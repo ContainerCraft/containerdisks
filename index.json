@@ -211,12 +211,12 @@
       "amd64": {
         "url": "https://cloud-images.ubuntu.com/impish/current",
         "image": "impish-server-cloudimg-amd64-disk-kvm.img",
-        "sha256sum": "2e62f12bc2b5032ca41ce5077f498ed4c0f50a667c0408b10728587a67ea5274"
+        "sha256sum": "5c5e0bd317ef8b6f9d9eaf60f63a8d3f0956b2272b10a06efa7249888d036763"
       },
       "arm64": {
         "url": "https://cloud-images.ubuntu.com/impish/current",
         "image": "impish-server-cloudimg-arm64.img",
-        "sha256sum": "30fbec2ddf6996c26e44edaaa250e2c4eca9f2a9113fca82b951c4582d18986d"
+        "sha256sum": "f5ed430fdad41372bd2271ae53ce6fded7e21cc94f7139e1be425bc7e961df2d"
       }
     }
   }
