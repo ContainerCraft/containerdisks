@@ -350,6 +350,8 @@ jobs:
       ARCH: << parameters.arch >>
     steps:
       - checkout
+      - halt-if-no-changes:
+          flavor: << parameters.flavor >>
       - prepare-qcow2:
           flavor: << parameters.flavor >>
           arch: << parameters.arch >>
@@ -365,6 +367,8 @@ jobs:
       FLAVOR: << parameters.flavor >>
     steps:
       - checkout
+      - halt-if-no-changes:
+          flavor: << parameters.flavor >>
       - cradle-qcow2:
           flavor: << parameters.flavor >>
       - ops-notify-err
@@ -375,6 +379,8 @@ jobs:
       flavor:
         type: string
     steps:
+      - halt-if-no-changes:
+          flavor: << parameters.flavor >>
       - trigger-gha-test:
           flavor: << parameters.flavor >>
       - ops-notify-err
@@ -382,6 +388,27 @@ jobs:
 #################################################################################
 # Reuseable Commands
 commands:
+  halt-if-no-changes:
+    description: "Halt the build if nothing has changed from origin/HEAD"
+    parameters:
+      flavor:
+        type: string
+    steps:
+      - run:
+          name: Halt if needed
+          command: |
+            set -x
+            # if we aren't on the ccio branch and there are no files changes
+            # from the ccio branch, halt. Else if the file has not changed in
+            # the last commit, halt.
+            if [[ "$CIRCLE_BRANCH" != "ccio" ]]; then
+              if git diff --quiet HEAD $(git rev-parse origin/HEAD) -- images/<< parameters.flavor >>/ ; then
+                circleci-agent step halt
+              fi
+            elif git diff --quiet HEAD $(git rev-parse origin/HEAD)~1 -- images/<< parameters.flavor >>/ ; then
+              circleci-agent step halt
+            fi
+
   trigger-gha-test:
     description: "Tests: Trigger GHA Test Workflow"
     parameters:
