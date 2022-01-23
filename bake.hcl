@@ -204,3 +204,15 @@ target "rocky-8" {
     FLAVOR = "rocky-8"
   }
 }
+
+target "openwrt-21" {
+  inherits = ["defaults"]
+  platforms = ["linux/amd64"]
+  tags = [
+    tag("openwrt", "21"),
+    tag("openwrt", "latest"),
+  ]
+  args = {
+    FLAVOR = "openwrt-21"
+  }
+}

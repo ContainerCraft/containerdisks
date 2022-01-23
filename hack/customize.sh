@@ -41,7 +41,7 @@ if [[ -z "${DOWNLOAD_FILE}" ]]; then
 fi
 
 if [[ -z "${BASE_URL}" ]]; then
-	__BASE_URL="${ARCH^^}__BASE_URL"
+	__BASE_URL="${ARCH^^}_BASE_URL"
 	BASE_URL="${!__BASE_URL}"
 fi
 
@@ -59,13 +59,22 @@ echo "${!SHASUM} ${DOWNLOAD_FILE}" |
 
 # Unarchive image
 if [[ "${DOWNLOAD_FILE}" =~ \.gz$ ]]; then
-	gzip -d "${DOWNLOAD_FILE}"
+	# TODO(jbpratt): OpenWrt compressed image contains additional garbage that
+	# causes a warning (exit code 2) to be returned though the decompression
+	# succeeds. This probably isn't the best fix...
+	# https://lists.openwrt.org/pipermail/openwrt-devel/2020-April/028777.html
+	gzip -d "${DOWNLOAD_FILE}" || :
 	mv "${DOWNLOAD_FILE/.gz/}" "${QCOW2_TMPFILE}"
 elif [[ "${DOWNLOAD_FILE}" =~ \.xz$ ]]; then
 	unxz "${DOWNLOAD_FILE}"
 	mv "${DOWNLOAD_FILE/.xz/}" "${QCOW2_TMPFILE}"
 else
 	mv "${DOWNLOAD_FILE}" "${QCOW2_TMPFILE}"
+fi
+
+if [[ "${CONVERT}" == "true" ]]; then
+	qemu-img convert "${QCOW2_TMPFILE}" -O qcow2 converted."${QCOW2_TMPFILE}"
+	mv converted."${QCOW2_TMPFILE}" "${QCOW2_TMPFILE}"
 fi
 
 if [[ "${CUSTOMIZE}" == "true" ]]; then
