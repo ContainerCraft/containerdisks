@@ -5,11 +5,9 @@ setup_file() {
 	load common
 	log "Setting up..."
 
-	if [[ -z ${FLAVOR} ]]; then
+	if [[ -z ${FLAVOR+x} ]]; then
 		log "\$FLAVOR must be passed in" && exit 1
 	fi
-
-	export FLAVOR
 
 	# Install virtctl cli
 	virtctl version --client || {
@@ -95,7 +93,7 @@ setup() {
 	load common
 	log "Running test '${BATS_TEST_DESCRIPTION}'..."
 	source images/"${FLAVOR}"/env.sh
-	if [[ -n ${SKIP} ]] && [[ "${BATS_TEST_NAME}" =~ ($SKIP) ]]; then
+	if [[ -n ${SKIP} ]] && [[ "${BATS_TEST_DESCRIPTION}" =~ ($SKIP) ]]; then
 		skip "Test is disabled"
 	fi
 }
