@@ -39,8 +39,7 @@ jobs:
         with:
           name: ${{ env.FLAVOR }}-logs
           path: |
-            ${{ github.workspace }}/*.txt
-            ${{ github.workspace }}/*.yaml
+            ${{ github.workspace }}/logs/*
 
   promote-image:
     runs-on: ubuntu-latest
