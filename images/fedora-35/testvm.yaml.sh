@@ -1,19 +1,6 @@
 cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: Service
-metadata:
-  name: ssh
-spec:
-  ports:
-  - nodePort: 30950
-    port: 30950
-    protocol: TCP
-    targetPort: 22
-  selector:
-    test: kmi
-  type: NodePort
 ---
-apiVersion: kubevirt.io/v1alpha3
+apiVersion: kubevirt.io/v1
 kind: VirtualMachine
 metadata:
   name: testvm
@@ -25,15 +12,12 @@ spec:
     metadata:
       labels:
         test: kmi
+        kubevirt.io/flavor: default-features
     spec:
       nodeSelector:
         test: "kmi"
       domain:
         devices:
-          autoattachPodInterface: true
-          autoattachSerialConsole: true
-          autoattachGraphicsDevice: true
-          networkInterfaceMultiqueue: false
           disks:
             - name: containerdisk
               bootOrder: 1
@@ -42,22 +26,12 @@ spec:
             - name: cloudinitdisk
               disk:
                 bus: virtio
-        cpu:
-          cores: 1
-          threads: 1
-          sockets: 1
-          model: host-model
-        resources:
-          limits:
-            memory: 4G
-          requests:
-            memory: 4G
       hostname: testvm
       terminationGracePeriodSeconds: 0
       volumes:
         - name: containerdisk
           containerDisk:
-            image: docker.io/containercraft/${FLAVOR/-/:}-dev
+            image: docker.io/containercraft/fedora:35-dev
             imagePullPolicy: Always
         - name: cloudinitdisk
           cloudInitNoCloud:

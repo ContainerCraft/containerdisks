@@ -1,8 +1,8 @@
 #!/usr/bin/env bats
 
-setup_file() {
+load common
 
-	load common
+setup_file() {
 	log "Setting up..."
 
 	if [[ -z ${FLAVOR} ]]; then
@@ -58,6 +58,9 @@ setup_file() {
 	until kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-controller; do sleep 1; done
 	until kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-handler; do sleep 1; done
 
+	kubectl apply -f tests/ssh-service.yaml
+	kubectl apply -f tests/vm-presets.yaml
+
 	log "Deploying test VM (${FLAVOR})"
 	kubectl delete vm testvm || :
 	bash images/"${FLAVOR}"/testvm.yaml.sh
@@ -92,7 +95,6 @@ setup() {
 	# skip all remaining tests if there is a failure
 	[[ ! -f "${BATS_PARENT_TMPNAME}".skip ]] || skip "skipping remaining tests"
 
-	load common
 	log "Running test '${BATS_TEST_DESCRIPTION}'..."
 	source images/"${FLAVOR}"/env.sh
 	if [[ -n ${SKIP} ]] && [[ "${BATS_TEST_NAME}" =~ ($SKIP) ]]; then

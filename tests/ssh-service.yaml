@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ssh
+spec:
+  ports:
+  - nodePort: 30950
+    port: 30950
+    protocol: TCP
+    targetPort: 22
+  selector:
+    test: kmi
+  type: NodePort
