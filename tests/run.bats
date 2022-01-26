@@ -69,6 +69,8 @@ setup_file() {
 teardown_file() {
 	log "Tearing down..."
 
+	mkdir -p logs/ && pushd logs
+
 	kubectl get events -A --sort-by=.metadata.creationTimestamp > events.txt
 	kubectl get kubevirt -n kubevirt kubevirt -o yaml > kubevirt.yaml
 	kubectl get daemonsets -n kubevirt virt-handler -o yaml > virt-handler-ds.yaml
@@ -77,6 +79,8 @@ teardown_file() {
 	for pod in $(kubectl get pod -n kubevirt -o name | grep virt-operator); do
 		kubectl logs "${pod}" -n kubevirt > "${pod/\//-}-logs.txt"
 	done
+
+	popd
 
 	# TODO: gather cloud-init logs
 
