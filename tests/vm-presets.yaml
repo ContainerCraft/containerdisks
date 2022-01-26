@@ -1,0 +1,23 @@
+---
+apiVersion: kubevirt.io/v1
+kind: VirtualMachineInstancePreset
+metadata:
+  name: default-features
+spec:
+  selector:
+    matchLabels:
+      kubevirt.io/flavor: default-features
+  domain:
+    devices:
+      autoattachPodInterface: true
+      autoattachSerialConsole: true
+      autoattachGraphicsDevice: true
+      networkInterfaceMultiqueue: false
+    cpu:
+      cores: 1
+      threads: 1
+      sockets: 1
+      model: host-model
+    resources:
+      requests:
+        memory: 4G

@@ -1,7 +1,8 @@
 #!/usr/bin/env bats
 
+load common
+
 setup_file() {
-	load common
 	log "Setting up..."
 
 	if [[ -z "${FLAVOR}" ]]; then
@@ -52,10 +53,17 @@ setup_file() {
 	until kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-controller; do sleep 1; done
 	until kubectl wait --for condition=ready pod -n kubevirt --timeout=100s -l kubevirt.io=virt-handler; do sleep 1; done
 
+	kubectl apply -f tests/ssh-service.yaml
+	kubectl apply -f tests/vm-presets.yaml
+
 	log "Deploying test VM (${FLAVOR})"
-	kubectl delete vm testvm || :
-	bash images/"${FLAVOR}"/testvm.yaml.sh
-	# until virtctl console testvm 2>&1 >> console.txt; do sleep 1; done
+	kubectl delete vmi testvm || :
+
+	if [[ -f "images/${FLAVOR}/testvmi.yaml" ]]; then
+		kubectl apply -f images/"${FLAVOR}"/testvmi.yaml
+	else
+		IMAGE=${FLAVOR/-/:} envsubst < tests/vmi.yaml | kubectl apply -f -
+	fi
 }
 
 teardown_file() {
@@ -73,7 +81,7 @@ teardown_file() {
 	# TODO: gather cloud-init logs
 
 	# TODO: add flag to disable teardown
-	kubectl delete vm testvm || :
+	kubectl delete vmi testvm || :
 
 	# if not running in GHA CI, teardown
 	if [[ -z "${GITHUB_ACTIONS}" ]]; then
@@ -86,7 +94,6 @@ setup() {
 	# skip all remaining tests if there is a failure
 	[[ ! -f "${BATS_PARENT_TMPNAME}".skip ]] || skip "skipping remaining tests"
 
-	load common
 	log "Running test '${BATS_TEST_DESCRIPTION}'..."
 	source images/"${FLAVOR}"/env.sh
 	if [[ -n ${SKIP} ]] && [[ "${BATS_TEST_DESCRIPTION}" =~ ($SKIP) ]]; then

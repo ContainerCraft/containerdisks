@@ -1,0 +1,25 @@
+---
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachineInstance
+metadata:
+  name: testvm
+  labels:
+    test: kmi
+    kubevirt.io/flavor: default-features
+spec:
+  nodeSelector:
+    test: kmi
+  domain:
+    devices:
+      disks:
+        - name: containerdisk
+          bootOrder: 1
+          disk:
+            bus: virtio
+  hostname: testvm
+  terminationGracePeriodSeconds: 0
+  volumes:
+    - name: containerdisk
+      containerDisk:
+        image: docker.io/containercraft/openwrt:latest-dev
+        imagePullPolicy: Always

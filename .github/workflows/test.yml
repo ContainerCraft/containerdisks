@@ -9,7 +9,7 @@ on:
 env:
   FLAVOR: ${{ github.event.inputs.flavor || 'ubuntu-18.04' }}
 jobs:
-  e2e-test:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -18,15 +18,9 @@ jobs:
       - name: Install bats
         run: npm install -g bats
 
-      - name: Prepare Node
-        run: |
-          docker volume create worker1-containerd
-          docker volume create control1-containerd
-
       - name: Create kind cluster
         uses: helm/kind-action@v1.2.0
         with:
-          cluster_name: kmi-test
           config: .github/workflows/kind/config.yml
 
       - name: Deploy and test ${{ env.FLAVOR }}
@@ -42,10 +36,10 @@ jobs:
             ${{ github.workspace }}/*.txt
             ${{ github.workspace }}/*.yaml
 
-  promote-image:
+  promote:
     runs-on: ubuntu-latest
     if: github.event_name != 'pull_request'
-    needs: e2e-test
+    needs: test
     permissions:
       id-token: write
     env:
