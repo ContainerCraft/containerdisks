@@ -407,6 +407,7 @@ jobs:
       flavor:
         type: string
     steps:
+      - checkout
       - halt-if-no-changes:
           flavor: << parameters.flavor >>
       - trigger-gha-test:
