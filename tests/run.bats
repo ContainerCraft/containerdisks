@@ -36,7 +36,7 @@ setup_file() {
 	# Deploy Kubevirt
 	kubectl create namespace kubevirt --dry-run=client -oyaml | kubectl apply -f -
 
-	KUBEVIRT_VERSION="v0.49.0"
+	KUBEVIRT_VERSION="v0.50.0"
 	log "Installing KubeVirt ${KUBEVIRT_VERSION}"
 
 	kubectl apply -n kubevirt \
