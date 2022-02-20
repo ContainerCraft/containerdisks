@@ -62,15 +62,13 @@ teardown_file() {
 	log "Tearing down..."
 
 	kubectl get events -A --sort-by=.metadata.creationTimestamp > events.txt
-	kubectl describe vmi/testvm > pod.txt
 	kubectl get kubevirt -n kubevirt kubevirt -o yaml > kubevirt.yaml
 	kubectl get daemonsets -n kubevirt virt-handler -o yaml > virt-handler-ds.yaml
 	kubectl get nodes -o yaml > nodes.yaml
+	kubectl describe vmi/testvm > pod.txt
 	for pod in $(kubectl get pod -n kubevirt -o name | grep virt-operator); do
 		kubectl logs "${pod}" -n kubevirt > "${pod/\//-}-logs.txt"
 	done
-
-	virtctl console testvm < cat /var/log/auth.log
 
 	# TODO: gather cloud-init logs
 
