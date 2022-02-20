@@ -1,19 +1,20 @@
 #!/usr/bin/env bats
 
 setup_file() {
-
 	load common
 	log "Setting up..."
 
-	if [[ -z ${FLAVOR+x} ]]; then
+	if [[ -z "${FLAVOR}" ]]; then
 		log "\$FLAVOR must be passed in" && exit 1
 	fi
 
+	export FLAVOR
+
+	KUBEVIRT_VERSION="v0.50.0"
+	KUBEVIRT_URL=https://github.com/kubevirt/kubevirt/releases/download/"${KUBEVIRT_VERSION}"
 	# Install virtctl cli
 	virtctl version --client || {
-		VIRTCTL_RELEASE=$(curl -s https://api.github.com/repos/kubevirt/kubevirt/releases/latest | awk -F '["v,]' '/tag_name/{print $5}')
-		sudo curl --output /usr/local/bin/virtctl \
-			-L https://github.com/kubevirt/kubevirt/releases/download/v"${VIRTCTL_RELEASE}"/virtctl-v"${VIRTCTL_RELEASE}"-"$(uname -s | awk '{print tolower($0)}')"-amd64
+		sudo curl --output /usr/local/bin/virtctl -L "${KUBEVIRT_URL}"/virtctl-"${KUBEVIRT_VERSION}"-linux-amd64
 		sudo chmod +x /usr/local/bin/virtctl
 		virtctl version --client
 	}
@@ -27,21 +28,16 @@ setup_file() {
 
 	kubectl cluster-info || (log "Failed to get cluster info" && exit 1)
 
-	ls "$HOME"/.ssh/id_rsa || ssh-keygen -t rsa -N "" -f "$HOME"/.ssh/id_rsa
+	ls "${HOME}"/.ssh/id_rsa || ssh-keygen -t rsa -N "" -f "${HOME}"/.ssh/id_rsa
 	kubectl create secret generic kargo-sshpubkey-kc2user \
-		--from-file=key1="$HOME"/.ssh/id_rsa.pub --dry-run=client -oyaml | kubectl apply -f -
+		--from-file=key1="${HOME}"/.ssh/id_rsa.pub --dry-run=client -oyaml | kubectl apply -f -
 
 	# Deploy Kubevirt
 	kubectl create namespace kubevirt --dry-run=client -oyaml | kubectl apply -f -
 
-	KUBEVIRT_VERSION="v0.50.0"
 	log "Installing KubeVirt ${KUBEVIRT_VERSION}"
-
-	kubectl apply -n kubevirt \
-		-f https://github.com/kubevirt/kubevirt/releases/download/"${KUBEVIRT_VERSION}"/kubevirt-operator.yaml
-
-	kubectl apply -n kubevirt \
-		-f https://github.com/kubevirt/kubevirt/releases/download/"${KUBEVIRT_VERSION}"/kubevirt-cr.yaml
+	kubectl apply -n kubevirt -f "${KUBEVIRT_URL}"/kubevirt-operator.yaml
+	kubectl apply -n kubevirt -f "${KUBEVIRT_URL}"/kubevirt-cr.yaml
 
 	kubectl patch -n kubevirt \
 		kubevirt kubevirt --type=merge \
@@ -73,6 +69,8 @@ teardown_file() {
 	for pod in $(kubectl get pod -n kubevirt -o name | grep virt-operator); do
 		kubectl logs "${pod}" -n kubevirt > "${pod/\//-}-logs.txt"
 	done
+
+	virtctl console testvm < cat /var/log/auth.log
 
 	# TODO: gather cloud-init logs
 
