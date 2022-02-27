@@ -28,7 +28,6 @@ The CCIO kmi project aims to maintain all published distributions up to date wit
 | [OPNsense]       |        |          |         |          | |        |       |
 | [openSUSE]       |        |          |    X    |          | |    X   |       |
 | [PFSense]        |        |          |         |          | |        |       |
-| [Red Hat CoreOS] |        |          |    X    |          | |    X   |   X   |
 | [Rocky Linux]    |        |          |    X    |          | |    X   |   X   |
 | [Ubuntu]         |        |     X    |         |          | |    X   |   X   |
 | [VyOS]           |        |          |    X    |          | |    X   |       |
@@ -98,7 +97,6 @@ These images also have automated maintenance for required compliance including:
 [OpenWRT]:https://openwrt.org
 [OPNsense]:https://opnsense.org
 [PFSense]:https://www.pfsense.org
-[Red Hat CoreOS]:https://cloud.redhat.com/learn/coreos
 [Rocky Linux]:https://rockylinux.org
 [Ubuntu]:https://ubuntu.com
 [VyOS]:https://vyos.io
