@@ -34,9 +34,6 @@ aliases:
   openwrt-flavors: &_openwrt-flavors
     - openwrt-21
 
-  rhcos-flavors: &_rhcos-flavors
-    - rhcos-4.9
-
   rocky-flavors: &_rocky-flavors
     - rocky-8
 
@@ -283,32 +280,6 @@ workflows:
             parameters:
               flavor: *_openwrt-flavors
       # End OpenWrt #
-
-      # Start RHCOS #
-      - customize:
-          name: customize-<< matrix.flavor >>-<< matrix.arch >>
-          matrix:
-            parameters:
-              flavor: *_rhcos-flavors
-              arch: [amd64, arm64]
-
-      - cradle:
-          requires:
-            - customize-<< matrix.flavor >>-amd64
-            - customize-<< matrix.flavor >>-arm64
-          name: cradle-<< matrix.flavor >>
-          matrix:
-            parameters:
-              flavor: *_rhcos-flavors
-
-      - trigger-tests:
-          requires:
-            - cradle-<< matrix.flavor >>
-          name: trigger-<< matrix.flavor >>-promotion
-          matrix:
-            parameters:
-              flavor: *_rhcos-flavors
-      # End RHCOS #
 
       # Start FCOS #
       - customize:

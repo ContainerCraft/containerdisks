@@ -154,16 +154,6 @@ target "centos-9" {
   }
 }
 
-target "rhcos-4.9" {
-  inherits = ["defaults"]
-  tags = [
-    tag("rhcos", "4.9")
-  ]
-  args = {
-    FLAVOR = "rhcos-4.9"
-  }
-}
-
 target "fcos-35" {
   inherits = ["defaults"]
   tags = [
