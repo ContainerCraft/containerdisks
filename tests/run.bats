@@ -11,7 +11,7 @@ setup_file() {
 
 	export FLAVOR
 
-	KUBEVIRT_VERSION="v0.51.0"
+	KUBEVIRT_VERSION="v0.52.0"
 	KUBEVIRT_URL=https://github.com/kubevirt/kubevirt/releases/download/"${KUBEVIRT_VERSION}"
 	# Install virtctl cli
 	virtctl version --client || {
