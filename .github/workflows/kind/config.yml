@@ -8,9 +8,9 @@ networking:
   apiServerPort: 6443
 nodes:
   - role: control-plane
-    image: kindest/node:v1.23.3
+    image: kindest/node:v1.23.5
   - role: worker
-    image: kindest/node:v1.23.3
+    image: kindest/node:v1.23.5
     extraPortMappings:
     - containerPort: 30950
       hostPort: 30950
