@@ -31,12 +31,12 @@ ubuntu::20-04() {
 	sed -i "s/ARM64_SHA256SUM=.*/ARM64_SHA256SUM=${arm64_sha256sum}/" "${file}"
 }
 
-ubuntu::21-10() {
-	local file="images/ubuntu-21.10/env.sh"
+ubuntu::22-04() {
+	local file="images/ubuntu-22.04/env.sh"
 	source "${file}"
 	local response=$(curl -s "${BASE_URL}"/SHA256SUMS)
-	local amd64_sha256sum=$(echo "${response}" | grep impish-server-cloudimg-amd64-disk-kvm.img | awk -F ' ' '{print $1}')
-	local arm64_sha256sum=$(echo "${response}" | grep impish-server-cloudimg-arm64.img | awk -F ' ' '{print $1}')
+	local amd64_sha256sum=$(echo "${response}" | grep jammy-server-cloudimg-amd64-disk-kvm.img | awk -F ' ' '{print $1}')
+	local arm64_sha256sum=$(echo "${response}" | grep jammy-server-cloudimg-arm64.img | awk -F ' ' '{print $1}')
 	sed -i "s/AMD64_SHA256SUM=.*/AMD64_SHA256SUM=${amd64_sha256sum}/" "${file}"
 	sed -i "s/ARM64_SHA256SUM=.*/ARM64_SHA256SUM=${arm64_sha256sum}/" "${file}"
 }
@@ -136,7 +136,7 @@ almalinux::8() {
 archlinux::latest
 ubuntu::18-04
 ubuntu::20-04
-ubuntu::21-10
+ubuntu::22-04
 fedora::34
 fedora::35
 debian::10
