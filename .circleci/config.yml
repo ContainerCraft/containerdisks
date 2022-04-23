@@ -40,7 +40,7 @@ aliases:
   ubuntu-flavors: &_ubuntu-flavors
     - ubuntu-18.04
     - ubuntu-20.04
-    - ubuntu-21.10
+    - ubuntu-22.04
 
   cache-key: &_cache-key
     key: << parameters.flavor >>-<< parameters.arch >>-{{ checksum "hack/customize.sh" }}-{{ checksum "images/<< parameters.flavor >>/env.sh" }}

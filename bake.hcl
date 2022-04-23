@@ -51,14 +51,14 @@ target "ubuntu-20.04" {
   }
 }
 
-target "ubuntu-21.10" {
+target "ubuntu-22.04" {
   inherits = ["defaults"]
   tags = [
-    tag("ubuntu", "21.10"),
-    # tag("ubuntu", "impish"),
+    tag("ubuntu", "22.04"),
+    # tag("ubuntu", "jammy"),
   ]
   args = {
-    FLAVOR = "ubuntu-21.10"
+    FLAVOR = "ubuntu-22.04"
   }
 }
 
