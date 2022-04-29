@@ -1,5 +1,5 @@
 VIRT_SYSPREP_OPERATIONS=user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache
 BASE_URL=https://cloud-images.ubuntu.com/focal/current
 DOWNLOAD_FILE=focal-server-cloudimg-${ARCH}.img
-AMD64_SHA256SUM=826743a5b7aab6e5bf9253d99436daee757361ed05246225abb0054a0429b14b
-ARM64_SHA256SUM=7119d41803657da474388b70127434c34393fb8f0d926aa4030913a89019f9cd
+AMD64_SHA256SUM=479ebb2ac752edb7cc7d47cc41e59767dcb51e7b60e5a2ba8b6c0b12b17ea7cf
+ARM64_SHA256SUM=51135740be457820eec2674c1aab16b368ad902f88a476d6b78c2edf14e88a12
