@@ -121,6 +121,6 @@ teardown() {
 }
 
 @test "guest ssh connects successfully" {
-	run retry 10 ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami
+	run retry 90 ssh -o PasswordAuthentication=no -o StrictHostKeyChecking=no -p30950 kc2user@127.0.0.1 whoami
 	[ $status -eq 0 ]
 }
