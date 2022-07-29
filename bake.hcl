@@ -62,13 +62,13 @@ target "ubuntu-22.04" {
   }
 }
 
-target "fedora-34" {
+target "fedora-36" {
   inherits = ["defaults"]
   tags = [
-    tag("fedora", "34")
+    tag("fedora", "36")
   ]
   args = {
-    FLAVOR = "fedora-34"
+    FLAVOR = "fedora-36"
   }
 }
 
