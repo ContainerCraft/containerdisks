@@ -1,5 +1,5 @@
 VIRT_SYSPREP_OPERATIONS=user-account,logfiles,customize,bash-history,net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhcp-client-state,yum-uuid,udev-persistent-net,tmp-files,smolt-uuid,rpm-db,package-manager-cache
 BASE_URL=https://cloud-images.ubuntu.com/bionic/current
 DOWNLOAD_FILE=bionic-server-cloudimg-${ARCH}.img
-AMD64_SHA256SUM=4a30c3d082aa5d6f984394fdcc97bb0b70f391b6a464d63e723d45ae82b605da
-ARM64_SHA256SUM=e206888d0f66cabc90b6b3ec901c471039a2d221a1167270462f0d71f55588e7
+AMD64_SHA256SUM=5269cad5bc26ec4c1742fb01525467abdc44b5a838dae09c90dc086aa50ac568
+ARM64_SHA256SUM=188f29bcd2cac8510e8147d6255fe43c9f3c9c8aa48e6ee4be3d8310683f0376
