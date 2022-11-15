@@ -2,5 +2,5 @@ VIRT_SYSPREP_OPERATIONS=net-hostname,net-hwaddr,machine-id,dhcp-server-state,dhc
 _ARCH=$(echo ${ARCH} | sed 's/amd64/x86_64/;s/arm64/aarch64/')
 BASE_URL=https://repo.almalinux.org/almalinux/8/cloud/"${_ARCH}"/images/
 DOWNLOAD_FILE=AlmaLinux-8-GenericCloud-latest."${_ARCH}".qcow2
-AMD64_SHA256SUM=e4b215dc807200db3a8934bdd785026c3776d3798e36f830897861074f29fc54
-ARM64_SHA256SUM=f5bea7f4dbc6326a8d5e8d03165b9ef6eb8cc0c10d298715a8ce5cee01e8ec3e
+AMD64_SHA256SUM=9505239cbaf56fae0abc93a2dba312606540014fcc01e74f196edac0b5fbe783
+ARM64_SHA256SUM=46773980934297efef24c3fe769d2e6d804a2da37af805f6182cfcfea5211767
