@@ -1,4 +1,0 @@
-update
-install screenfetch,python3,tmux,git,vim,net-tools,cloud-init,cloud-initramfs-growroot,qemu-guest-agent
-run-command apt-get autoremove -y && apt-get purge -y
-run-command systemctl enable qemu-guest-agent

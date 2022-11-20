@@ -29,28 +29,6 @@ function "tag" {
   result = equal("", REPO) ? "docker.io/containercraft/${image}:${tag}-${FLAG}" : "${REPO}/${image}:${tag}-${FLAG}"
 }
 
-target "ubuntu-18.04" {
-  inherits = ["defaults"]
-  tags = [
-    tag("ubuntu", "18.04"),
-    # tag("ubuntu", "bionic"),
-  ]
-  args = {
-    FLAVOR = "ubuntu-18.04"
-  }
-}
-
-target "ubuntu-20.04" {
-  inherits = ["defaults"]
-  tags = [
-    tag("ubuntu", "20.04"),
-    # tag("ubuntu", "focal"),
-  ]
-  args = {
-    FLAVOR = "ubuntu-20.04"
-  }
-}
-
 target "ubuntu-22.04" {
   inherits = ["defaults"]
   tags = [
@@ -62,23 +40,13 @@ target "ubuntu-22.04" {
   }
 }
 
-target "fedora-36" {
+target "fedora-37" {
   inherits = ["defaults"]
   tags = [
-    tag("fedora", "36")
+    tag("fedora", "37")
   ]
   args = {
-    FLAVOR = "fedora-36"
-  }
-}
-
-target "fedora-35" {
-  inherits = ["defaults"]
-  tags = [
-    tag("fedora", "35")
-  ]
-  args = {
-    FLAVOR = "fedora-35"
+    FLAVOR = "fedora-37"
   }
 }
 

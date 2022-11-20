@@ -11,26 +11,6 @@ archlinux::latest() {
 	sed -i "s/AMD64_SHA256SUM=.*/AMD64_SHA256SUM=${amd64_sha256sum}/" "${file}"
 }
 
-ubuntu::18-04() {
-	local file="images/ubuntu-18.04/env.sh"
-	source "${file}"
-	local response=$(curl -s "${BASE_URL}"/SHA256SUMS)
-	local amd64_sha256sum=$(echo "${response}" | grep bionic-server-cloudimg-amd64.img | awk -F ' ' '{print $1}')
-	local arm64_sha256sum=$(echo "${response}" | grep bionic-server-cloudimg-arm64.img | awk -F ' ' '{print $1}')
-	sed -i "s/AMD64_SHA256SUM=.*/AMD64_SHA256SUM=${amd64_sha256sum}/" "${file}"
-	sed -i "s/ARM64_SHA256SUM=.*/ARM64_SHA256SUM=${arm64_sha256sum}/" "${file}"
-}
-
-ubuntu::20-04() {
-	local file="images/ubuntu-20.04/env.sh"
-	source "${file}"
-	local response=$(curl -s "${BASE_URL}"/SHA256SUMS)
-	local amd64_sha256sum=$(echo "${response}" | grep focal-server-cloudimg-amd64.img | awk -F ' ' '{print $1}')
-	local arm64_sha256sum=$(echo "${response}" | grep focal-server-cloudimg-arm64.img | awk -F ' ' '{print $1}')
-	sed -i "s/AMD64_SHA256SUM=.*/AMD64_SHA256SUM=${amd64_sha256sum}/" "${file}"
-	sed -i "s/ARM64_SHA256SUM=.*/ARM64_SHA256SUM=${arm64_sha256sum}/" "${file}"
-}
-
 ubuntu::22-04() {
 	local file="images/ubuntu-22.04/env.sh"
 	source "${file}"
@@ -41,24 +21,13 @@ ubuntu::22-04() {
 	sed -i "s/ARM64_SHA256SUM=.*/ARM64_SHA256SUM=${arm64_sha256sum}/" "${file}"
 }
 
-fedora::36() {
-	local file="images/fedora-36/env.sh"
+fedora::37() {
+	local file="images/fedora-37/env.sh"
 	local response=$(curl -s https://getfedora.org/releases.json)
 	local amd64_sha256sum=$(echo "${response}" |
-		jq -r '.[] | select(.link|test(".*qcow2")) | select(.variant=="Cloud" and .arch=="x86_64" and .version=="36").sha256')
+		jq -r '.[] | select(.link|test(".*qcow2")) | select(.variant=="Cloud" and .arch=="x86_64" and .version=="37").sha256')
 	local arm64_sha256sum=$(echo "${response}" |
-		jq -r '.[] | select(.link|test(".*qcow2")) | select(.variant=="Cloud" and .arch=="aarch64" and .version=="36").sha256')
-	sed -i "s/AMD64_SHA256SUM=.*/AMD64_SHA256SUM=${amd64_sha256sum}/" "${file}"
-	sed -i "s/ARM64_SHA256SUM=.*/ARM64_SHA256SUM=${arm64_sha256sum}/" "${file}"
-}
-
-fedora::35() {
-	local file="images/fedora-35/env.sh"
-	local response=$(curl -s https://getfedora.org/releases.json)
-	local amd64_sha256sum=$(echo "${response}" |
-		jq -r '.[] | select(.link|test(".*qcow2")) | select(.variant=="Cloud" and .arch=="x86_64" and .version=="35").sha256')
-	local arm64_sha256sum=$(echo "${response}" |
-		jq -r '.[] | select(.link|test(".*qcow2")) | select(.variant=="Cloud" and .arch=="aarch64" and .version=="35").sha256')
+		jq -r '.[] | select(.link|test(".*qcow2")) | select(.variant=="Cloud" and .arch=="aarch64" and .version=="37").sha256')
 	sed -i "s/AMD64_SHA256SUM=.*/AMD64_SHA256SUM=${amd64_sha256sum}/" "${file}"
 	sed -i "s/ARM64_SHA256SUM=.*/ARM64_SHA256SUM=${arm64_sha256sum}/" "${file}"
 }
@@ -134,11 +103,8 @@ almalinux::8() {
 }
 
 archlinux::latest
-ubuntu::18-04
-ubuntu::20-04
 ubuntu::22-04
-fedora::36
-fedora::35
+fedora::37
 debian::10
 debian::11
 centos::8
