@@ -21,8 +21,7 @@ aliases:
     - fcos-35
 
   fedora-flavors: &_fedora-flavors
-    - fedora-36
-    - fedora-35
+    - fedora-37
 
   freebsd-flavors: &_freebsd-flavors
     - freebsd-13
@@ -38,8 +37,6 @@ aliases:
     - rocky-8
 
   ubuntu-flavors: &_ubuntu-flavors
-    - ubuntu-18.04
-    - ubuntu-20.04
     - ubuntu-22.04
 
   cache-key: &_cache-key
