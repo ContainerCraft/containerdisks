@@ -403,7 +403,8 @@ commands:
                 circleci-agent step halt
               fi
             elif git diff --quiet HEAD $(git rev-parse origin/HEAD)~1 -- images/<< parameters.flavor >>/ ; then
-              circleci-agent step halt
+              echo "No Change Detected"
+              # circleci-agent step halt
             fi
 
   trigger-gha-test:
