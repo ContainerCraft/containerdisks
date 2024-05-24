@@ -3,4 +3,4 @@ _ARCH=$(echo ${ARCH} | sed 's/amd64/x86_64/;s/arm64/aarch64/')
 BASE_URL=https://repo.almalinux.org/almalinux/8/cloud/"${_ARCH}"/images/
 DOWNLOAD_FILE=AlmaLinux-8-GenericCloud-latest."${_ARCH}".qcow2
 AMD64_SHA256SUM=a1686bc537bce699b512e3233666f5b8f69ed797ff1ce0af52c17fdc52942621
-ARM64_SHA256SUM=603531fce80537f1ac4f78b6a43f79a47d1b2d70247fb2004da48ff1e5300813
+ARM64_SHA256SUM=ea6058be50597b7a54904a47c0b4a83eb4bff040301376ac828a6ac0932399a0
