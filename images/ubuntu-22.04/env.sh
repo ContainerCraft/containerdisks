@@ -2,5 +2,5 @@ VIRT_SYSPREP_OPERATIONS=user-account,logfiles,customize,bash-history,net-hostnam
 BASE_URL=https://cloud-images.ubuntu.com/jammy/current
 AMD64_DOWNLOAD_FILE=jammy-server-cloudimg-amd64-disk-kvm.img
 ARM64_DOWNLOAD_FILE=jammy-server-cloudimg-arm64.img
-AMD64_SHA256SUM=26279ed3ae31f7242863a3fffcadcf91df58f11c994db11e34b6823dd42b5e79
-ARM64_SHA256SUM=31c046db6c7ea01d31d5ceb2f7bc510c7ed7aa1143eac0dbd028bd27c2de26fa
+AMD64_SHA256SUM=5c877c72055a905c462300ee97da320104df311e3661ddf0ddd03ba0e5e0ed45
+ARM64_SHA256SUM=9c7d1bc59508542018aab7aabe9c375d3a2a9bcc8f18c2b47b830e9428a4f1c0
